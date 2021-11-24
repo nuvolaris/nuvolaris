@@ -1,6 +1,6 @@
 # nuvolaris-operator
 
-**Work in progress - this stuff is incomplete and unstable **
+**Work in progress - this stuff is incomplete and unstable.**
 
 ## Install and Run
 
