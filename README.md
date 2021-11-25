@@ -134,7 +134,7 @@ You can discuss it in the #[nuvolaris-runtimes](https://discord.gg/ZPZZYMG4pS) d
 
 [Up.](#index)
 
-### [`nuvolaris-operator`](https://github.com/nuvolaris/nuvolaris-controller)
+### [`nuvolaris-operator`](https://github.com/nuvolaris/nuvolaris-operator)
 
 This repo builds our operator and published the image in the GitHub docker registry.
 
