@@ -9,7 +9,7 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "CONTRIBUTING.md",
+            "file": "README.md",
             "mode": "source"
           }
         }
@@ -68,7 +68,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "CONTRIBUTING.md",
+                "file": "README.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -88,8 +88,8 @@
   },
   "active": "77c630b44bf5f9ec",
   "lastOpenFiles": [
-    "CONTRIBUTING.md",
     "README.md",
+    "CONTRIBUTING.md",
     "Neo.md",
     "Matrix.md",
     "OWNERS.md",

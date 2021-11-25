@@ -24,10 +24,19 @@ This is an ongoing project, that is still in early stages, to build an Open Sour
 
 Before you ask, there are currently no releases yet. So if you look for something to run, you are out of luck. If you look for contributing to an Open Source project, then maybe you can find something of interest.
 
+## Index
+
 - [About this project](#about-this-project)
 - [Get in touch](#get-in-touch)
 - [What is the next activity?](#what-is-the-next-activity)
 - [How to contribute](#how-to-contribute)
+- [Overview of the project](#overview-of-the-project)
+- Repo [`nuvolaris`](#nuvolaris-controller)
+- Repo [`nuvolaris-controller`](#nuvolaris-controller)
+- Repo [`nuvolaris-runtimes`](#nuvolaris-runtimes)
+- Repo [`nuvolaris-operator`](#nuvolaris-operator)
+- Repo [`nuvolaris-testing`](#nuvolaris-testing)
+
 
 ##  About this project
 
@@ -41,12 +50,16 @@ THis is the main differentiation from Apache OpenWHisk as it only provides a bas
 
 Long term goals are in our **roadmap** (long term goals) in [ROADMAP](ROADMAP.md) document to read about.
 
+[Up.](#index)
+
 ## Get in touch
 
 Do you want to help?
 
 - Start [introducing yourself in the forum](https://github.com/nuvolaris/nuvolaris/discussions/7) and partecipating to discussions.
 - Chat with us joining our [discord server](https://discord.gg/VSGG7aQ2Ds).   Note there is a channel for every repository in the project to discuss specific issues.
+
+[Up.](#index)
 
 ## What is the next activity?
 
@@ -57,6 +70,8 @@ We split activities in milestones. We give to them a friendly name and we name m
  Future Milestones will be named Trinity, Morpheus, Smith and so on.
 
 To manage the milestones we use [GitHub Projects](https://github.com/nuvolaris/nuvolaris/projects) that in turn uses  the [GitHub Issue Tracker](https://github.com/nuvolaris/nuvolaris/issues).
+
+[Up.](#index)
 
 ## How to contribute
 
@@ -69,6 +84,7 @@ In order to contribute to our project:
 - Code it!
 - Submit a Pull Request and get it merged after the review.
 
+[Up.](#index)
 
 ## Overview of the project
 
@@ -78,7 +94,9 @@ The main repositories, those relevant  for the project, are  pinned and named `n
 
 If we to make changes to our fork, we try to limit changes to the absolute minimum. Our work is always placed in branches starting with `nuvolaris`, and then they are included as git modules in the main ones.  And we try, when possible, to contribute back our changes tp upstream.
 
-Let's review the main repositories.
+Let's review the main repositories:
+
+[Up.](#index)
 
 ### [`nuvolaris`](https://github.com/nuvolaris/nuvolaris)
 
@@ -94,6 +112,8 @@ To discuss the project in general, introduce yourself, make suggestions or ask q
 
 Do not ask if you can ask, just ask :)
 
+[Up.](#index)
+
 ### [`nuvolaris-controller`](https://github.com/nuvolaris/nuvolaris-controller)
 
 This repo builds the OpenWhisk controller that is the core of OpenWhisk and publishes the images in the GitHub docker registry.
@@ -101,6 +121,8 @@ This repo builds the OpenWhisk controller that is the core of OpenWhisk and publ
 It includes as a subrepo our fork of [apache/openwhisk](https://github.com/nuvolaris/openwhisk)
 
 You can discuss it in the #[nuvolaris-controller](https://discord.gg/2weUATjvV7) discord channel and in the forum under the category [controller](https://github.com/nuvolaris/nuvolaris/discussions/categories/controller).
+
+[Up.](#index)
 
 ### [`nuvolaris-runtimes`](https://github.com/nuvolaris/nuvolaris-runtimes)
 
@@ -110,11 +132,15 @@ It includes as a subrepo our fork of some (but not all) `apache/openwhisk-runtim
 
 You can discuss it in the #[nuvolaris-runtimes](https://discord.gg/ZPZZYMG4pS) discord channel and in the forum under the category [runtimes](https://github.com/nuvolaris/nuvolaris/discussions/categories/runtimes).
 
+[Up.](#index)
+
 ### [`nuvolaris-operator`](https://github.com/nuvolaris/nuvolaris-controller)
 
 This repo builds our operator and published the image in the GitHub docker registry.
 
 You can discuss it in the #[nuvolaris-operator](https://discord.gg/RzJ4FHR2aR) discord channel and in the forum under the category [operator](https://github.com/nuvolaris/nuvolaris/discussions/categories/operator).
+
+[Up.](#index)
 
 ### [`nuvolaris-testing`](https://github.com/nuvolaris/nuvolaris-testing)
 
@@ -122,4 +148,4 @@ This repo includes our test suite and the scripts to build our test environments
 
 You can discuss it in the #[nuvolaris-testing](https://discord.gg/sgXqn9we) discord channel and in the forum under the category [testing](https://github.com/nuvolaris/nuvolaris/discussions/categories/testing).
 
-
+[Up.](#index)
