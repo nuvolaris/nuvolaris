@@ -1,4 +1,7 @@
 # nuvolaris-operator
+This repo builds our operator and published the image in the GitHub docker registry.
+
+You can discuss it in the #[nuvolaris-operator](https://discord.gg/RzJ4FHR2aR) discord channel and in the forum under the category [operator](https://github.com/nuvolaris/nuvolaris/discussions/categories/operator).
 
 **Work in progress - this stuff is incomplete and unstable.**
 
