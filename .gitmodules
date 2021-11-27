@@ -1,0 +1,12 @@
+[submodule "controller"]
+	path = controller
+	url = https://github.com/nuvolaris/nuvolaris-controller
+[submodule "runtimes"]
+	path = runtimes
+	url = https://github.com/nuvolaris/nuvolaris-runtimes
+[submodule "operator"]
+	path = operator
+	url = https://github.com/nuvolaris/nuvolaris-operator
+[submodule "testing"]
+	path = testing
+	url = https://github.com/nuvolaris/nuvolaris-testing
