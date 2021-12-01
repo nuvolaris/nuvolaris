@@ -1,9 +1,13 @@
 ## source this script, do not execute it.
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]] 
+then echo "You must source this script with bash, not execute it." ; exit 1
+fi
 
 # versions
 export NODENV_VERSION=16.13.0
 export PYENV_VERSION=3.9.9
 export GOENV_VERSION=1.17.3
+
 # env roots
 export PYENV_ROOT="$HOME/.pyenv"
 export NODENV_ROOT="$HOME/.nodenv"
@@ -15,41 +19,53 @@ die() {
     exit 1
 }
 
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]] 
-then die "You must source this script, not execute it."
-fi
+ok() {
+    echo OK: "$@"
+}
 
 if ! which git >/dev/null
-then die "Please configure this users with sudo with no password"
-fi
-
-if ! sudo id >/dev/null
-then die "Please configure this users with sudo with no password"
-fi
-
-if ! docker ps >/dev/null
-then die "Please install docker and assign access to this user"
+then die "Git is required"
+else ok git
 fi
 
 if ! which gcc >/dev/null
 then die "Please install development tools"
+else ok gcc
 fi
+
+
+if ! docker ps >/dev/null
+then die "Please install docker and assign access to this user"
+else ok docker
+fi
+
+# for now, sudo is not required, leaving this if we need it later
+#if ! sudo id >/dev/null
+#then die "Please configure this users with sudo with no password"
+#else ok sudo
+#fi
+
 
 # Install
 if ! test -d $GOENV_ROOT
 then git clone https://github.com/syndbg/goenv.git $GOENV_ROOT
+else ok goenv
 fi
+
 if ! test -e $NODENV_ROOT
 then git clone https://github.com/nodenv/nodenv.git $NODENV_ROOT
      mkdir "$NODENV_ROOT/plugins"
      git clone https://github.com/nodenv/node-build.git "$NODENV_ROOT"/plugins/node-build
+else ok nodenv
 fi
+
 if ! test -e $PYENV_ROOT
 then git clone https://github.com/pyenv/pyenv.git $PYENV_ROOT
+else ok pyenv
 fi
 
-
-export PATH="$GOENV_ROOT/bin:$NODENV_ROOT/bin:$PYENV_ROOT/bin:$PATH"
+export GOBIN="$PWD/bin"
+export PATH="$GOBIN:$GOENV_ROOT/bin:$NODENV_ROOT/bin:$PYENV_ROOT/bin:$PATH"
 
 eval "$(nodenv init -)"
 nodenv install $NODENV_VERSION -s
@@ -63,3 +79,15 @@ echo $PYENV_VERSION >.python-version
 eval "$(goenv init -)"
 goenv install $GOENV_VERSION -s
 echo $GOENV_VERSION >.go-version
+
+# install task
+if ! which task >/dev/null
+then go install github.com/go-task/task/v3/cmd/task@latest
+else ok task
+fi
+
+# install ansible
+if ! which ansible >/dev/null
+then pip install ansible
+else ok ansible
+fi

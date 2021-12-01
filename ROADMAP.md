@@ -9,7 +9,7 @@ Nuvolaris will be a distribution of Apache OpenWhisk. It will be open source and
 It should let you to install itself on any supported Kubernetes with a single command:
 
 ```
-curl get.serverlessanywere.com | kubectl apply -f -
+curl get.nuvolaris.org | kubectl apply -f -
 ```
 
 This will give sensible defaults. We can then use [`kustomize`](https://kustomize.io/) to further customize options. Ideally the whole configuration should be a single file as simple as possible.

@@ -18,11 +18,11 @@
 -->
 # Nuvolaris
 
-Welcome to Nuvolaris.
+Welcome to Nuvolaris. If you want to know what we are doing, [check our roadmap first](ROADMAP.md).
 
 This is an ongoing project, that is still in early stages, to build an Open Source distribution of [Apache OpenWhisk](https://openwhisk.apache.org) licensed released under the [Apache Licence 2.0](LICENSE.txt) (like OpenWhisk itself)
 
-Before you ask, there are currently no releases yet. So if you look for something to run, you are out of luck. If you look for contributing to an Open Source project, then maybe you can find something of interest.
+Before you ask, I tell you that there are currently no releases yet. So if you look for something to run, you are out of luck. If you look for contributing to an Open Source project, then maybe you can find something of interest.
 
 ## Index
 
@@ -48,7 +48,7 @@ We want to build a *complete* distribution of a serverless environment that is:
 
 THis is the main differentiation from Apache OpenWHisk as it only provides a basic engine for serverless.
 
-Long term goals are in our **roadmap** (long term goals) in [ROADMAP](ROADMAP.md) document to read about.
+Our goals are described in our [**roadmap**](ROADMAP.md) document to read about.
 
 [Up.](#index)
 
