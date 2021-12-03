@@ -105,3 +105,9 @@ if ! which ansible >/dev/null
 then pip install ansible
 else ok ansible
 fi
+
+# install addlicense
+if ! which addlicense >/dev/null
+then go install github.com/google/addlicense@latest
+else ok addlicense
+fi
