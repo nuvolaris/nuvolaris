@@ -1,5 +1,4 @@
-#!/bin/bash
-# Copyright 2021 Google LLC
+# Copyright 2021 Nuvolaris LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-pip3 install
-python3 -m virtualenv virtualenv
-source virtualenv/bin/activate
-pip install -r requirements.txt
+# task
+sudo sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
