@@ -27,3 +27,9 @@
 [submodule "testing"]
 	path = testing
 	url = https://github.com/nuvolaris/nuvolaris-testing
+[submodule "training"]
+	path = training
+	url = https://github.com/nuvolaris/nuvolaris-training
+[submodule "cli"]
+	path = cli
+	url = https://github.com/nuvolaris/nuvolaris-cli
