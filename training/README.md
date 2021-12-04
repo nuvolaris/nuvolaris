@@ -17,14 +17,9 @@
   ~ under the License.
   ~
 -->
-# Neo milestone
+# nuvolaris-training
 
-This is our first milestone. We want to release just an operator that runs OpenWhisk standalone (no Kafka, Couchdb and other components yet).
+This repo includes our test suite and the scripts to build our test environments.
 
-We start building:
-
-- an image with the standalone OpenWhisk  controller #5
-- a operator that launches such a controller #3
-- a set of runtimes to be used by such an image #4
-- a test suite to test it at least in Docker Desktop and in one Kubernetes cluster built with Microk8s #2
+You can discuss it in the #[nuvolaris-training](https://discord.gg/TeNA2Pa5Nu) discord channel and in the forum under the category [training](https://github.com/nuvolaris/nuvolaris/discussions/categories/training).
 
