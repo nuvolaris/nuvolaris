@@ -4,5 +4,5 @@ header:
     copyright-owner: Apache Software Foundation
 
   paths-ignore:
-    - **/*.md
+    - '**/*.md'
  
