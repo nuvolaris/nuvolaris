@@ -50,18 +50,10 @@ then die "Please install development tools"
 else ok gcc
 fi
 
-
-if ! docker ps >/dev/null
+if ! which docker >/dev/null
 then die "Please install docker and assign access to this user"
 else ok docker
 fi
-
-# for now, sudo is not required, leaving this if we need it later
-#if ! sudo id >/dev/null
-#then die "Please configure this users with sudo with no password"
-#else ok sudo
-#fi
-
 
 # Install
 if ! test -d $GOENV_ROOT
@@ -81,7 +73,6 @@ then git clone https://github.com/pyenv/pyenv.git $PYENV_ROOT
 else ok pyenv
 fi
 
-
 export GOBIN="$PWD/bin"
 export PATH="$GOBIN:$GOENV_ROOT/bin:$NODENV_ROOT/bin:$PYENV_ROOT/bin:$PATH"
 
@@ -97,9 +88,6 @@ echo $PYENV_VERSION >.python-version
 eval "$(goenv init -)"
 goenv install $GOENV_VERSION -s
 echo $GOENV_VERSION >.go-version
-
-eval "$(rbenv init - bash)"
-
 
 # install task
 if ! which task >/dev/null
