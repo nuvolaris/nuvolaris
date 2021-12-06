@@ -21,7 +21,7 @@
 
 This document describes development procedures.
 
-# Prequequisite
+# Prerequisites
 
 Development happens in **modern** Unix-like environments. Basically, we are supporting OSX, Linux and Windows WSL. 
 

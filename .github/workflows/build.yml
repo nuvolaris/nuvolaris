@@ -45,3 +45,4 @@ jobs:
       - name: Build
         run: |
           bash .github/cisetup.sh
+          task build-and-push
