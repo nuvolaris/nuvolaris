@@ -24,7 +24,7 @@ ENV WSK_BASE=https://github.com/apache/openwhisk-cli/releases/download
 RUN apt-get update && apt-get -y install curl file
 RUN DOCKER_URL="$DOCKER_BASE/$(arch)/docker-$DOCKER_VERSION.tgz" ;\
     curl -sL "$DOCKER_URL" | tar xzvf -
-RUN ARCH="$(if [[ "$(arch)" == "aarch64" ]] ; then echo "arm64" ; else echo "amd64" ; fi)" ;\
+RUN ARCH=amd64 ; test $(arch) = "aarch64" && ARCH=arm64 ;\
     WSK_URL="$WSK_BASE/$WSK_VERSION/OpenWhisk_CLI-$WSK_VERSION-linux-$ARCH.tgz" ;\
     curl -sL "$WSK_URL" | tar xzvf -
 FROM ubuntu:20.04
