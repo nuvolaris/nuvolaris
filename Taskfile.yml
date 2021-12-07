@@ -18,21 +18,18 @@
 version: '3'
 
 env:
-  REPO: ghcr.io/nuvolaris
+  REPO: ghcr.io
+  USER: nuvolaris
   NAME: nuvolaris-devkit
-  TAG: neo-latest-{{ARCH}}
+  TAG: neo-latest
 
 tasks:
 
-  default:
-    task: build-and-push
-
-  build-and-push:
-    deps:
-      - build
+  buildx-and-push:
     cmds:
-      - docker push $REPO/$NAME:$TAG
+     - docker buildx build --platform linux/amd64,linux/arm64 -t $REPO/$USER/$NAME:$TAG .
+     - docker push $REPO/$USER/$NAME:$TAG
 
   build:
     cmds:
-      - docker build . -t $REPO/$NAME:$TAG
+      - docker build . -t $NAME
