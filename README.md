@@ -19,7 +19,13 @@
 -->
 # Nuvolaris
 
-Welcome to Nuvolaris. If you want to know what we are doing, [check our roadmap first](ROADMAP.md).
+Welcome to Nuvolaris. Starting points:
+
+- Chat with us on [Discord](https://discord.gg/VSGG7aQ2Ds)
+- Discuss with us on [Forum](https://github.com/nuvolaris/nuvolaris/discussions/)
+- Read our [Roadmap](ROADMAP.md).
+
+## About
 
 This is an ongoing project, that is still in early stages, to build an Open Source distribution of [Apache OpenWhisk](https://openwhisk.apache.org) licensed released under the [Apache Licence 2.0](LICENSE.txt) (like OpenWhisk itself)
 
@@ -36,7 +42,9 @@ Before you ask, I tell you that there are currently no releases yet. So if you l
 - Repo [`nuvolaris-controller`](#nuvolaris-controller)
 - Repo [`nuvolaris-runtimes`](#nuvolaris-runtimes)
 - Repo [`nuvolaris-operator`](#nuvolaris-operator)
+- Repo [`nuvolaris-cli`](#nuvolaris-cli)
 - Repo [`nuvolaris-testing`](#nuvolaris-testing)
+- Repo [`nuvolaris-training`](#nuvolaris-training)
 
 
 ##  About this project
@@ -101,17 +109,32 @@ Let's review the main repositories:
 
 ### [`nuvolaris`](https://github.com/nuvolaris/nuvolaris)
 
-This repo does not contain code but it is the starting point.
+This repo is the starting point.
 
 It contains:
 
 - project management documentation (that you are reading right now)
--  the [discussion forum](https://github.com/nuvolaris/nuvolaris/discussions
--  the [Issue Tracker](https://github.com/nuvolaris/nuvolaris/issues) to manage the whole project.
+- the build for the development environment container
+- references to all the other repositories
+- the [discussion forum](https://github.com/nuvolaris/nuvolaris/discussions)
+- the [Issue Tracker](https://github.com/nuvolaris/nuvolaris/issues) to manage the whole project.
 
 To discuss the project in general, introduce yourself, make suggestions or ask questions, post in the [general]   category on forum or join the  the  #[general](https://discord.gg/VSGG7aQ2Ds) discord and ask.
 
 Do not ask if you can ask, just ask :)
+
+As a prerequisite, you need an modern Unix environment, either Linux, OSX os Windows WSL.
+You need to preinstall java and build tools
+
+If you have those you can start with:
+
+```
+git clone --recurse-submodules https://github.com/nuvolaris/nuvolaris
+cd nuvolaris
+source setup.source
+```
+
+More details are in the [DEVEL](DEVEL.md) document.
 
 [Up.](#index)
 
@@ -141,6 +164,13 @@ This repo builds our operator and published the image in the GitHub docker regis
 
 You can discuss it in the #[nuvolaris-operator](https://discord.gg/RzJ4FHR2aR) discord channel and in the forum under the category [operator](https://github.com/nuvolaris/nuvolaris/discussions/categories/operator).
 
+### [`nuvolaris-cli`](https://github.com/nuvolaris/nuvolaris-cli)
+
+This repo builds our operator and published the image in the GitHub docker registry.
+
+You can discuss it in the #[nuvolaris-cli](https://discord.gg/JWqFJJfvED) discord channel and in the forum under the category [operator](https://github.com/nuvolaris/nuvolaris/discussions/categories/cli).
+
+
 [Up.](#index)
 
 ### [`nuvolaris-testing`](https://github.com/nuvolaris/nuvolaris-testing)
@@ -150,3 +180,14 @@ This repo includes our test suite and the scripts to build our test environments
 You can discuss it in the #[nuvolaris-testing](https://discord.gg/sgXqn9we) discord channel and in the forum under the category [testing](https://github.com/nuvolaris/nuvolaris/discussions/categories/testing).
 
 [Up.](#index)
+
+
+### [`nuvolaris-training`](https://github.com/nuvolaris/nuvolaris-training)
+
+This repo includes our test suite and the scripts to build our test environments.
+
+You can discuss it in the #[nuvolaris-training](https://discord.gg/TeNA2Pa5Nu) discord channel and in the forum under the category [training](https://github.com/nuvolaris/nuvolaris/discussions/categories/training).
+
+[Up.](#index)
+
+
