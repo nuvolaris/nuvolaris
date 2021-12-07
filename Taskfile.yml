@@ -19,17 +19,16 @@ version: '3'
 
 env:
   REPO: ghcr.io
-  USER: nuvolaris
-  NAME: nuvolaris-devkit
+  IMAGE: nuvolaris/nuvolaris-devkit
   TAG: neo-latest
 
 tasks:
 
   buildx-and-push:
     cmds:
-     - docker buildx build --platform linux/amd64,linux/arm64 -t $REPO/$USER/$NAME:$TAG .
-     - docker push $REPO/$USER/$NAME:$TAG
+     - docker buildx build --platform linux/amd64,linux/arm64 -t $REPO/$IMAGE:$TAG .
+     - docker push $REPO/$IMAGE:$TAG
 
   build:
     cmds:
-      - docker build . -t $NAME
+      - docker build . -t $IMAGE
