@@ -17,12 +17,16 @@
 #
 FROM ubuntu:20.04 as builder
 # download required component
-ENV DOCKER_URL=https://download.docker.com/linux/static/stable/x86_64/docker-18.06.3-ce.tgz
-ENV WSK_URL=https://github.com/apache/openwhisk-cli/releases/download/1.2.0/OpenWhisk_CLI-1.2.0-linux-amd64.tgz
-RUN apt-get update && apt-get -y install curl
-RUN curl -sL $DOCKER_URL | tar xzvf -
-RUN curl -sL $WSK_URL | tar xzvf -
-
+ENV DOCKER_VERSION=18.06.3-ce
+ENV WSK_VERSION=1.2.0
+ENV DOCKER_BASE=https://download.docker.com/linux/static/stable
+ENV WSK_BASE=https://github.com/apache/openwhisk-cli/releases/download
+RUN apt-get update && apt-get -y install curl file
+RUN DOCKER_URL="$DOCKER_BASE/$(arch)/docker-$DOCKER_VERSION.tgz" ;\
+    curl -sL "$DOCKER_URL" | tar xzvf -
+RUN ARCH="$(if [[ "$(arch)" == "aarch64" ]] ; then echo "arm64" ; else echo "amd64" ; fi)" ;\
+    WSK_URL="$WSK_BASE/$WSK_VERSION/OpenWhisk_CLI-$WSK_VERSION-linux-$ARCH.tgz" ;\
+    curl -sL "$WSK_URL" | tar xzvf -
 FROM ubuntu:20.04
 # configure timezone and configutations
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections

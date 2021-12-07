@@ -16,12 +16,16 @@
 # under the License.
 #
 version: '3'
+
 env:
   REPO: ghcr.io/nuvolaris
   NAME: nuvolaris-devkit
-  TAG: neo-latest
+  TAG: neo-latest-{{ARCH}}
 
 tasks:
+
+  default:
+    task: build-and-push
 
   build-and-push:
     deps:
