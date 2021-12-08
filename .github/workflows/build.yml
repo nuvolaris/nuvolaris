@@ -36,19 +36,23 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout recursive
         uses: actions/checkout@v2
         with:
           submodules: recursive
-      - name: License
+      - name: License check
         uses: apache/skywalking-eyes@main
-      - name: Log in to the Container registry
+      - name: Registry login
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build
+      - name: Buildx install
+        uses: crazy-max/ghaction-docker-buildx@v1
+        with:
+          version: latest   
+      - name: Build and push
         run: |
           bash .github/cisetup.sh
-          task build-and-push
+          task buildx-and-push

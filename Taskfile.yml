@@ -16,19 +16,18 @@
 # under the License.
 #
 version: '3'
+
 env:
-  REPO: ghcr.io/nuvolaris
-  NAME: nuvolaris-devkit
+  REPO: ghcr.io
+  IMAGE: nuvolaris/nuvolaris-devkit
   TAG: neo-latest
 
 tasks:
 
-  build-and-push:
-    deps:
-      - build
+  buildx-and-push:
     cmds:
-      - docker push $REPO/$NAME:$TAG
+     - docker buildx build --platform linux/amd64,linux/arm64 -t $REPO/$IMAGE:$TAG . --push
 
   build:
     cmds:
-      - docker build . -t $REPO/$NAME:$TAG
+      - docker build . -t $IMAGE
