@@ -19,7 +19,7 @@
  */
 {
 	"name": "Nuvolaris DevKit",
-	"image": "ghcr.io/nuvolaris/nuvolaris-dekit:neo-latest",
+	"image": "ghcr.io/nuvolaris/nuvolaris-devkit:neo-latest",
 	"runArgs": [],
 	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind" ],
 	"overrideCommand": false,
