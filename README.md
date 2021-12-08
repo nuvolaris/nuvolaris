@@ -27,7 +27,7 @@ Welcome to Nuvolaris. Starting points:
 
 ## About
 
-This is an ongoing project, that is still in early stages, to build an Open Source distribution of [Apache OpenWhisk](https://openwhisk.apache.org) licensed released under the [Apache Licence 2.0](LICENSE.txt) (like OpenWhisk itself)
+This is an ongoing project, that is still in early stages, to build an Open Source distribution of [Apache OpenWhisk](https://openwhisk.apache.org) licensed released under the [Apache Licence 2.0](LICENSE) (like OpenWhisk itself)
 
 Before you ask, I tell you that there are currently no releases yet. So if you look for something to run, you are out of luck. If you look for contributing to an Open Source project, then maybe you can find something of interest.
 
@@ -57,7 +57,7 @@ We want to build a *complete* distribution of a serverless environment that is:
 
 THis is the main differentiation from Apache OpenWHisk as it only provides a basic engine for serverless.
 
-Our goals are described in our [**roadmap**](ROADMAP.md) document to read about.
+Our goals are described in our [**roadmap**](docs/ROADMAP.md) document to read about.
 
 [Up.](#index)
 
@@ -74,7 +74,7 @@ Do you want to help?
 
 We split activities in milestones. We give to them a friendly name and we name milestones after characters the movies of The Matrix franchise. 
 
- The  current milestone (the first one) is [Neo](Neo.md). And of course the milestone to reach to release 1.0 is [Matrix](Matrix.md).
+ The  current milestone (the first one) is [Neo](docs/Neo.md). And of course the milestone to reach to release 1.0 is [Matrix](docs/Matrix.md).
  
  Future Milestones will be named Trinity, Morpheus, Smith and so on.
 
@@ -86,7 +86,7 @@ To manage the milestones we use [GitHub Projects](https://github.com/nuvolaris/n
 
 In order to contribute to our project:
 
-- Review the [Code Contribution](CONTRIBUTING.md) rules. In particular we need you sign the [Apache CLA (Contributor License)](http://www.apache.org/licenses/#clas) and include the  [Apache License Header](https://www.apache.org/legal/src-headers.html) in every file. Also every PR will have to pass the existing tests (there are none yet but there will be).
+- Review the [Code Contribution](docs/CONTRIBUTING.md) rules. In particular we need you sign the [Apache CLA (Contributor License)](http://www.apache.org/licenses/#clas) and include the  [Apache License Header](https://www.apache.org/legal/src-headers.html) in every file. Also every PR will have to pass the existing tests (there are none yet but there will be).
 - Either find an open and unassigned issue, or open one by yourself in the [Issue Tracker](https://github.com/nuvolaris/nuvolaris/issues) describing what you want to do.
 - Please discuss *in the forum*  and ensure you want to do is approved by the [project owners](OWNERS.md), if you want to be sure your PR will be merged. We can still merge unsolicited PR, but if you do not discuss it before there is some risk that for some reason we may unable to merge it. -
 - Get an issue assigned. Seriously. 
@@ -134,7 +134,7 @@ cd nuvolaris
 source setup.source
 ```
 
-More details are in the [DEVEL](DEVEL.md) document.
+More details are in the [DEVEL](docs/DEVEL.md) document.
 
 [Up.](#index)
 
@@ -189,5 +189,3 @@ This repo includes our test suite and the scripts to build our test environments
 You can discuss it in the #[nuvolaris-training](https://discord.gg/TeNA2Pa5Nu) discord channel and in the forum under the category [training](https://github.com/nuvolaris/nuvolaris/discussions/categories/training).
 
 [Up.](#index)
-
-
