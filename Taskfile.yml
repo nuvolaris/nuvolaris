@@ -28,7 +28,7 @@ tasks:
 
   buildx-and-push:
     cmds:
-     - echo docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} . --push
+     - docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} . --push
 
   build:
     cmds:
