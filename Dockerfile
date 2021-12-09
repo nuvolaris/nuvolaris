@@ -15,48 +15,49 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-FROM ubuntu:20.04 as builder
-# download required component
-ENV DOCKER_VERSION=18.06.3-ce
-ENV WSK_VERSION=1.2.0
-ENV DOCKER_BASE=https://download.docker.com/linux/static/stable
-ENV WSK_BASE=https://github.com/apache/openwhisk-cli/releases/download
-RUN apt-get update && apt-get -y install curl file
-RUN DOCKER_URL="$DOCKER_BASE/$(arch)/docker-$DOCKER_VERSION.tgz" ;\
-    curl -sL "$DOCKER_URL" | tar xzvf -
-RUN ARCH=amd64 ; test $(arch) = "aarch64" && ARCH=arm64 ;\
-    WSK_URL="$WSK_BASE/$WSK_VERSION/OpenWhisk_CLI-$WSK_VERSION-linux-$ARCH.tgz" ;\
-    curl -sL "$WSK_URL" | tar xzvf -
 FROM ubuntu:20.04
-# configure timezone and configutations
+# configure dpkg && timezone
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 ENV TZ=Europe/London
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-# add required software packaged
-COPY --from=builder /docker/docker /usr/bin/docker
-COPY --from=builder /wsk /usr/bin/wsk
+# add docker and java (amazon corretto) repos
+RUN apt-get update && apt-get -y upgrade &&\
+   apt-get -y install curl wget gpg software-properties-common apt-utils
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor > /usr/share/keyrings/docker-archive-keyring.gpg &&\
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu bionic stable" > /etc/apt/sources.list.d/docker.list &&\
+    wget -O- https://apt.corretto.aws/corretto.key | apt-key add - && \
+    add-apt-repository 'deb https://apt.corretto.aws stable main'
+# install software
 RUN apt-get update &&\
  apt-get -y install \
    sudo socat \
    lsb-release \
-   apt-utils \
-   software-properties-common \
    build-essential \
    ca-certificates \
    git gnupg curl wget \
-   zlib1g-dev libbz2-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev
-# add java (amazon corretto)   
-RUN wget -O- https://apt.corretto.aws/corretto.key | apt-key add - && \
-  add-apt-repository 'deb https://apt.corretto.aws stable main' && \
-  apt-get update && \
-  apt-get install -y java-11-amazon-corretto-jdk
+   zlib1g-dev libbz2-dev libncurses5-dev \
+   libgdbm-dev libnss3-dev libssl-dev \
+   libreadline-dev libffi-dev libsqlite3-dev \
+   java-11-amazon-corretto-jdk \
+   docker-ce-cli
+# Download Kubectl
+RUN LVER="$(curl -L -s https://dl.k8s.io/release/stable.txt)" ;\
+    ARCH="$(dpkg --print-architecture)" ;\
+    KURL="https://dl.k8s.io/release/$KVER/bin/linux/$ARCH/kubectl" ;\
+    curl -sL $KURL -o /usr/bin/kubectl && chmod +x /usr/bin/kubectl
+# Download WSK
+ENV WSK_VERSION=1.2.0
+ENV WSK_BASE=https://github.com/apache/openwhisk-cli/releases/download
+RUN ARCH=$(dpkg --print-architecture) ;\
+    WSK_URL="$WSK_BASE/$WSK_VERSION/OpenWhisk_CLI-$WSK_VERSION-linux-$ARCH.tgz" ;\
+    curl -sL "$WSK_URL" | tar xzvf - wsk -C /usr/bin
 # setup and initialize the work environment
 RUN useradd -m nuvolaris -s /bin/bash &&\
     echo "nuvolaris ALL=(ALL:ALL) NOPASSWD: ALL" >>/etc/sudoers
 USER nuvolaris
 WORKDIR /home/nuvolaris
 ADD setup.source /home/nuvolaris/.bashrc
-ADD docker-noroot-proxy.sh /sbin/docker-noroot-proxy.sh
 RUN /bin/bash -c 'source /home/nuvolaris/.bashrc'
-ENTRYPOINT ["/sbin/docker-noroot-proxy.sh"]
-CMD /bin/bash
+# proxy to docker and keep alive
+ADD docker-noroot-proxy.sh /usr/bin/docker-noroot-proxy.sh
+CMD /usr/bin/docker-noroot-proxy.sh
