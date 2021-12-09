@@ -116,3 +116,5 @@ if ! which license-eye >/dev/null
 then go install github.com/apache/skywalking-eyes/cmd/license-eye@latest
 else ok license-eye
 fi
+
+export PS1="[\W]"
