@@ -48,13 +48,13 @@ tasks:
 
   stop:
     cmds:
-      - docker kill "$(cat .docker-pid)"
-      - docker rm "$(cat .docker-pid)"
+      - cmd: docker kill "$(cat .docker-pid)"
+        ignore_error: true
+      - cmd: docker rm "$(cat .docker-pid)"
+        ignore_error: true
       - rm .docker-pid
     preconditions:
       - test -f .docker-pid
-
-
 
   tag:
     cmds:
@@ -63,5 +63,3 @@ tasks:
   show-tag:
     cmds:
       - echo {{.TAG}}
-    
-
