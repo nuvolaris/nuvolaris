@@ -17,3 +17,4 @@
 #
 bin/*
 .obsidian/
+.docker-pid

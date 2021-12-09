@@ -41,10 +41,10 @@ RUN apt-get update &&\
    java-11-amazon-corretto-jdk \
    docker-ce-cli
 # Download Kubectl
-RUN LVER="$(curl -L -s https://dl.k8s.io/release/stable.txt)" ;\
+RUN KVER="v1.23.0" ;\
     ARCH="$(dpkg --print-architecture)" ;\
     KURL="https://dl.k8s.io/release/$KVER/bin/linux/$ARCH/kubectl" ;\
-    curl -sL $KURL -o /usr/bin/kubectl && chmod +x /usr/bin/kubectl
+    wget $KURL -O /usr/bin/kubectl && chmod +x /usr/bin/kubectl
 # Download WSK
 ENV WSK_VERSION=1.2.0
 ENV WSK_BASE=https://github.com/apache/openwhisk-cli/releases/download

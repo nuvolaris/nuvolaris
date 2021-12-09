@@ -33,6 +33,28 @@ tasks:
   build:
     cmds:
       - docker build . -t {{.REPO}}/{{.IMAGE}}:{{.TAG}}
+  
+  start:
+    cmds:
+      - docker run -d  --mount source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind {{.REPO}}/{{.IMAGE}}:{{.TAG}} | tee .docker-pid
+    status:
+      - test -f .docker-pid
+
+  enter:
+    deps:
+      - start
+    cmds:
+      - docker exec -ti $(cat .docker-pid) bash
+
+  stop:
+    cmds:
+      - docker kill "$(cat .docker-pid)"
+      - docker rm "$(cat .docker-pid)"
+      - rm .docker-pid
+    preconditions:
+      - test -f .docker-pid
+
+
 
   tag:
     cmds:
