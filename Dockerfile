@@ -50,7 +50,7 @@ ENV WSK_VERSION=1.2.0
 ENV WSK_BASE=https://github.com/apache/openwhisk-cli/releases/download
 RUN ARCH=$(dpkg --print-architecture) ;\
     WSK_URL="$WSK_BASE/$WSK_VERSION/OpenWhisk_CLI-$WSK_VERSION-linux-$ARCH.tgz" ;\
-    curl -sL "$WSK_URL" | tar xzvf - wsk -C /usr/bin
+    curl -sL "$WSK_URL" | tar xzvf - -C /usr/bin/
 # setup and initialize the work environment
 RUN useradd -m nuvolaris -s /bin/bash &&\
     echo "nuvolaris ALL=(ALL:ALL) NOPASSWD: ALL" >>/etc/sudoers
