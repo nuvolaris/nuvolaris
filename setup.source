@@ -16,8 +16,11 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+if test -z "$BASH"
+then echo "Please, source me using bash." ; kill -INT $$
+fi
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]] 
-then echo "You must source this script with bash, not execute it." ; exit 1
+then echo "You must source this script with bash, not execute it." ; kill -INT $$
 fi
 
 # versions
@@ -100,6 +103,13 @@ if ! which ansible >/dev/null
 then pip install ansible
 else ok ansible
 fi
+
+# install httpie
+if ! which http >/dev/null
+then pip install httpie
+else ok httpie
+fi
+
 
 # install addlicense
 if ! which license-eye >/dev/null

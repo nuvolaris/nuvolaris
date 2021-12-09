@@ -17,17 +17,29 @@
 #
 version: '3'
 
-env:
-  REPO: ghcr.io
+vars:
+  MILESTONE: neo
   IMAGE: nuvolaris/nuvolaris-devkit
-  TAG: neo-latest
-
+  REPO: ghcr.io
+  TAG:
+    sh: git describe --tags --abbrev=0 2>/dev/null || echo {{.MILESTONE}}-latest
+  
 tasks:
 
   buildx-and-push:
     cmds:
-     - docker buildx build --platform linux/amd64,linux/arm64 -t $REPO/$IMAGE:$TAG . --push
+     - echo docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} . --push
 
   build:
     cmds:
-      - docker build . -t $IMAGE
+      - docker build . -t {{.IMAGE}}
+
+  tag:
+    cmds:
+      - git tag {{.MILESTONE}}-{{now | date "2006.0102.0304" }}
+
+  show-tag:
+    cmds:
+      - echo {{.TAG}}
+    
+
