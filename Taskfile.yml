@@ -32,7 +32,7 @@ tasks:
 
   build:
     cmds:
-      - docker build . -t {{.IMAGE}}
+      - docker build . -t {{.REPO}}/{{.IMAGE}}:{{.TAG}}
 
   tag:
     cmds:

@@ -37,6 +37,7 @@ COPY --from=builder /docker/docker /usr/bin/docker
 COPY --from=builder /wsk /usr/bin/wsk
 RUN apt-get update &&\
  apt-get -y install \
+   sudo socat \
    lsb-release \
    apt-utils \
    software-properties-common \
@@ -50,10 +51,12 @@ RUN wget -O- https://apt.corretto.aws/corretto.key | apt-key add - && \
   apt-get update && \
   apt-get install -y java-11-amazon-corretto-jdk
 # setup and initialize the work environment
-RUN useradd -m nuvolaris
+RUN useradd -m nuvolaris -s /bin/bash &&\
+    echo "nuvolaris ALL=(ALL:ALL) NOPASSWD: ALL" >>/etc/sudoers
 USER nuvolaris
-RUN git clone https://github.com/nuvolaris/nuvolaris /home/nuvolaris/nuvolaris
 WORKDIR /home/nuvolaris
-RUN /bin/bash -c 'source nuvolaris/setup.source'
-RUN echo '. nuvolaris/setup.source' >.bashrc
+ADD setup.source /home/nuvolaris/.bashrc
+ADD docker-noroot-proxy.sh /sbin/docker-noroot-proxy.sh
+RUN /bin/bash -c 'source /home/nuvolaris/.bashrc'
+ENTRYPOINT ["/sbin/docker-noroot-proxy.sh"]
 CMD /bin/bash
