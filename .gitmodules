@@ -33,3 +33,6 @@
 [submodule "cli"]
 	path = cli
 	url = https://github.com/nuvolaris/nuvolaris-cli
+[submodule "admin"]
+	path = admin
+	url = https://github.com/nuvolaris/nuvolaris-admin
