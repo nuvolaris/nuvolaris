@@ -23,7 +23,7 @@ Welcome to Nuvolaris. Starting points:
 
 - Chat with us on [Discord](https://discord.gg/VSGG7aQ2Ds)
 - Discuss with us on [Forum](https://github.com/nuvolaris/nuvolaris/discussions/)
-- Read our [Roadmap](ROADMAP.md).
+- Read our [Roadmap](docs/ROADMAP.md).
 
 ## About
 
