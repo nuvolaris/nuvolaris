@@ -18,20 +18,32 @@
   ~
 -->
 # nuvolaris-operator
-This repo builds our operator and published the image in the GitHub docker registry.
+
+This is the Kubernetes Operator of the [bit.ly/nuvolaris](nuvolaris project). Follow the link to learn more.
 
 You can discuss it in the #[nuvolaris-operator](https://discord.gg/RzJ4FHR2aR) discord channel and in the forum under the category [operator](https://github.com/nuvolaris/nuvolaris/discussions/categories/operator).
 
-**Work in progress - this stuff is incomplete and unstable.**
+## Developer Guide
 
-## Install and Run
+Instructions to use this repository.
 
-To use it in current state (whatever it is!):
+## Generic instructions to start all the repos in the Nuvolaris project
 
-- Get an Unix environment (Linux/OSX/Windows+WSL)
-- Install Python3
-- bash setup.sh to initialize
-- bash run.sh to run
+- Install [Docker Desktop](https://www.docker.com/products/docker-desktop) on Mac or Windows. 
+- Install [VSCode](https://code.visualstudio.com/) and the [Remote Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension
+- Fork `nuvolaris-operator` in your github accou,t
+- Open the repository in a volume with `F1` | `Remote-Containers: Clone Repositories in a Container Volume` then log in GitHub and select your fork.
+
+*TODO* it is possible to use it on Linux but instructions are still missing.
+
+## Setup
+
+- We be
+
+
+
+
+*TODO* Instructions to 
 
 ## References
 

@@ -19,5 +19,6 @@
 	"image": "ghcr.io/nuvolaris/nuvolaris-devkit:neo-2021.1209.1900",
 	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"],
 	"remoteUser": "nuvolaris",
-	"overrideCommand": false
+	"overrideCommand": false,
+	"runArgs": ["--name=nuvolaris-container"]
 }
