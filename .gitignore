@@ -16,4 +16,5 @@
 # under the License.
 #
 __pypackages__
+.pdm.toml
 .*-version
