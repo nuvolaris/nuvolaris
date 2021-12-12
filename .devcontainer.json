@@ -16,9 +16,10 @@
 // under the License.
 {
 	"name": "Nuvolaris DevKit",
-	"image": "ghcr.io/nuvolaris/nuvolaris-devkit:neo-2021.1209.1900",
+	"image": "ghcr.io/nuvolaris/nuvolaris-devkit:neo-2021.1212.1530",
 	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"],
 	"remoteUser": "nuvolaris",
 	"overrideCommand": false,
-	"runArgs": ["--name=nuvolaris-controller"]
+	"runArgs": ["--name=nuvolaris-controller"],
+        "extensions": [ "ms-python.python","ms-python.vscode-pylance","ms-toolsai.jupyter"]
 }
