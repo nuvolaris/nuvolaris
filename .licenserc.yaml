@@ -21,6 +21,23 @@ header:
     copyright-owner: Apache Software Foundation
 
   paths-ignore:
-    - '**/*.md'
-    - 'LICENSE'
+    - '**/*.excalidraw'
+    - '.pdm.toml'
+    - 'nodesource_setup.sh'
+    - '**/pdm.lock'
+    - '**/LICENSE'
+    - '**/package-lock.json'
+    - '**/.*-version'
+    - '**/*.json'
+    - '**/node_modules/**'
+    - '**/__pypackages__/**'
+    - '**/build/**'
+    - '**/target/**'
+    - '**/openwhisk/**'
+    - '**/openwhisk-*/**'
+    - '**/parthenon/**'
  
+dependency:
+  files:
+    - go.mod
+    - package.json 
