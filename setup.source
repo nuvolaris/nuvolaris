@@ -36,7 +36,7 @@ export GOENV_ROOT="$HOME/.goenv"
 # Preflight checks
 die() {
     echo ERROR: "$@"
-    exit 1
+    kill -INT $$
 }
 
 ok() {

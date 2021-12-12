@@ -43,9 +43,9 @@ Before you ask, I tell you that there are currently no releases yet. So if you l
 - Repo [`nuvolaris-runtimes`](#nuvolaris-runtimes)
 - Repo [`nuvolaris-operator`](#nuvolaris-operator)
 - Repo [`nuvolaris-cli`](#nuvolaris-cli)
+- Repo [`nuvolaris-admin`](#nuvolaris-admin)
 - Repo [`nuvolaris-testing`](#nuvolaris-testing)
 - Repo [`nuvolaris-training`](#nuvolaris-training)
-
 
 ##  About this project
 
@@ -173,6 +173,14 @@ You can discuss it in the #[nuvolaris-cli](https://discord.gg/JWqFJJfvED) discor
 
 [Up.](#index)
 
+# nuvolaris-admin
+
+This repo includes the administrative interface.
+
+You can discuss it in the #[nuvolaris-admin](https://discord.gg/TfhXXxqXzj) discord channel and in the forum under the category [admin](https://github.com/nuvolaris/nuvolaris/discussions/categories/admin).
+
+[Up.](#index)
+
 ### [`nuvolaris-testing`](https://github.com/nuvolaris/nuvolaris-testing)
 
 This repo includes our test suite and the scripts to build our test environments.
@@ -181,10 +189,9 @@ You can discuss it in the #[nuvolaris-testing](https://discord.gg/sgXqn9we) disc
 
 [Up.](#index)
 
-
 ### [`nuvolaris-training`](https://github.com/nuvolaris/nuvolaris-training)
 
-This repo includes our test suite and the scripts to build our test environments.
+This repo includes training material.
 
 You can discuss it in the #[nuvolaris-training](https://discord.gg/TeNA2Pa5Nu) discord channel and in the forum under the category [training](https://github.com/nuvolaris/nuvolaris/discussions/categories/training).
 
