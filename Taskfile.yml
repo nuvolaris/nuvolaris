@@ -23,9 +23,9 @@ vars:
   REPO: ghcr.io
   TAG:
     sh: git describe --tags --abbrev=0 2>/dev/null || echo {{.MILESTONE}}-latest
+  MODULES: controller runtimes operator cli admin testing
   
 tasks:
-      
 
   buildx-and-push:
     cmds:
@@ -67,15 +67,10 @@ tasks:
 
   setup:
      cmds:
-       - cmd: cd controller ; test -e Taskfile.yml && task setup 
+       - cmd: |
+            for mod in {{.MODULES}}
+            do if test -e $mod/Taskfile.yml
+               then task setup -d $mod
+               fi
+            done 
          ignore_error: true
-       - cmd: cd runtimes ; test -e Taskfile.yml && task setup
-         ignore_error: true 
-       - cmd: cd operator ; test -e Taskfile.yml && task setup 
-         ignore_error: true 
-       - cmd: cd cli ; test -e Taskfile.yml && task setup 
-         ignore_error: true 
-       - cmd: cd admin ; test -e Taskfile.yml && task setup 
-         ignore_error: true 
-       - cmd: cd testing ; test -e Taskfile.yml && task setup 
-         ignore_error: true 

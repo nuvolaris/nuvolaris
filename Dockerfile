@@ -61,14 +61,14 @@ RUN ARCH="$(dpkg --print-architecture)" ;\
     rm /tmp/terraform.zip
 # setup and initialize the work environment
 RUN  FILE="git-delta_0.11.2_$(dpkg --print-architecture).deb" ;\
-     wget "https://github.com/dandavison/delta/releases/download/0.11.2/$FILE" ;\
-     sudo dpkg -i "$FILE" ; "rm $FILE"
-ADD gitconfig /home/nuvolaris/.gitconfig
+     wget "https://github.com/dandavison/delta/releases/download/0.11.2/$FILE" -O "/tmp/$FILE" ;\
+     sudo dpkg -i "$FILE" ; rm "/tmp/$FILE"
 RUN useradd -m nuvolaris -s /bin/bash &&\
     echo "nuvolaris ALL=(ALL:ALL) NOPASSWD: ALL" >>/etc/sudoers
 USER nuvolaris
 WORKDIR /home/nuvolaris
 ADD setup.source /home/nuvolaris/.bashrc
+ADD gitconfig /home/nuvolaris/.gitconfig
 RUN /bin/bash -c 'source /home/nuvolaris/.bashrc'
 # proxy to docker and keep alive
 ENV KUBECONFIG=/etc/kubeconfig

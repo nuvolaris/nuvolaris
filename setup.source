@@ -126,7 +126,7 @@ fi
 # install jest
 if ! nodenv which jest >/dev/null
 then npm install -g jest
-else echo ok jest
+else ok jest
 fi
 export PATH="$(nodenv prefix)/bin:$PATH"
 
@@ -141,13 +141,17 @@ then
     then sudo cp kubeconfig /etc/kubeconfig
     fi
     if ! test -e /etc/kubeconfig
-    then die <<END
-No kubeconfig found. Please either 
+    then die 'No kubeconfig found. Please either:
 - copy your ~/.kube/config in this folder as "kubeconfig" 
 - copy your ~/.kube/config in this container as "/etc/kubeconfig"
-END
+'
+    fi
+    if ! test -r /etc/kubeconfig
+    then sudo chmod 0644 /etc/kubeconfig
     fi
 fi
 
 # local setup
-task setup
+if test -e Taskfile.yml
+then task setup
+fi
