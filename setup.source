@@ -30,13 +30,22 @@ fi
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]] 
 then echo "You must source this script with bash, not execute it." ; kill -INT $$
 fi
+if test -e ../kubeconfig
+then sudo cp ../kubeconfig /etc/kubeconfig
+fi
+if test -e kubeconfig
+then sudo cp kubeconfig /etc/kubeconfig
+fi
 if ! test -e /etc/kubeconfig
 then die "Please run 'docker cp \$HOME/.kube/config nuvolaris-controller:/etc/kubeconfig' to use your Kubernetes and try again."
 else mkdir ~/.kube/ ; sudo cat /etc/kubeconfig >~/.kube/config
 fi
-# configuration
 cp ~/.*-version .
 export PATH=$HOME/bin:$HOME/.local/bin:$PATH
+if ! kubectl get nodes
+then die "Cannot access to your Kubernetes - you cannot test your code"
+else ok Kubernetes ready
+fi
 # install dependencies
 if ! which pdm 2>/dev/null
 then curl -sSL https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py | python -
@@ -44,9 +53,4 @@ else ok pdm
 fi
 if pdm install
 then ok Python Dependencies
-fi
-# test kubernetes access
-if ! kubectl get nodes
-then die "Cannot access to your Kubernetes - you cannot test your code"
-else ok Kubernetes ready
 fi
