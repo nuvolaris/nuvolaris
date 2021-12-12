@@ -18,3 +18,4 @@
 __pypackages__
 .pdm.toml
 .*-version
+kubeconfig
