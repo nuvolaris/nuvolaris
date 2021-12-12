@@ -18,3 +18,4 @@
 bin/*
 .obsidian/
 .docker-pid
+kubeconfig

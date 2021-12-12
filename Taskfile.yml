@@ -25,6 +25,7 @@ vars:
     sh: git describe --tags --abbrev=0 2>/dev/null || echo {{.MILESTONE}}-latest
   
 tasks:
+      
 
   buildx-and-push:
     cmds:
@@ -63,3 +64,18 @@ tasks:
   show-tag:
     cmds:
       - echo {{.TAG}}
+
+  setup:
+     cmds:
+       - cmd: cd controller ; test -e Taskfile.yml && task setup 
+         ignore_error: true
+       - cmd: cd runtimes ; test -e Taskfile.yml && task setup
+         ignore_error: true 
+       - cmd: cd operator ; test -e Taskfile.yml && task setup 
+         ignore_error: true 
+       - cmd: cd cli ; test -e Taskfile.yml && task setup 
+         ignore_error: true 
+       - cmd: cd admin ; test -e Taskfile.yml && task setup 
+         ignore_error: true 
+       - cmd: cd testing ; test -e Taskfile.yml && task setup 
+         ignore_error: true 

@@ -22,7 +22,7 @@ ENV TZ=Europe/London
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # add docker and java (amazon corretto) repos
 RUN apt-get update && apt-get -y upgrade &&\
-    apt-get -y install curl wget gpg software-properties-common apt-utils unzip
+    apt-get -y install curl wget gpg software-properties-common apt-utils unzip vim
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor > /usr/share/keyrings/docker-archive-keyring.gpg &&\
     wget -O- https://apt.corretto.aws/corretto.key | apt-key add -
 RUN ARCH=$(dpkg --print-architecture) ;\
@@ -60,6 +60,10 @@ RUN ARCH="$(dpkg --print-architecture)" ;\
     unzip /tmp/terraform.zip -d /usr/bin ;\
     rm /tmp/terraform.zip
 # setup and initialize the work environment
+RUN  FILE="git-delta_0.11.2_$(dpkg --print-architecture).deb" ;\
+     wget "https://github.com/dandavison/delta/releases/download/0.11.2/$FILE" ;\
+     sudo dpkg -i "$FILE" ; "rm $FILE"
+ADD gitconfig /home/nuvolaris/.gitconfig
 RUN useradd -m nuvolaris -s /bin/bash &&\
     echo "nuvolaris ALL=(ALL:ALL) NOPASSWD: ALL" >>/etc/sudoers
 USER nuvolaris
@@ -67,6 +71,7 @@ WORKDIR /home/nuvolaris
 ADD setup.source /home/nuvolaris/.bashrc
 RUN /bin/bash -c 'source /home/nuvolaris/.bashrc'
 # proxy to docker and keep alive
+ENV KUBECONFIG=/etc/kubeconfig
 ENTRYPOINT ["/bin/sudo", "/usr/bin/socat", \
   "UNIX-LISTEN:/var/run/docker.sock,fork,mode=660,user=nuvolaris", \
   "UNIX-CONNECT:/var/run/docker-host.sock"]

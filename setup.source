@@ -24,6 +24,7 @@ then echo "You must source this script with bash, not execute it." ; kill -INT $
 fi
 
 # versions
+export PS1="[\W]\$ "
 export NODENV_VERSION=16.13.0
 export PYENV_VERSION=3.9.9
 export GOENV_VERSION=1.17.3
@@ -76,7 +77,7 @@ then git clone https://github.com/pyenv/pyenv.git $PYENV_ROOT
 else ok pyenv
 fi
 
-export GOBIN="$PWD/bin"
+export GOBIN="$PWD/.local/bin"
 export PATH="$GOBIN:$GOENV_ROOT/bin:$NODENV_ROOT/bin:$PYENV_ROOT/bin:$PATH"
 
 eval "$(nodenv init -)"
@@ -110,11 +111,42 @@ then pip install httpie
 else ok httpie
 fi
 
-
 # install addlicense
 if ! which license-eye >/dev/null
 then go install github.com/apache/skywalking-eyes/cmd/license-eye@latest
 else ok license-eye
 fi
 
-export PS1="[\W]"
+# install pdm
+if ! which pdm >/dev/null
+then curl -sSL https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py | python -
+else ok pdm
+fi
+
+# install jest
+if ! nodenv which jest >/dev/null
+then npm install -g jest
+else echo ok jest
+fi
+alias jest="$(nodenv which jest)"
+
+# check kubernetes configuration
+if test -e /.dockerenv
+then
+    if test -e ../kubeconfig
+    then sudo cp ../kubeconfig /etc/kubeconfig
+    fi
+    if test -e ./kubeconfig
+    then sudo cp kubeconfig /etc/kubeconfig
+    fi
+    if ! test -e /etc/kubeconfig
+    then die <<END
+No kubeconfig found. Please either 
+- copy your ~/.kube/config in this folder as "kubeconfig" 
+- copy your ~/.kube/config in this container as "/etc/kubeconfig"
+END
+    fi
+fi
+
+# local setup
+task setup
