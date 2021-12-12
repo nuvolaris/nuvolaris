@@ -23,8 +23,7 @@ This is the Kubernetes Operator of the [bit.ly/nuvolaris](nuvolaris project). Fo
 
 You can discuss it in the #[nuvolaris-operator](https://discord.gg/RzJ4FHR2aR) discord channel and in the forum under the category [operator](https://github.com/nuvolaris/nuvolaris/discussions/categories/operator).
 
-## Developer Guide
-
+Please read the [development document](https://github.com/nuvolaris/nuvolaris/blob/main/docs/DEVEL.md) for instructions how to setup the development environment and develop this module.
 
 ## References
 
