@@ -36,6 +36,8 @@ header:
     - '**/openwhisk/**'
     - '**/openwhisk-*/**'
     - '**/parthenon/**'
+    - '**/*.md'
+    - '**/pres/**'
  
 dependency:
   files:
