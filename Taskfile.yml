@@ -18,13 +18,17 @@
 version: '3'
 
 vars:
+  MODULES: controller runtimes operator cli admin testing
   MILESTONE: neo
   IMAGE: nuvolaris/nuvolaris-devkit
   REPO: ghcr.io
   TAG:
     sh: git describe --tags --abbrev=0 2>/dev/null || echo {{.MILESTONE}}-latest
-  MODULES: controller runtimes operator cli admin testing
-  
+  REMOTE:
+    sh: echo "${REMOTE:-origin}"
+  BRANCH:
+    sh: git rev-parse --abbrev-ref HEAD 
+        
 tasks:
 
   buildx-and-push:
@@ -57,13 +61,9 @@ tasks:
     preconditions:
       - test -f .docker-pid
 
-  tag:
-    cmds:
-      - git tag {{.MILESTONE}}-{{now | date "2006.0102.0304" }}
+  tag: git tag {{.MILESTONE}}-{{now | date "2006.0102.0304" }}
 
-  show-tag:
-    cmds:
-      - echo {{.TAG}}
+  show-tag: echo {{.TAG}}
 
   setup:
      cmds:
@@ -74,3 +74,11 @@ tasks:
                fi
             done 
          ignore_error: true
+
+  git-push-all: |
+       for mod in {{.MODULES}}
+       do cd $mod 
+          echo "*** $mod ***"
+          git push {{.REMOTE}} {{.BRANCH}}
+          cd ..
+       done
