@@ -20,6 +20,6 @@
 	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"],
 	"remoteUser": "nuvolaris",
 	"overrideCommand": false,
-	"runArgs": ["--name=nuvolaris-controller"],
-        "extensions": [ "ms-python.python","ms-python.vscode-pylance","ms-toolsai.jupyter"]
+	"runArgs": ["--name=nuvolaris-operator", "--network=host"],
+    "extensions": [ "ms-python.python","ms-python.vscode-pylance","ms-toolsai.jupyter"]
 }
