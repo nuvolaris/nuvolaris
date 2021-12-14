@@ -19,3 +19,4 @@ bin/*
 .obsidian/
 .docker-pid
 kubeconfig
+.DS_Store
