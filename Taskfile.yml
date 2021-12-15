@@ -70,7 +70,7 @@ tasks:
        - cmd: |
             for mod in {{.MODULES}}
             do if test -e $mod/Taskfile.yml
-            then echo "task setup $mod: "; task setup -d $mod
+               then task setup -d $mod
                fi
             done 
          ignore_error: true
