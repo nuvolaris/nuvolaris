@@ -25,7 +25,7 @@
 - Repo [`nuvolaris-runtimes`](#nuvolaris-runtimes)
 - Repo [`nuvolaris-operator`](#nuvolaris-operator)
 - Repo [`nuvolaris-cli`](#nuvolaris-cli)
-- Repo [`nuvolaris-admin`](#nuvolaris-admin)
+- Repo [`nuvolaris-config`](#nuvolaris-config)
 - Repo [`nuvolaris-testing`](#nuvolaris-testing)
 - Repo [`nuvolaris-training`](#nuvolaris-training)
 
@@ -95,11 +95,11 @@ You can discuss it in the #[nuvolaris-cli](https://discord.gg/JWqFJJfvED) discor
 
 [Up.](#index)
 
-# nuvolaris-admin
+# nuvolaris-config
 
-This repo includes the administrative interface.
+This repo includes the configurator of the operator.
 
-You can discuss it in the #[nuvolaris-admin](https://discord.gg/TfhXXxqXzj) discord channel and in the forum under the category [admin](https://github.com/nuvolaris/nuvolaris/discussions/categories/admin).
+You can discuss it in the #[nuvolaris-config](https://discord.gg/TfhXXxqXzj) discord channel and in the forum under the category [config](https://github.com/nuvolaris/nuvolaris/discussions/categories/config).
 
 [Up.](#index)
 
