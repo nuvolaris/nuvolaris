@@ -18,7 +18,7 @@
 version: '3'
 
 vars:
-  MODULES: controller runtimes operator cli admin testing
+  MODULES: controller runtimes operator cli config testing
   MILESTONE: neo
   IMAGE: nuvolaris/nuvolaris-devkit
   REPO: ghcr.io
@@ -70,7 +70,7 @@ tasks:
        - cmd: |
             for mod in {{.MODULES}}
             do if test -e $mod/Taskfile.yml
-               then task setup -d $mod
+            then echo "task setup $mod: "; task setup -d $mod
                fi
             done 
          ignore_error: true
