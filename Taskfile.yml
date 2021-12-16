@@ -18,7 +18,7 @@
 version: '3'
 
 vars:
-  MODULES: controller runtimes operator cli admin testing
+  MODULES: controller runtimes operator cli config testing
   MILESTONE: neo
   IMAGE: nuvolaris/nuvolaris-devkit
   REPO: ghcr.io
