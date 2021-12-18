@@ -16,9 +16,10 @@
 // under the License.
 {
 	"name": "Nuvolaris DevKit",
-	"image": "ghcr.io/nuvolaris/nuvolaris-devkit:neo-2021.1212.1530",
+	"image": "ghcr.io/nuvolaris/nuvolaris-devkit:neo-2021.1218.1845",
 	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"],
 	"remoteUser": "nuvolaris",
 	"overrideCommand": false,
-	"runArgs": ["--name=nuvolaris", "--network=host"]
+	"runArgs": ["--name=nuvolaris", "--network=host"],
+	"extensions": ["mhutchie.git-graph", "eamodio.gitlens", "stuart.unique-window-colors"]
 }

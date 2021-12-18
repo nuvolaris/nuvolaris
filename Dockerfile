@@ -62,7 +62,7 @@ RUN ARCH="$(dpkg --print-architecture)" ;\
 # setup and initialize the work environment
 RUN  FILE="git-delta_0.11.2_$(dpkg --print-architecture).deb" ;\
      wget "https://github.com/dandavison/delta/releases/download/0.11.2/$FILE" -O "/tmp/$FILE" ;\
-     sudo dpkg -i "$FILE" ; rm "/tmp/$FILE"
+     sudo dpkg -i "/tmp/$FILE" ; rm "/tmp/$FILE"
 RUN useradd -m nuvolaris -s /bin/bash &&\
     echo "nuvolaris ALL=(ALL:ALL) NOPASSWD: ALL" >>/etc/sudoers
 USER nuvolaris
