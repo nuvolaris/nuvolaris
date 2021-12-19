@@ -162,11 +162,11 @@ then
 Please either:
 - copy your ~/.kube/config in this folder as "kubeconfig" 
 - copy your ~/.kube/config in this container as "/etc/kubeconfig"
-If you do not want to see this message anymore "touch kubeconfig".
-'
-    fi
-    if ! test -r /etc/kubeconfig
-    then sudo chmod 0644 /etc/kubeconfig
+If you do not want to see this message anymore "touch kubeconfig".'
+    else
+        if ! test -r /etc/kubeconfig
+        then sudo chmod 0644 /etc/kubeconfig
+        fi
     fi
 fi
 
