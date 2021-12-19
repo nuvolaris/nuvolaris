@@ -34,7 +34,32 @@ Too lazy to read?
 - Give a look our [Roadmap](docs/ROADMAP.md).
 - Check the [overview](docs/OVERVIEW.md)
 
-Otherwise, read on.
+If you want to contribute, **YOU HAVE TO PUT YOUR CODE UNDER A LICENSE**. Quick way to to it:
+
+1. fork the repository where you want to contribute. 
+
+If in doubt which one, fork `nuvolaris` we move the code in the right place
+
+2. clone the repository and open it with VSCode
+
+```
+# change here your-github-user and nuvolaris-submodule
+git clone https://github.com/your-github-user/nuvolaris-submodule
+cd nuvolaris-submodule
+code . 
+```
+
+Now it will ask if you want to run in a container. Say yes.
+
+3. Add your code and **LICENSE IT**. Use `license-eye`.
+
+After editing, open the terminal and type:
+
+```
+license-eye header fix
+```
+
+4. Commit, push and send a pull request to us.
 
 ## About
 
