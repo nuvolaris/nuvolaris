@@ -130,8 +130,25 @@ else ok jest
 fi
 export PATH="$(nodenv prefix)/bin:$PATH"
 
+# add coursier and bloop
+if ! which cs >/dev/null
+then curl -sfLo $HOME/.local/bin/cs https://git.io/coursier-cli-"$(uname | tr LD ld)"
+     chmod +x $HOME/.local/bin/cs  
+else ok coursier
+fi
 
-# check kubernetes configuration
+export PATH="$PATH:/home/nuvolaris/.local/share/coursier/bin"
+if ! which bloop >/dev/null
+then cs install bloop --only-prebuilt=true
+else ok bloop
+fi
+
+# extra
+if test -e ~/.localrc
+then source ~/.localrc
+fi
+
+# check kubernetes configuration in docker
 if test -e /.dockerenv
 then
     if test -e ../kubeconfig
@@ -144,6 +161,7 @@ then
     then die 'No kubeconfig found. Please either:
 - copy your ~/.kube/config in this folder as "kubeconfig" 
 - copy your ~/.kube/config in this container as "/etc/kubeconfig"
+If you do not want to see this message anymore "touch kubeconfig".
 '
     fi
     if ! test -r /etc/kubeconfig

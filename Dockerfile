@@ -46,6 +46,7 @@ RUN KVER="v1.23.0" ;\
     ARCH="$(dpkg --print-architecture)" ;\
     KURL="https://dl.k8s.io/release/$KVER/bin/linux/$ARCH/kubectl" ;\
     wget $KURL -O /usr/bin/kubectl && chmod +x /usr/bin/kubectl
+ENV KUBECONFIG=/etc/kubeconfig
 # Download WSK
 RUN WSK_VERSION=1.2.0 ;\
     WSK_BASE=https://github.com/apache/openwhisk-cli/releases/download ;\
@@ -59,19 +60,22 @@ RUN ARCH="$(dpkg --print-architecture)" ;\
     curl -sL $TURL -o /tmp/terraform.zip ;\
     unzip /tmp/terraform.zip -d /usr/bin ;\
     rm /tmp/terraform.zip
-# setup and initialize the work environment
+# add delta to show diffs
 RUN  FILE="git-delta_0.11.2_$(dpkg --print-architecture).deb" ;\
      wget "https://github.com/dandavison/delta/releases/download/0.11.2/$FILE" -O "/tmp/$FILE" ;\
      sudo dpkg -i "/tmp/$FILE" ; rm "/tmp/$FILE"
+# add coursier and bloop
+
+# add and configure user
 RUN useradd -m nuvolaris -s /bin/bash &&\
     echo "nuvolaris ALL=(ALL:ALL) NOPASSWD: ALL" >>/etc/sudoers
 USER nuvolaris
 WORKDIR /home/nuvolaris
+# add standard configuations
 ADD setup.source /home/nuvolaris/.bashrc
 ADD gitconfig /home/nuvolaris/.gitconfig
 RUN /bin/bash -c 'source /home/nuvolaris/.bashrc'
 # proxy to docker and keep alive
-ENV KUBECONFIG=/etc/kubeconfig
 ENTRYPOINT ["/bin/sudo", "/usr/bin/socat", \
   "UNIX-LISTEN:/var/run/docker.sock,fork,mode=660,user=nuvolaris", \
   "UNIX-CONNECT:/var/run/docker-host.sock"]
