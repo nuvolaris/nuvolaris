@@ -158,7 +158,7 @@ then
     then sudo cp kubeconfig /etc/kubeconfig
     fi
     if ! test -e /etc/kubeconfig
-    then die 'No kubeconfig found. Please either:
+    then echo 'No kubeconfig found. Please either:
 - copy your ~/.kube/config in this folder as "kubeconfig" 
 - copy your ~/.kube/config in this container as "/etc/kubeconfig"
 If you do not want to see this message anymore "touch kubeconfig".
