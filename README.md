@@ -34,6 +34,8 @@ Too lazy to read?
 - Give a look our [Roadmap](docs/ROADMAP.md).
 - Check the [overview](docs/OVERVIEW.md)
 
+### Contributing quick-n-dirty
+
 If you want to contribute, **YOU HAVE TO PUT YOUR CODE UNDER A LICENSE**. Quick way to to it:
 
 1. fork the repository where you want to contribute. 
