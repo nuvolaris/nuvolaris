@@ -17,6 +17,11 @@
 #
 version: '3'
 
+vars:
+  OPENWHISK_IMAGE: ghcr.io/nuvolaris/openwhisk-standalone:neo-latest
+  TEMPLATES: /home/nuvolaris/openwhisk-deploy-kube/helm/openwhisk/templates
+  YAML: ""
+
 tasks:
   setup:
     cmds:
@@ -24,4 +29,23 @@ tasks:
     status:
       - test -d __pypackages__
 
- 
+  extract: |
+      if test -z "{{.YAML}}"
+      then ls {{.TEMPLATES}}
+           echo "** use 'task YAML=... extract' to export the template **"
+      else helm template {{.TEMPLATES}}/.. -s templates/{{.YAML}} | tee nuvolaris/{{.YAML}}
+      fi
+   
+  standalone: 
+    cmds: 
+      - >
+       docker run -ti
+       -p 3232:3232 -p 3233:3233
+       -v /var/run/docker.sock:/var/run/docker.sock
+       {{.OPENWHISK_IMAGE}}
+    interactive: true
+
+
+#HOST=$(hostname)
+#IP=$(hostname -i)
+#

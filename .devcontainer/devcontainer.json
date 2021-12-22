@@ -15,11 +15,23 @@
 // specific language governing permissions and limitations
 // under the License.
 {
-	"name": "Nuvolaris DevKit",
-	"image": "ghcr.io/nuvolaris/nuvolaris-devkit:neo-2021.1212.1530",
-	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"],
+	"name": "nuvolaris-operator",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"mounts": [
+		"source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"
+	],
 	"remoteUser": "nuvolaris",
 	"overrideCommand": false,
-	"runArgs": ["--name=nuvolaris-operator", "--network=host"],
-    "extensions": [ "ms-python.python","ms-python.vscode-pylance","ms-toolsai.jupyter"]
+	"runArgs": [
+		"--name=nuvolaris-operator",
+		"--network=host"
+	],
+	"extensions": [
+		"ms-python.python",
+		"ms-python.vscode-pylance",
+		"ms-toolsai.jupyter",
+		"stuart.unique-window-colors"
+	]
 }
