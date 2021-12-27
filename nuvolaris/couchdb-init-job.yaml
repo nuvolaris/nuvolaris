@@ -24,9 +24,6 @@ metadata:
   name: nuvolaris-init-couchdb
   labels:
     name: nuvolaris-init-couchdb
-    heritage: "Helm"
-    release: "nuvolaris"
-    chart: "openwhisk-1.0.1"
     app: nuvolaris-openwhisk
 spec:
   backoffLimit: 3
