@@ -31,7 +31,8 @@ RUN ARCH=$(dpkg --print-architecture) ;\
 # install software
 RUN apt-get update &&\
  apt-get -y install \
-   sudo socat \
+   sudo socat telnet \
+   inetutils-ping \
    lsb-release \
    build-essential \
    ca-certificates \
@@ -40,13 +41,13 @@ RUN apt-get update &&\
    libgdbm-dev libnss3-dev libssl-dev \
    libreadline-dev libffi-dev libsqlite3-dev \
    java-11-amazon-corretto-jdk \
-   docker-ce-cli 
+   docker-ce-cli
 # Download Kubectl
 RUN KVER="v1.23.0" ;\
     ARCH="$(dpkg --print-architecture)" ;\
     KURL="https://dl.k8s.io/release/$KVER/bin/linux/$ARCH/kubectl" ;\
     wget $KURL -O /usr/bin/kubectl && chmod +x /usr/bin/kubectl
-ENV KUBECONFIG=/etc/kubeconfig
+ENV KUBECONFIG=/etc/kube/config
 # Download WSK
 RUN WSK_VERSION=1.2.0 ;\
     WSK_BASE=https://github.com/apache/openwhisk-cli/releases/download ;\

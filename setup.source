@@ -148,27 +148,38 @@ if test -e ~/.localrc
 then source ~/.localrc
 fi
 
+# install kind
+if ! which kind >/dev/null
+then go install sigs.k8s.io/kind@v0.11.1
+fi
+
 # check kubernetes configuration in docker
 if test -e /.dockerenv
 then
+    if ! test -d /etc/kube/
+    then sudo mkdir /etc/kube -m 0777
+    fi
     if test -e ../kubeconfig
-    then sudo cp ../kubeconfig /etc/kubeconfig
+    then sudo cp ../kubeconfig /etc/kube/config
     fi
     if test -e ./kubeconfig
-    then sudo cp kubeconfig /etc/kubeconfig
+    then sudo cp kubeconfig /etc/kube/config
     fi
-    if ! test -e /etc/kubeconfig
+    if ! test -e /etc/kube/config
     then echo 'Warning: no kubeconfig found. You will not have access to Kubernetes.
 Please either:
 - copy your ~/.kube/config in this folder as "kubeconfig" 
 - copy your ~/.kube/config in this container as "/etc/kubeconfig"
 If you do not want to see this message anymore "touch kubeconfig".'
     else
-        if ! test -r /etc/kubeconfig
-        then sudo chmod 0644 /etc/kubeconfig
+        if ! test -r /etc/kube/config
+        then sudo chmod 0644 /etc/kube/config
         fi
     fi
 fi
+
+alias k=kubectl
+alias kn="kubectl -n nuvolaris"
 
 # local setup
 if test -e Taskfile.yml
