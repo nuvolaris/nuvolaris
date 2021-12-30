@@ -16,23 +16,23 @@
 # under the License.
 #
 [submodule "controller"]
-	path = controller
+	path = nuvolaris-controller
 	url = https://github.com/nuvolaris/nuvolaris-controller
 [submodule "runtimes"]
-	path = runtimes
+	path = nuvolaris-runtimes
 	url = https://github.com/nuvolaris/nuvolaris-runtimes
 [submodule "operator"]
-	path = operator
+	path = nuvolaris-operator
 	url = https://github.com/nuvolaris/nuvolaris-operator
 [submodule "testing"]
-	path = testing
+	path = nuvolaris-testing
 	url = https://github.com/nuvolaris/nuvolaris-testing
 [submodule "training"]
-	path = training
+	path = nuvolaris-training
 	url = https://github.com/nuvolaris/nuvolaris-training
 [submodule "cli"]
-	path = cli
+	path = nuvolaris-cli
 	url = https://github.com/nuvolaris/nuvolaris-cli
 [submodule "config"]
-	path = config
+	path = nuvolaris-config
 	url = https://github.com/nuvolaris/nuvolaris-config
