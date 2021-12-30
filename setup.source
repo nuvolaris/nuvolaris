@@ -137,7 +137,8 @@ then curl -sfLo $HOME/.local/bin/cs https://git.io/coursier-cli-"$(uname | tr LD
 else ok coursier
 fi
 
-export PATH="$PATH:/home/nuvolaris/.local/share/coursier/bin"
+eval "$(cs setup --env 2>/dev/null)"
+
 if ! which bloop >/dev/null
 then cs install bloop --only-prebuilt=true
 else ok bloop

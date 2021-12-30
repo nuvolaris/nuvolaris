@@ -66,14 +66,17 @@ tasks:
   show-tag: echo {{.TAG}}
 
   setup:
-     cmds:
-       - cmd: |
-            for mod in {{.MODULES}}
-            do if test -e $mod/Taskfile.yml
-               then task setup -d $mod
-               fi
-            done 
-         ignore_error: true
+    cmds:
+       #- cmd: |
+       #     for mod in {{.MODULES}}
+       #     do if test -e $mod/Taskfile.yml
+       #        then task setup -d $mod
+       #        fi
+       #     done 
+       #  ignore_error: true
+
+       - echo "Ready."
+    silent: true
 
   git-push-all: |
        for mod in {{.MODULES}}
