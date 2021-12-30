@@ -38,6 +38,8 @@ header:
     - '**/parthenon/**'
     - '**/*.md'
     - '**/pres/**'
+    - 'go.sum'
+    - 'kustomization.yaml'
  
 dependency:
   files:
