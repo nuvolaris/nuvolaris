@@ -18,6 +18,7 @@
 name: License Check
 on: 
   push:
+    branches:
 
 jobs:
   check:

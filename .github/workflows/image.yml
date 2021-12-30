@@ -33,7 +33,7 @@ name: Image Build
 on: 
   push:
     tags:
-      - 'neo-[0-9]*'
+      - 'neon-[0-9]*'
 
 jobs:
   build:

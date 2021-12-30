@@ -23,7 +23,7 @@ vars:
   IMAGE: nuvolaris/nuvolaris-devkit
   REPO: ghcr.io
   TAG:
-    sh: git describe --tags --abbrev=0 2>/dev/null || echo {{.MILESTONE}}-latest
+    sh: git describe --tags --abbrev=0 2>/dev/null || echo latest
   REMOTE:
     sh: echo "${REMOTE:-origin}"
   BRANCH:
@@ -61,21 +61,17 @@ tasks:
     preconditions:
       - test -f .docker-pid
 
-  tag: git tag {{.MILESTONE}}-{{now | date "2006.0102.0304" }}
-
   show-tag: echo {{.TAG}}
 
   setup:
-    cmds:
-       #- cmd: |
-       #     for mod in {{.MODULES}}
-       #     do if test -e $mod/Taskfile.yml
-       #        then task setup -d $mod
-       #        fi
-       #     done 
-       #  ignore_error: true
-
-       - echo "Ready."
+    #cmds:
+    #- cmd: |
+    #     for mod in {{.MODULES}}
+    #     do if test -e $mod/Taskfile.yml
+    #        then task setup -d $mod
+    #        fi
+    #     done 
+    #  ignore_error: true
     silent: true
 
   git-push-all: |
