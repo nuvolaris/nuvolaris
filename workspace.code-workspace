@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "nuvolaris-controller"
+		},
+		{
+			"path": "nuvolaris-operator"
+		},
+		{
+			"path": "nuvolaris-cli"
+		}
+	],
+	"settings": {
+		"workbench.colorCustomizations": {
+			"activityBar.background": "#0d89d7",
+			"titleBar.activeBackground": "#0d89d7",
+			"titleBar.activeForeground": "#0d89d7"
+		}
+	}
+}
