@@ -25,7 +25,6 @@
 	"remoteUser": "nuvolaris",
 	"overrideCommand": false,
 	"runArgs": [
-		"--name=nuvolaris-operator",
 		"--network=host"
 	],
 	"extensions": [
