@@ -44,20 +44,34 @@ ok() {
     echo OK: "$@"
 }
 
-if ! which git >/dev/null
-then die "Git is required"
-else ok git
-fi
 
 if ! which gcc >/dev/null
 then die "Please install development tools"
 else ok gcc
 fi
 
+if ! which git >/dev/null
+then die "Please install git"
+else ok git
+fi
+
+
 if ! which docker >/dev/null
 then die "Please install docker and assign access to this user"
 else ok docker
 fi
+
+if ! which kubectl >/dev/null
+then die "Please install kubectl"
+else ok kubectl
+fi
+
+if ! which wsk >/dev/null
+then die "Please install wsk"
+else ok wsk
+fi
+
+
 
 # Install
 if ! test -d $GOENV_ROOT
@@ -117,10 +131,10 @@ then go install github.com/apache/skywalking-eyes/cmd/license-eye@latest
 else ok license-eye
 fi
 
-# install pdm
-if ! which pdm >/dev/null
-then curl -sSL https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py | python -
-else ok pdm
+# install poetry
+if ! which poetry >/dev/null
+then curl -sSL https://install.python-poetry.org | python3 -
+else ok poetry
 fi
 
 # install jest

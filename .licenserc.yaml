@@ -31,6 +31,7 @@ header:
     - '**/*.json'
     - '**/node_modules/**'
     - '**/__pypackages__/**'
+    - '**/.task/**'
     - '**/build/**'
     - '**/target/**'
     - '**/openwhisk/**'
@@ -40,6 +41,10 @@ header:
     - '**/pres/**'
     - 'go.sum'
     - 'kustomization.yaml'
+    - 'nuvolaris.yml'
+    - '**/vendor/**'
+    - '**/kind/**'
+    - '**/task/**'
  
 dependency:
   files:

@@ -37,13 +37,19 @@ tasks:
 
   build:
     cmds:
-      - docker build . -t {{.REPO}}/{{.IMAGE}}:{{.TAG}}
+      - docker build . -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} {{.CLI_ARGS}}
   
   start:
     cmds:
-      - docker run -d  --mount source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind {{.REPO}}/{{.IMAGE}}:{{.TAG}} | tee .docker-pid
+      - > 
+        docker run -d --mount source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind 
+        -v {{.PWD}}:/workspace
+        {{.REPO}}/{{.IMAGE}}:{{.TAG}} | tee .docker-pid
     status:
       - test -f .docker-pid
+    vars:
+      PWD:
+        sh: pwd
 
   enter:
     deps:
