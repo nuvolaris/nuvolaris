@@ -45,6 +45,7 @@ header:
     - '**/vendor/**'
     - '**/kind/**'
     - '**/task/**'
+    - 'workspace.code-workspace'
  
 dependency:
   files:
