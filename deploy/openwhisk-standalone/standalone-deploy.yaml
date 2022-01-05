@@ -15,6 +15,31 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-FROM ghcr.io/nuvolaris/nuvolaris-devkit:neo-21.1228.12
-RUN curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-RUN git clone https://github.com/apache/openwhisk-deploy-kube /home/nuvolaris/openwhisk-deploy-kube
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: nuvolaris
+  name: standalone
+spec:
+  selector:
+    matchLabels:
+      app: standalone
+  template:
+    metadata:
+      labels:
+        app: standalone
+    spec:
+      serviceAccountName: standalone
+      containers:
+      - name: openwhisk-standalone
+        image: ghcr.io/nuvolaris/openwhisk-standalone:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3233
+          name: apihost
+        - containerPort: 3232
+          name: playground
+        - containerPort: 7896
+          name: debugger
+        #command: ["sleep", "inf"]
+        #command: ["/home/bin/debug", "y"]

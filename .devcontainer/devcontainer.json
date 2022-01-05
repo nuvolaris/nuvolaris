@@ -16,9 +16,7 @@
 // under the License.
 {
 	"name": "nuvolaris-operator",
-	"build": {
-		"dockerfile": "Dockerfile"
-	},
+	"image": "ghcr.io/nuvolaris/nuvolaris-devkit:neo-22.0103.09",
 	"mounts": [
 		"source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"
 	],

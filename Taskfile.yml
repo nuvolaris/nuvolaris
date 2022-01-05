@@ -18,34 +18,40 @@
 version: '3'
 
 vars:
-  OPENWHISK_IMAGE: ghcr.io/nuvolaris/openwhisk-standalone:neo-latest
-  TEMPLATES: /home/nuvolaris/openwhisk-deploy-kube/helm/openwhisk/templates
+  TEMPLATES: openwhisk-deploy-kube/helm/openwhisk/templates
   YAML: ""
 
 tasks:
+  default: poetry run kopf run -n nuvolaris -m nuvolaris
+
   setup:
     cmds:
-      - pdm install
+      - poetry install
     status:
-      - test -d __pypackages__
+      - test -e $GOBIN/kopf
 
-  extract: |
+  helm:
+    cmds:
+      - curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+    status:
+      - which helm
+
+  openwhisk-deploy-kube:
+    cmds:
+      - git clone https://github.com/apache/openwhisk-deploy-kube 
+    status:
+      - test -d openwhisk-deploy-kube
+
+  extract:
+    deps:
+      - helm
+      - openwhisk-deploy-kube 
+    cmds:
+     - |
       if test -z "{{.YAML}}"
       then ls {{.TEMPLATES}}
-           echo "** use 'task YAML=... extract' to export the template **"
-      else helm template {{.TEMPLATES}}/.. -s templates/{{.YAML}} | tee nuvolaris/{{.YAML}}
+           echo "*** use 'task YAML=... extract' to export the template **"
+      else echo "*** {{.YAML}} ***"
+           helm template {{.TEMPLATES}}/.. -s templates/{{.YAML}} | tee deploy/{{.YAML}}
+           echo "*** saved in deploy/{{.YAML}}"
       fi
-   
-  standalone: 
-    cmds: 
-      - >
-       docker run -ti
-       -p 3232:3232 -p 3233:3233
-       -v /var/run/docker.sock:/var/run/docker.sock
-       {{.OPENWHISK_IMAGE}}
-    interactive: true
-
-
-#HOST=$(hostname)
-#IP=$(hostname -i)
-#

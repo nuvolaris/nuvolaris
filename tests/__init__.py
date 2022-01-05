@@ -15,10 +15,3 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-__pycache__/
-__pypackages__
-.pdm.toml
-.*-version
-kubeconfig
-openwhisk-deploy-kube/
-kustomization.yaml
