@@ -22,3 +22,4 @@ __pypackages__
 kubeconfig
 openwhisk-deploy-kube/
 kustomization.yaml
+playground

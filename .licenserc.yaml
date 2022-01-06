@@ -21,6 +21,7 @@ header:
     copyright-owner: Apache Software Foundation
 
   paths-ignore:
+    - 'playground'
     - '**/*.excalidraw'
     - '.pdm.toml'
     - 'nodesource_setup.sh'
