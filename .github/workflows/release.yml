@@ -30,10 +30,12 @@
 # limitations under the License.
 
 name: nuvolaris-operator
-on: [push]
+on: 
+  push:
+    tags:
 jobs:
-  build:
-    name: Build
+  relese:
+    name: Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -41,15 +43,13 @@ jobs:
         with:
           submodules: recursive
       - name: License
-        run: |
-          curl -sL https://github.com/google/addlicense/releases/download/v1.0.0/addlicense_1.0.0_Linux_x86_64.tar.gz | tar xzvf -
-          ./addlicense -check -c 'Nuvolaris' -ignore 'openwhisk/**' . 2>/dev/null
-      - name: Log in to the Container registry
+        uses: apache/skywalking-eyes@main
+      - name: Registry
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build
+      - name: Release
         run: |
-          bash cisetup.sh
+          bash .github/cisetup.sh

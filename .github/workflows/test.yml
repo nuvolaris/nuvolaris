@@ -30,7 +30,9 @@
 # limitations under the License.
 
 name: nuvolaris-operator
-on: [push]
+on: 
+  push:
+    branches:
 jobs:
   build:
     name: Build
@@ -42,12 +44,12 @@ jobs:
           submodules: recursive
       - name: License
         uses: apache/skywalking-eyes@main
-      - name: Registry
-        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1.2.0
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build
-        run: |
-          bash .github/cisetup.sh
+          config: .github/kind.yaml
+      - name: Setup
+        run: bash .github/cisetup.sh
+      - name: Test
+        run: task test
+  
