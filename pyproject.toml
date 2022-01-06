@@ -28,7 +28,7 @@ PyYAML = "^6.0"
 pykube = "^0.15.0"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
+ipython = "^7.31.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

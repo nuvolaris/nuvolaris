@@ -30,6 +30,11 @@ tasks:
     status:
       - test -e $GOBIN/kopf
 
+  test: |
+    for test in nuvolaris/*.py
+    do python3 -m doctest $test {{.CLI_ARGS}}
+    done
+
   helm:
     cmds:
       - curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
