@@ -33,6 +33,8 @@ name: nuvolaris-operator
 on: 
   push:
     tags:
+     - '[a-z]+-[0-9]*'
+
 jobs:
   relese:
     name: Release
