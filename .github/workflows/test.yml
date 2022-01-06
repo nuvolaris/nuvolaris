@@ -52,5 +52,5 @@ jobs:
       - name: Setup
         run: bash .github/cisetup.sh
       - name: Test
-        run: task test -v
+        run: task test -- -v
   
