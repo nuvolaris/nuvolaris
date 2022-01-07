@@ -1,0 +1,6 @@
+version: 3
+tasks:
+  init: kubectl apply -f ns.yaml -f crd.yaml
+  create: kubectl apply -f obj.yaml
+  delete: kubectl delete -f obj.yaml
+  clean: kubectl delete -f crd.yaml -f ns.yaml

@@ -24,8 +24,7 @@ import re
 
 
 def grep(input, word, field=None):
-  r"""Test grep
-
+  r"""
   >>> import nuvolaris.testutil as tu
   >>> tu.grep("a\nb\nc\n", "b")
   b
@@ -45,8 +44,18 @@ def grep(input, word, field=None):
                 line = "missing-field"
         print(line)
 
-# capture and print an excection
+# capture and print an exception with its type
+# or just print the output of the fuction
 def catch(f):
-    try: f()
+    """
+    >>> import nuvolaris.testutil as tu
+    >>> tu.catch(lambda: "ok")
+    ok
+    >>> def error():
+    ...   raise Exception("error")
+    >>> tu.catch(error)
+    <class 'Exception'> error
+    """
+    try: print(f().strip())
     except Exception as e:
         print(type(e), str(e).strip())

@@ -22,7 +22,11 @@ vars:
   YAML: ""
 
 tasks:
-  default: poetry run kopf run -n nuvolaris -m nuvolaris
+
+  run: 
+    cmds: 
+    - poetry run kopf run -n nuvolaris -m nuvolaris main.py
+    dir: nuvolaris
 
   setup:
     cmds:
@@ -32,7 +36,7 @@ tasks:
 
   test: |
     for test in nuvolaris/*.py
-    do python3 -m doctest $test {{.CLI_ARGS}}
+    do poetry run python3 -m doctest $test {{.CLI_ARGS}}
     done
 
   helm:

@@ -1,0 +1,4 @@
+kubectl config set-context --current --namespace nuvolaris
+alias ka="kubectl apply -f"
+alias kd="kubectl delete -f"
+alias kg="kubectl get"
