@@ -1,5 +1,6 @@
 import kopf
 import os.path
+import nuvolaris.kustomize as nku
 
 @kopf.on.login()
 def whisk_login(**kwargs):
@@ -8,17 +9,19 @@ def whisk_login(**kwargs):
         return kopf.login_via_pykube(**kwargs)
     return kopf.login_via_client(**kwargs)
 
-
-
 @kopf.on.create('whisks')
 def whisk_create(spec, **kwargs):
-    print(f"Creating: {spec}")
+    # TODO: pass from configurations somewhere
+    print("whisk_create")
+    TAG = "neo-21.1230.16"
+    IMG = "ghcr.io/nuvolaris/openwhisk-standalone"
+    yaml = nku.kustomize("openwhisk-standalone", nku.image(IMG, newTag=TAG))
+    print(yaml)
     return {'message': 'created'}
 
 
 @kopf.on.delete('whisks')
 def whisk_delete(spec, **kwargs):
-    print(f"Deleting: {spec}")
+    print("whisk_delete")
     return {'message': 'deleted'}
-
 

@@ -23,16 +23,21 @@ vars:
 
 tasks:
 
-  run: 
-    cmds: 
-    - poetry run kopf run -n nuvolaris -m nuvolaris main.py
-    dir: nuvolaris
-
   setup:
     cmds:
       - poetry install
     status:
       - test -e $GOBIN/kopf
+  run: 
+    cmds: 
+    - kubectl apply -f ../deploy/ns.yaml -f ../deploy/crd.yaml
+    - poetry run kopf run -n nuvolaris -m nuvolaris main.py
+    dir: nuvolaris
+
+  clean: kubectl delete -f deploy/crd.yaml -f deploy/ns.yaml
+
+  create: kubectl apply -f deploy/obj.yaml
+  delete: kubectl delete -f deploy/obj.yaml
 
   test: |
     for test in nuvolaris/*.py
