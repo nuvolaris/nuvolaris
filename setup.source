@@ -44,7 +44,6 @@ ok() {
     echo OK: "$@"
 }
 
-
 if ! which gcc >/dev/null
 then die "Please install development tools"
 else ok gcc
@@ -54,7 +53,6 @@ if ! which git >/dev/null
 then die "Please install git"
 else ok git
 fi
-
 
 if ! which docker >/dev/null
 then die "Please install docker and assign access to this user"
@@ -70,8 +68,6 @@ if ! which wsk >/dev/null
 then die "Please install wsk"
 else ok wsk
 fi
-
-
 
 # Install
 if ! test -d $GOENV_ROOT
@@ -144,57 +140,29 @@ else ok jest
 fi
 export PATH="$(nodenv prefix)/bin:$PATH"
 
-# add coursier and bloop
+# install coursier
 if ! which cs >/dev/null
 then curl -sfLo $HOME/.local/bin/cs https://git.io/coursier-cli-"$(uname | tr LD ld)"
      chmod +x $HOME/.local/bin/cs  
 else ok coursier
 fi
-
 eval "$(cs setup --env 2>/dev/null)"
-
-if ! which bloop >/dev/null
-then cs install bloop --only-prebuilt=true
-else ok bloop
-fi
 
 # extra
 if test -e ~/.localrc
 then source ~/.localrc
 fi
 
-# install kind
-if ! which kind >/dev/null
-then go install sigs.k8s.io/kind@v0.11.1
+# if there is a kubeconfig configuration, use it
+if test -e kubeconfig
+then export KUBECONFIG=$PWD/kubeconfig
 fi
 
-# check kubernetes configuration in docker
-if test -e /.dockerenv
-then
-    if ! test -d /etc/kube/
-    then sudo mkdir /etc/kube -m 0777
-    fi
-    if test -e ../kubeconfig
-    then sudo cp ../kubeconfig /etc/kube/config
-    fi
-    if test -e ./kubeconfig
-    then sudo cp kubeconfig /etc/kube/config
-    fi
-    if ! test -e /etc/kube/config
-    then echo 'Warning: no kubeconfig found. You will not have access to Kubernetes.
-Please either:
-- copy your ~/.kube/config in this folder as "kubeconfig" 
-- copy your ~/.kube/config in this container as "/etc/kubeconfig"
-If you do not want to see this message anymore "touch kubeconfig".'
-    else
-        if ! test -r /etc/kube/config
-        then sudo chmod 0644 /etc/kube/config
-        fi
-    fi
-fi
-
-alias k=kubectl
-alias kn="kubectl -n nuvolaris"
+alias k="kubectl"
+alias ka="kubectl apply"
+alias kg="kubectl get"
+alias kd="kubectl delete"
+alias kns="kubectl config  set-context --current --namespace"
 
 # local setup
 if test -e Taskfile.yml

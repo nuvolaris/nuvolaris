@@ -28,6 +28,8 @@
 	],
 	"extensions": [
 		"stuart.unique-window-colors",
-		"eamodio.gitlens"
+		"oderwat.indent-rainbow",
+		"eamodio.gitlens",
+		"mhutchie.git-graph"
 	]
 }

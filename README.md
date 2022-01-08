@@ -32,34 +32,39 @@ Too lazy to read?
 - Chat with us on [Discord](https://discord.gg/VSGG7aQ2Ds)
 - Discuss with us on [Forum](https://github.com/nuvolaris/nuvolaris/discussions/)
 - Give a look our [Roadmap](docs/ROADMAP.md).
-- Check the [overview](docs/OVERVIEW.md)
+- Check this [Overview](docs/OVERVIEW.md)
+- If you have Git, Docker and VSCode already installed, start with:
+```
+git clone https://github.com/nuvolaris/nuvolaris --recurse-submodules
+code nuvolaris
+```
+then say yes to "Reopen in container". You can then check and open the various workspaces of the `nuvolaris-*` subprojects.
 
-### Contributing quick-n-dirty
+### How to submit a contribution
 
-If you want to contribute, **YOU HAVE TO PUT YOUR CODE UNDER A LICENSE**. Quick way to to it:
+If you want to contribute, **YOU HAVE TO PUT YOUR CODE UNDER A LICENSE** . Quick way to to it:
 
-1. fork the repository where you want to contribute. 
+1. Fork the repository where you want to contribute (one of `nuvolaris/nuvolaris-*`) 
 
-If in doubt which one, fork `nuvolaris` we move the code in the right place
-
-2. clone the repository and open it with VSCode
+2. Push your changes to your fork
 
 ```
-# change here your-github-user and nuvolaris-submodule
-git clone https://github.com/your-github-user/nuvolaris-submodule
-cd nuvolaris-submodule
-code . 
+git remote add <user> https://github.com/<your-user>/<your-fork>
+git push <user> main
 ```
 
-Now it will ask if you want to run in a container. Say yes.
+3. Ensure all your contributions have a **LICENSE HEADER**. 
+We use the Apache License 2.0.
 
-3. Add your code and **LICENSE IT**. Use `license-eye`.
+Use `license-eye` to check: `license-eye header check`.
 
-After editing, open the terminal and type:
+If something is not properly licensed, you can fix automatically with:
 
 ```
 license-eye header fix
 ```
+
+Note that some kind of files are not recognized so you have to fix them adding a license header manually.
 
 4. Commit, push and send a pull request to us.
 

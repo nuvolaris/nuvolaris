@@ -42,6 +42,11 @@ RUN apt-get update &&\
    libreadline-dev libffi-dev libsqlite3-dev \
    java-11-amazon-corretto-jdk \
    docker-ce-cli
+# Download kind
+RUN KVER="v0.11.1" ;\
+    ARCH="$(dpkg --print-architecture)" ;\
+    KURL="https://github.com/kubernetes-sigs/kind/releases/download/$KVER/kind-linux-$ARCH" ;\
+    wget $KURL -O /usr/bin/kind && chmod +x /usr/bin/kind
 # Download Kubectl
 RUN KVER="v1.23.0" ;\
     ARCH="$(dpkg --print-architecture)" ;\
@@ -65,8 +70,6 @@ RUN ARCH="$(dpkg --print-architecture)" ;\
 RUN  FILE="git-delta_0.11.2_$(dpkg --print-architecture).deb" ;\
      wget "https://github.com/dandavison/delta/releases/download/0.11.2/$FILE" -O "/tmp/$FILE" ;\
      sudo dpkg -i "/tmp/$FILE" ; rm "/tmp/$FILE"
-# add coursier and bloop
-
 # add and configure user
 RUN useradd -m nuvolaris -s /bin/bash &&\
     echo "nuvolaris ALL=(ALL:ALL) NOPASSWD: ALL" >>/etc/sudoers
@@ -75,8 +78,7 @@ WORKDIR /home/nuvolaris
 # add standard configuations
 ADD setup.source /home/nuvolaris/.bashrc
 ADD gitconfig /home/nuvolaris/.gitconfig
+ADD init.sh /usr/sbin/init.sh
 RUN /bin/bash -c 'source /home/nuvolaris/.bashrc'
 # proxy to docker and keep alive
-ENTRYPOINT ["/bin/sudo", "/usr/bin/socat", \
-  "UNIX-LISTEN:/var/run/docker.sock,fork,mode=660,user=nuvolaris", \
-  "UNIX-CONNECT:/var/run/docker-host.sock"]
+ENTRYPOINT ["/bin/bash", "/usr/sbin/init.sh"]
