@@ -42,7 +42,9 @@ tasks:
   start:
     cmds:
       - > 
-        docker run -d --mount source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind 
+        docker run -d
+        --mount source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind
+        --network=host
         -v {{.PWD}}:/workspace
         {{.REPO}}/{{.IMAGE}}:{{.TAG}} | tee .docker-pid
     status:

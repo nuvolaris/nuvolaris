@@ -52,7 +52,6 @@ RUN KVER="v1.23.0" ;\
     ARCH="$(dpkg --print-architecture)" ;\
     KURL="https://dl.k8s.io/release/$KVER/bin/linux/$ARCH/kubectl" ;\
     wget $KURL -O /usr/bin/kubectl && chmod +x /usr/bin/kubectl
-ENV KUBECONFIG=/etc/kube/config
 # Download WSK
 RUN WSK_VERSION=1.2.0 ;\
     WSK_BASE=https://github.com/apache/openwhisk-cli/releases/download ;\
