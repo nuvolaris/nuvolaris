@@ -71,6 +71,8 @@ tasks:
 
   show-tag: echo {{.TAG}}
 
+  update-tag: git tag -f {{.TAG}}
+
   setup:
     #cmds:
     #- cmd: |
