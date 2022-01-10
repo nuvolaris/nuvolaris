@@ -23,3 +23,5 @@ kubeconfig
 openwhisk-deploy-kube/
 kustomization.yaml
 playground
+examples/
+aliases
