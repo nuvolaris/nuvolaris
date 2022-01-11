@@ -17,8 +17,9 @@
 #
 # this module wraps generation of kustomizations
 
-import os
+import os, io, yaml
 import nuvolaris.kube as kube
+import nuvolaris.kustomize as nku
 
 # execute the kustomization of a folder under "deploy"
 # sperficied with `where`
@@ -32,9 +33,10 @@ def kustomize(where, *what):
 
     >>> import nuvolaris.kustomize as ku
     >>> import nuvolaris.testutil as tu
-    >>> tu.grep(ku.kustomize("test", ku.image("busybox", "nginx")), "kind|image:")
+    >>> tu.grep(ku.kustomize("test", ku.image("nginx", "busybox")), "kind|image:")
     kind: Pod
-    - image: nginx
+    kind: Service
+    - image: busybox
     """
     # prepare the kustomization
     dir = f"deploy/{where}"
@@ -77,6 +79,20 @@ def image(name, newName=None, newTag=None):
     if newTag:  r += f"  newTag: {newTag}\n"
     return r
 
-
-
+# returns a list of kustomized objects
+def kustom_list(where, *what):
+  """
+  >>> import nuvolaris.kustomize as nku
+  >>> where = "test"
+  >>> what = []
+  >>> res = nku.kustom_list(where, *what)
+  >>> out = [x['kind'] for x in res]
+  >>> out.sort()
+  >>> print(out)
+  ['Pod', 'Service']
+  """
+  yml = nku.kustomize(where, *what)
+  stream = io.StringIO(yml)
+  res = list(yaml.load_all(stream, yaml.Loader))
+  return res
 

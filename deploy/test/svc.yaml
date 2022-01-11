@@ -16,7 +16,11 @@
 # under the License.
 #
 apiVersion: v1
-kind: Namespace
+kind: Service
 metadata:
-  name: nuvolaris
-  
+  name: test-svc
+spec:
+  selector:
+    app: nginx
+  ports:
+  - port: 80

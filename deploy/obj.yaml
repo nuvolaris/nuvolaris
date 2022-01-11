@@ -19,5 +19,6 @@ apiVersion: nuvolaris.org/v1
 kind: Whisk
 metadata:
   name: standalone
+  namespace: nuvolaris
 spec:
   debug: false

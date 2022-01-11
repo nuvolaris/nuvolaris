@@ -29,7 +29,7 @@ returncode = -1
 # default output is text
 # if you specify jsonpath it will filter and parse the json output
 # returns exceptions if errors
-def kubectl(*args, namespace="nuvolaris", jsonpath=None):
+def kubectl(*args, namespace="nuvolaris", jsonpath=None, input=None):
     """Test kube
     
     >>> import nuvolaris.kube as kube
@@ -51,8 +51,11 @@ def kubectl(*args, namespace="nuvolaris", jsonpath=None):
         cmd += ["-o", "jsonpath-as-json=%s" % jsonpath]
     logging.debug("command: %s", " ".join(cmd))
     # executing
-    res = subprocess.run(cmd, capture_output=True)
+ 
 
+    res = subprocess.run(cmd, capture_output=True, input=input)
+
+    res = subprocess.run()
     global returncode, output, error
     returncode = res.returncode
     output = res.stdout.decode()
@@ -66,6 +69,3 @@ def kubectl(*args, namespace="nuvolaris", jsonpath=None):
         else:
             return output
     raise Exception(error)
-
-
-

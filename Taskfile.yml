@@ -28,38 +28,43 @@ tasks:
       - poetry install
     status:
       - test -e $GOBIN/kopf
+
   run: 
-    cmds: 
-    - kubectl apply -f ../deploy/ns.yaml -f ../deploy/crd.yaml
-    - poetry run kopf run -n nuvolaris -m nuvolaris main.py
-    dir: nuvolaris
+    cmds:
+    - kubectl apply -f deploy/crd.yaml
+    - poetry run kopf run -n nuvolaris -m nuvolaris nuvolaris/main.py
 
-  clean: kubectl delete -f deploy/crd.yaml -f deploy/ns.yaml
-
+  cli: poetry run ipython
+  
+  clean: kubectl delete -f deploy/crd.yaml -f deploy/obj.yaml
+  
   create: kubectl apply -f deploy/obj.yaml
   delete: kubectl delete -f deploy/obj.yaml
+  recreate:
+   - task: delete
+   - task: create
 
   test: |
     for test in nuvolaris/*.py
     do poetry run python3 -m doctest $test {{.CLI_ARGS}}
     done
 
-  helm:
+  install-helm:
     cmds:
       - curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
     status:
       - which helm
 
-  openwhisk-deploy-kube:
+  get-openwhisk-chart:
     cmds:
-      - git clone https://github.com/apache/openwhisk-deploy-kube 
+     - git clone https://github.com/apache/openwhisk-deploy-kube 
     status:
-      - test -d openwhisk-deploy-kube
+     - test -d openwhisk-deploy-kube
 
   extract:
     deps:
-      - helm
-      - openwhisk-deploy-kube 
+     - install-helm
+     - get-openwhisk-chart
     cmds:
      - |
       if test -z "{{.YAML}}"
