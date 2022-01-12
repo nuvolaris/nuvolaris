@@ -15,5 +15,22 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+FROM ubuntu:20.04
 ENV STANDALONE_IMAGE=ghcr.io/nuvolaris/openwhisk-standalone
 ENV STANDALONE_TAG=neo-21.1230.16
+# configure dpkg && timezone
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+ENV TZ=Europe/London
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+# add docker and java (amazon corretto) repos
+RUN apt-get update && apt-get -y upgrade && apt-get -y install python3.9 python3.9-venv curl sudo
+RUN useradd -m -s /bin/bash nuvolaris &&\
+    echo "nuvolaris ALL=(ALL:ALL) NOPASSWD: ALL" >>/etc/sudoers
+USER nuvolaris
+WORKDIR /home/nuvolaris
+RUN curl -sSL https://install.python-poetry.org | python3.9 -
+ADD pyproject.toml poetry.lock /home/nuvolaris/
+ADD nuvolaris/*.py /home/nuvolaris/nuvolaris/
+ENV PATH=/home/nuvolaris/.local/bin:/usr/local/bin:/usr/bin:/sbin:/bin
+RUN poetry install
+CMD

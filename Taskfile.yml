@@ -19,8 +19,16 @@ version: '3'
 
 vars:
   TEMPLATES: openwhisk-deploy-kube/helm/openwhisk/templates
+  IMAGE: nuvolaris/nuvolaris-operator
+  REPO: ghcr.io
+  TAG:
+    sh: git describe --tags --abbrev=0 2>/dev/null || echo latest
   YAML: ""
   TEST: ""
+
+dotenv:
+  - .env
+
 
 tasks:
 
@@ -30,10 +38,21 @@ tasks:
     status:
       - test -e $GOBIN/kopf
 
+  buildx-and-push:
+    cmds:
+      - docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} . --push
+
+  build:
+    cmds:
+      - docker build . -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} {{.CLI_ARGS}}
+
+  
   run: 
     cmds:
     - kubectl apply -f deploy/crd.yaml
     - poetry run kopf run -n nuvolaris -m nuvolaris nuvolaris/main.py {{.CLI_ARGS}}
+
+  env: env
 
   cli: poetry run ipython -i profile.ipy
   
