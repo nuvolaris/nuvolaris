@@ -19,6 +19,7 @@
 import subprocess
 import json
 import logging
+import yaml
 
 output = ""
 error = ""
@@ -29,11 +30,9 @@ returncode = -1
 # default output is text
 # if you specify jsonpath it will filter and parse the json output
 # returns exceptions if errors
-def kubectl(*args, namespace="nuvolaris", jsonpath=None, input=None):
+def kubectl(*args, namespace="nuvolaris", input=None, jsonpath=None):
     """Test kube
-    
-    >>> import nuvolaris.kube as kube
-    >>> import nuvolaris.testutil as tu
+    >>> import nuvolaris.kube as kube, nuvolaris.testutil as tu
     >>> tu.grep(kube.kubectl("get", "ns"), "kube-system", field=0)
     kube-system
     >>> kube.returncode
@@ -44,18 +43,27 @@ def kubectl(*args, namespace="nuvolaris", jsonpath=None, input=None):
     <class 'Exception'> Error: flags cannot be placed before plugin name: -n
     >>> print(kube.returncode, kube.error.strip())
     1 Error: flags cannot be placed before plugin name: -n
+    >>> tu.grep(kube.kubectl("apply", "-f", "-", input=kube.configMap("test", file='Hello')), "configmap")
+    configmap/test created
+    >>> tu.grep(kube.kubectl("get", "cm/test", "-o", "yaml"), r"name:|file:", sort=True)
+    file: Hello
+    name: test
+    >>> tu.grep(kube.kubectl("delete", "cm/test"), "configmap")
+    configmap "test" deleted
     """
     cmd = ["kubectl", "-n", namespace]
     cmd += list(args)
     if jsonpath:
         cmd += ["-o", "jsonpath-as-json=%s" % jsonpath]
-    logging.debug("command: %s", " ".join(cmd))
-    # executing
- 
 
+    # if is a string, convert input in bytes
+    try: input = input.encode('utf-8')
+    except: pass
+        
+    # executing
+    logging.debug(cmd)
     res = subprocess.run(cmd, capture_output=True, input=input)
 
-    res = subprocess.run()
     global returncode, output, error
     returncode = res.returncode
     output = res.stdout.decode()
@@ -69,3 +77,52 @@ def kubectl(*args, namespace="nuvolaris", jsonpath=None, input=None):
         else:
             return output
     raise Exception(error)
+
+# create a configmap from keyword arguments
+def configMap(name, **kwargs):
+    """
+    >>> import nuvolaris.kube as kube, nuvolaris.testutil as tu
+    >>> tu.grep(kube.configMap("hello", value="world"), "kind:|name:|value:", sort=True)
+    kind: ConfigMap
+    name: hello
+    value: world
+    >>> tu.grep(kube.configMap("hello", **{"file.js":"function", "file.py": "def"}), "file.", sort=True)
+    file.js: function
+    file.py: def
+    """
+    out = yaml.safe_load("""apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: %s
+data: {}
+"""% name)
+    for key, value in kwargs.items():
+        out['data'][key] = value
+    return yaml.dump(out)
+    
+# delete an object
+def delete(obj, namespace="nuvolaris"):
+    # tested with apply
+    if not isinstance(obj, str):
+        obj = json.dumps(obj)
+    return kubectl("delete", "-f", "-", namespace=namespace, input=obj)
+
+# apply an object
+def apply(obj, namespace="nuvolaris"):
+    """
+    >>> import nuvolaris.kube as kube, nuvolaris.testutil as tu, nuvolaris.kustomize as nku
+    >>> obj = {"apiVersion": "v1", "kind": "Namespace", "metadata":{"name":"nuvolaris"}}
+    >>> _ = kube.apply(obj)
+    >>> print(kube.apply(obj).strip())
+    namespace/nuvolaris unchanged
+    >>> obj = nku.kustom_list("test")
+    >>> print(kube.apply(obj).strip())
+    service/test-svc created
+    pod/test-pod created
+    >>> print(kube.delete(obj).strip())
+    service "test-svc" deleted
+    pod "test-pod" deleted
+    """
+    if not isinstance(obj, str):
+        obj = json.dumps(obj)
+    return kubectl("apply", "-f", "-", namespace=namespace, input=obj)

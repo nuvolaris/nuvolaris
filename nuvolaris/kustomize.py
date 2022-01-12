@@ -33,10 +33,10 @@ def kustomize(where, *what):
 
     >>> import nuvolaris.kustomize as ku
     >>> import nuvolaris.testutil as tu
-    >>> tu.grep(ku.kustomize("test", ku.image("nginx", "busybox")), "kind|image:")
+    >>> tu.grep(ku.kustomize("test", ku.image("nginx", "busybox")), "kind|image:", sort=True)
+    - image: busybox
     kind: Pod
     kind: Service
-    - image: busybox
     """
     # prepare the kustomization
     dir = f"deploy/{where}"
@@ -46,7 +46,9 @@ def kustomize(where, *what):
         for s in list(what):
             f.write(s)
         f.write("resources:\n")
-        for file in os.listdir(f"deploy/{where}"):
+        dirs = os.listdir(f"deploy/{where}")
+        dirs.sort()
+        for file in dirs:
             if file != "kustomization.yaml":
                 f.write(f"- {file}\n")
     return kube.kubectl("kustomize", dir)
@@ -86,7 +88,7 @@ def kustom_list(where, *what):
   >>> where = "test"
   >>> what = []
   >>> res = nku.kustom_list(where, *what)
-  >>> out = [x['kind'] for x in res]
+  >>> out = [x['kind'] for x in res['items']]
   >>> out.sort()
   >>> print(out)
   ['Pod', 'Service']
@@ -94,5 +96,5 @@ def kustom_list(where, *what):
   yml = nku.kustomize(where, *what)
   stream = io.StringIO(yml)
   res = list(yaml.load_all(stream, yaml.Loader))
-  return res
+  return {"apiVersion": "v1", "kind": "List", "items": res }
 

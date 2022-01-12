@@ -16,29 +16,31 @@
 # under the License.
 #
 import nuvolaris.kustomize as nku
+import nuvolaris.kube as kube
 import kopf
 import os, os.path
+import logging
 
 # tested by an integration test
 @kopf.on.login()
 def whisk_login(**kwargs):
-    print("whisk_login")
     token = '/var/run/secrets/kubernetes.io/serviceaccount/token'
     if os.path.isfile(token):
+        logging.debug("found serviceaccount token: login via pykube in kubernetes")
         return kopf.login_via_pykube(**kwargs)
+    logging.debug("login via client")
     return kopf.login_via_client(**kwargs)
 
 # tested by an integration test
 @kopf.on.create('whisks')
 def whisk_create(spec, **kwargs):
-    # TODO: pass from configurations somewhere
-    print("whisk_create", os.getcwd())
     IMG = os.environ.get("STANDALONE_IMAGE", "ghcr.io/nuvolaris/openwhisk-standalone")
     TAG = os.environ.get("STANDALONE_TAG", "latest")
-    list = nku.kustom_list("openwhisk-standalone", nku.image(IMG, newTag=TAG))
-    kopf.adopt(list)
-    nku.
-    print(list)
+    logging.debug("whisk_create: %s:%s" % (IMG,TAG) )
+    spec = nku.kustom_list("openwhisk-standalone", nku.image(IMG, newTag=TAG))
+    kopf.adopt(spec)
+    logging.debug(spec)
+    kube.apply(spec)
     return {'message': 'created'}
 
 # tested by an integration test

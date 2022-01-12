@@ -20,6 +20,7 @@ version: '3'
 vars:
   TEMPLATES: openwhisk-deploy-kube/helm/openwhisk/templates
   YAML: ""
+  TEST: ""
 
 tasks:
 
@@ -32,9 +33,9 @@ tasks:
   run: 
     cmds:
     - kubectl apply -f deploy/crd.yaml
-    - poetry run kopf run -n nuvolaris -m nuvolaris nuvolaris/main.py
+    - poetry run kopf run -n nuvolaris -m nuvolaris nuvolaris/main.py {{.CLI_ARGS}}
 
-  cli: poetry run ipython
+  cli: poetry run ipython -i profile.ipy
   
   clean: kubectl delete -f deploy/crd.yaml -f deploy/obj.yaml
   
@@ -45,7 +46,7 @@ tasks:
    - task: create
 
   test: |
-    for test in nuvolaris/*.py
+    for test in nuvolaris/{{.TEST}}*.py
     do poetry run python3 -m doctest $test {{.CLI_ARGS}}
     done
 

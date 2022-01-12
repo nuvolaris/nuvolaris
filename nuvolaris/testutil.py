@@ -17,32 +17,38 @@
 #
 import re
 
-
 # takes a string, split in lines and search for the word (a re)
 # if field is a number, splits the line in fields separated by spaces and print the selected field
 # the output is always space trimmed for easier check
 
 
-def grep(input, word, field=None):
-  r"""
-  >>> import nuvolaris.testutil as tu
-  >>> tu.grep("a\nb\nc\n", "b")
-  b
-  >>> tu.grep(b"a\nb\n c\n", r"a|c")
-  a
-  c
-  """
-  try: input = input.decode()
-  except: pass
-  for line in input.split("\n"):
-    if re.search(word, line):
-        line = line.strip()
-        if not field is None:
-            try:
-                line = line.split()[field]
-            except:
-                line = "missing-field"
-        print(line)
+def grep(input, word, field=None, sort=False):
+    r"""
+    >>> import nuvolaris.testutil as tu
+    >>> tu.grep("a\nb\nc\n", "b")
+    b
+    >>> tu.grep(b"a\nb\n c\n", r"a|c")
+    a
+    c
+    >>> tu.grep(b"z\nt\n w\n", r"w|z", sort=True)
+    w
+    z
+    """
+    try: input = input.decode()
+    except: pass
+    lines = []
+    for line in str(input).split("\n"):
+        if re.search(word, line):
+            line = line.strip()
+            if not field is None:
+                try:
+                    line = line.split()[field]
+                except:
+                    line = "missing-field"
+            lines.append(line)
+    if sort:
+        lines.sort()
+    print("\n".join(lines))
 
 # capture and print an exception with its type
 # or just print the output of the fuction

@@ -1,0 +1,8 @@
+%load_ext autoreload
+%autoreload 2
+import logging
+logging.basicConfig(level=logging.DEBUG)
+import nuvolaris.kube as kube
+import nuvolaris.testutil as tu
+import nuvolaris.kustomize as nku
+import sys, os, os.path, yaml, json
