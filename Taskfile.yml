@@ -18,17 +18,14 @@
 version: '3'
 
 vars:
-  TEMPLATES: openwhisk-deploy-kube/helm/openwhisk/templates
   IMAGE: nuvolaris/nuvolaris-operator
   REPO: ghcr.io
   TAG:
     sh: git describe --tags --abbrev=0 2>/dev/null || echo latest
-  YAML: ""
   TEST: ""
 
 dotenv:
   - .env
-
 
 tasks:
 
@@ -45,11 +42,11 @@ tasks:
   build:
     cmds:
       - docker build . -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} {{.CLI_ARGS}}
+      - kind load docker-image {{.REPO}}/{{.IMAGE}}:{{.TAG}} --name=nuvolaris
 
-  
   run: 
     cmds:
-    - kubectl apply -f deploy/crd.yaml
+    - kubectl apply -f tests/crd.yaml
     - poetry run kopf run -n nuvolaris -m nuvolaris nuvolaris/main.py {{.CLI_ARGS}}
 
   env: env
@@ -69,28 +66,3 @@ tasks:
     do poetry run python3 -m doctest $test {{.CLI_ARGS}}
     done
 
-  install-helm:
-    cmds:
-      - curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-    status:
-      - which helm
-
-  get-openwhisk-chart:
-    cmds:
-     - git clone https://github.com/apache/openwhisk-deploy-kube 
-    status:
-     - test -d openwhisk-deploy-kube
-
-  extract:
-    deps:
-     - install-helm
-     - get-openwhisk-chart
-    cmds:
-     - |
-      if test -z "{{.YAML}}"
-      then ls {{.TEMPLATES}}
-           echo "*** use 'task YAML=... extract' to export the template **"
-      else echo "*** {{.YAML}} ***"
-           helm template {{.TEMPLATES}}/.. -s templates/{{.YAML}} | tee deploy/{{.YAML}}
-           echo "*** saved in deploy/{{.YAML}}"
-      fi

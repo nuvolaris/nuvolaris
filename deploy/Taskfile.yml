@@ -1,0 +1,33 @@
+version: '3'
+
+vars:
+  TEMPLATES: extract/openwhisk-deploy-kube/helm/openwhisk/templates
+  YAML: ""
+
+tasks:
+  install-helm:
+    cmds:
+    - curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+    status:
+    - which helm
+
+  get-openwhisk-chart:
+    cmds:
+    - mkdir -p extract
+    - git clone https://github.com/apache/openwhisk-deploy-kube extract/openwhisk-deploy-kube
+    status:
+    - test -d extract/openwhisk-deploy-kube
+
+  extract:
+    deps:
+    - install-helm
+    - get-openwhisk-chart
+    cmds:
+    - |
+      if test -z "{{.YAML}}"
+      then ls {{.TEMPLATES}}
+          echo "*** use 'task YAML=... extract' to export the template"
+      else echo "*** extracting {{.YAML}}"
+          helm template {{.TEMPLATES}}/.. -s templates/{{.YAML}} | tee extract/{{.YAML}}
+          echo "*** saved in extract/{{.YAML}}"
+      fi

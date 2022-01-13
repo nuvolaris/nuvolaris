@@ -15,15 +15,11 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-__pycache__/
-__pypackages__
-.pdm.toml
-.*-version
-kubeconfig
-openwhisk-deploy-kube/
-kustomization.yaml
-playground
-examples/
-aliases
-deploy/extract/
-node_modules/
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nuvolaris-operator
+spec:
+  containers:
+    - name: nuvolaris-operator
+      image: ghcr.io/nuvolaris/nuvolaris-operator:latest

@@ -1,0 +1,34 @@
+version: '3'
+
+vars:
+  IMAGE: nuvolaris/nuvolaris-operator
+  REPO: ghcr.io
+  TAG:
+    sh: git describe --tags --abbrev=0 2>/dev/null || echo latest
+
+tasks:
+
+  kustomization:
+    cmds:
+    - |
+      cat <<__EOF__ >deploy/kustomization.yaml
+      apiVersion: kustomize.config.k8s.io/v1beta1
+      kind: Kustomization
+      images:
+      - name: {{.REPO}}/{{.IMAGE}}
+        newTag: {{.TAG}}
+      resources:
+      - operator-crd.yaml
+      - operator-roles.yaml
+      - operator-pod.yaml
+      - operator-obj.yaml
+      __EOF__
+
+  deploy:
+  - task: kustomization
+  #- kubectl apply -f crd.yaml
+  #- kubectl apply -f pod.yaml
+  #- kubectl apply -f ../deploy/obj.yaml
+
+  test:
+  - jest 
