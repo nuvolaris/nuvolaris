@@ -18,41 +18,54 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: operator
+  name: nuvolaris-operator-sa
   namespace: nuvolaris
   labels:
-    app: operator
+    app: nuvolaris-operator
 ---
-kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
 metadata:
-  name: operator
-  namespace: nuvolaris
+  name: nuvolaris-operator-cr
   labels:
-    app: operator
+    app: nuvolaris-operator
 rules:
-- apiGroups: ["extensions", "apps"]
-  resources: ["deployments"]
-  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
-- apiGroups: [""]
-  resources: ["pods"]
-  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
-- apiGroups: [""]
-  resources: ["pods/log"]
-  verbs: ["get", "list"]
+  - apiGroups:
+      - ""
+      - apps
+      - extensions
+      - nuvolaris.org
+    resources:
+      - namespaces
+      - secrets
+      - pods
+      - pods/log
+      - services
+      - configmaps
+      - deployments
+      - daemonsets
+      - whisks
+    verbs:
+      - get
+      - list
+      - watch
+      - patch
+      - create
+      - update
+      - delete
 ---
-kind: RoleBinding
+kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: operator
+  name: nuvolaris-operator-crb
   namespace: nuvolaris
   labels:
-    app: operator
+    app: nuvolaris-operator
 subjects:
 - kind: ServiceAccount
-  namespace: "nuvolaris"
-  name:  operator 
+  namespace: nuvolaris
+  name: nuvolaris-operator-sa
 roleRef:
-  kind: Role
-  name: operator
+  kind: ClusterRole
+  name: nuvolaris-operator-cr
   apiGroup: rbac.authorization.k8s.io

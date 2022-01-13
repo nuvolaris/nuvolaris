@@ -1,5 +1,4 @@
 version: '3'
-
 vars:
   IMAGE: nuvolaris/nuvolaris-operator
   REPO: ghcr.io
@@ -7,7 +6,6 @@ vars:
     sh: git describe --tags --abbrev=0 2>/dev/null || echo latest
 
 tasks:
-
   kustomization:
     cmds:
     - |
@@ -21,14 +19,20 @@ tasks:
       - operator-crd.yaml
       - operator-roles.yaml
       - operator-pod.yaml
-      - operator-obj.yaml
       __EOF__
 
   deploy:
   - task: kustomization
+  - kubectl apply -k deploy
+  - kubectl -n nuvolaris wait --for=condition=ready pod/nuvolaris-operator
+  - kubectl apply -f operator-obj.yaml
   #- kubectl apply -f crd.yaml
   #- kubectl apply -f pod.yaml
   #- kubectl apply -f ../deploy/obj.yaml
+
+  destroy:
+  - task: kustomization
+  - kubectl delete -k deploy
 
   test:
   - jest 

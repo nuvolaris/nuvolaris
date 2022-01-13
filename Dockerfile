@@ -31,6 +31,7 @@ WORKDIR /home/nuvolaris
 RUN curl -sSL https://install.python-poetry.org | python3.9 -
 ADD pyproject.toml poetry.lock /home/nuvolaris/
 ADD nuvolaris/*.py /home/nuvolaris/nuvolaris/
+ADD deploy /home/nuvolaris/deploy/
 ENV PATH=/home/nuvolaris/.local/bin:/usr/local/bin:/usr/bin:/sbin:/bin
 RUN poetry install
-CMD
+CMD poetry run kopf run -n nuvolaris -m nuvolaris nuvolaris/main.py

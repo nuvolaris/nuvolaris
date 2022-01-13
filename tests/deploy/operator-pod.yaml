@@ -15,9 +15,13 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-version: 3
-tasks:
-  init: kubectl apply -f ns.yaml -f crd.yaml
-  create: kubectl apply -f obj.yaml
-  delete: kubectl delete -f obj.yaml
-  clean: kubectl delete -f crd.yaml -f ns.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nuvolaris-operator
+  namespace: nuvolaris
+spec:
+  serviceAccount: nuvolaris-operator-sa
+  containers:
+    - name: nuvolaris-operator
+      image: ghcr.io/nuvolaris/nuvolaris-operator:latest
