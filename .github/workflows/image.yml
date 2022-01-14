@@ -52,6 +52,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Release
+      - name: Image
         run: |
           bash .github/cisetup.sh
+          task buildx-and-push

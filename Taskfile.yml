@@ -36,8 +36,7 @@ tasks:
       - test -e $GOBIN/kopf
 
   buildx-and-push:
-    cmds:
-      - docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} . --push
+  - docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} . --push
 
   build-and-load:
   - task build
@@ -45,7 +44,7 @@ tasks:
 
   build:
     cmds:
-      - docker build . -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} {{.CLI_ARGS}}
+    - docker build . -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} {{.CLI_ARGS}}
 
   run: 
     cmds:
@@ -53,16 +52,7 @@ tasks:
     - poetry run kopf run -n nuvolaris -m nuvolaris nuvolaris/main.py {{.CLI_ARGS}}
 
   env: env
-
   cli: poetry run ipython -i profile.ipy
-  
-  clean: kubectl delete -f tests/deploy/operator-crd.yaml -f operator-obj.yaml
-  
-  create: kubectl apply -f operator-obj.yaml
-  delete: kubectl delete -f operator-obj.yaml
-  recreate:
-   - task: delete
-   - task: create
 
   test: |
     for test in nuvolaris/{{.TEST}}*.py
