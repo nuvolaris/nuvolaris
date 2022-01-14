@@ -17,3 +17,9 @@
 # under the License.
 #
 sudo sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+curl -sSL https://install.python-poetry.org | python3 -
+WSK_VERSION=1.2.0
+WSK_BASE=https://github.com/apache/openwhisk-cli/releases/download
+ARCH=amd64
+WSK_URL="$WSK_BASE/$WSK_VERSION/OpenWhisk_CLI-$WSK_VERSION-linux-$ARCH.tgz"
+curl -sL "$WSK_URL" | tar xzvf - -C /usr/bin/
