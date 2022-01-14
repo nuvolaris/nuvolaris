@@ -32,7 +32,7 @@ def whisk_login(**kwargs):
     return kopf.login_via_client(**kwargs)
 
 # tested by an integration test
-@kopf.on.create('whisks')
+@kopf.on.create('nuvolaris.org', 'v1', 'whisks')
 def whisk_create(spec, **kwargs):
     IMG = os.environ.get("STANDALONE_IMAGE", "ghcr.io/nuvolaris/openwhisk-standalone")
     TAG = os.environ.get("STANDALONE_TAG", "latest")
@@ -44,7 +44,7 @@ def whisk_create(spec, **kwargs):
     return {'message': 'created'}
 
 # tested by an integration test
-@kopf.on.delete('whisks')
+@kopf.on.delete('nuvolaris.org', 'v1', 'whisks')
 def whisk_delete(spec, **kwargs):
     print("whisk_delete")
     return {'message': 'deleted'}

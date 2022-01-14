@@ -22,16 +22,32 @@ ENV STANDALONE_TAG=neo-21.1230.16
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 ENV TZ=Europe/London
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-# add docker and java (amazon corretto) repos
-RUN apt-get update && apt-get -y upgrade && apt-get -y install python3.9 python3.9-venv curl sudo
+# install Python
+RUN apt-get update && apt-get -y upgrade &&\
+    apt-get -y install python3.9 python3.9-venv curl sudo
+# Download Kubectl
+RUN KVER="v1.23.0" ;\
+    ARCH="$(dpkg --print-architecture)" ;\
+    KURL="https://dl.k8s.io/release/$KVER/bin/linux/$ARCH/kubectl" ;\
+    curl -sL $KURL -o /usr/bin/kubectl && chmod +x /usr/bin/kubectl
+# Download WSK
+RUN WSK_VERSION=1.2.0 ;\
+    WSK_BASE=https://github.com/apache/openwhisk-cli/releases/download ;\
+    ARCH=$(dpkg --print-architecture) ;\
+    WSK_URL="$WSK_BASE/$WSK_VERSION/OpenWhisk_CLI-$WSK_VERSION-linux-$ARCH.tgz" ;\
+    curl -sL "$WSK_URL" | tar xzvf - -C /usr/bin/
+# add user
 RUN useradd -m -s /bin/bash nuvolaris &&\
     echo "nuvolaris ALL=(ALL:ALL) NOPASSWD: ALL" >>/etc/sudoers
-USER nuvolaris
-WORKDIR /home/nuvolaris
-RUN curl -sSL https://install.python-poetry.org | python3.9 -
-ADD pyproject.toml poetry.lock /home/nuvolaris/
 ADD nuvolaris/*.py /home/nuvolaris/nuvolaris/
 ADD deploy /home/nuvolaris/deploy/
+ADD run.sh /home/nuvolaris/run.sh
+USER nuvolaris
+WORKDIR /home/nuvolaris
+# install the operator
+RUN curl -sSL https://install.python-poetry.org | python3.9 -
+ADD pyproject.toml poetry.lock /home/nuvolaris/
 ENV PATH=/home/nuvolaris/.local/bin:/usr/local/bin:/usr/bin:/sbin:/bin
-RUN poetry install
-CMD poetry run kopf run -n nuvolaris -m nuvolaris nuvolaris/main.py
+RUN sudo chown -R nuvolaris:nuvolaris /home/nuvolaris ;\
+    poetry install
+CMD ./run.sh

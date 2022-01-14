@@ -21,7 +21,9 @@ metadata:
   name: nuvolaris-operator
   namespace: nuvolaris
 spec:
-  serviceAccount: nuvolaris-operator-sa
+  serviceAccount: nuvolaris-operator
   containers:
     - name: nuvolaris-operator
       image: ghcr.io/nuvolaris/nuvolaris-operator:latest
+      command: ["sleep", "inf"]
+  
