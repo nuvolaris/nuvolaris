@@ -45,7 +45,7 @@ def kubectl(*args, namespace="nuvolaris", input=None, jsonpath=None):
     1 Error: flags cannot be placed before plugin name: -n
     >>> tu.grep(kube.kubectl("apply", "-f", "-", input=kube.configMap("test", file='Hello')), "configmap")
     configmap/test created
-    >>> tu.grep(kube.kubectl("get", "cm/test", "-o", "yaml"), r"name:|file:", sort=True)
+    >>> tu.grep(kube.kubectl("get", "cm/test", "-o", "yaml"), r"name: t|file: H", sort=True)
     file: Hello
     name: test
     >>> tu.grep(kube.kubectl("delete", "cm/test"), "configmap")
