@@ -22,4 +22,4 @@ WSK_VERSION=1.2.0
 WSK_BASE=https://github.com/apache/openwhisk-cli/releases/download
 ARCH=amd64
 WSK_URL="$WSK_BASE/$WSK_VERSION/OpenWhisk_CLI-$WSK_VERSION-linux-$ARCH.tgz"
-curl -sL "$WSK_URL" | tar xzvf - -C /usr/bin/
+curl -sL "$WSK_URL" | tar xzvf - -C ~/.local/bin/
