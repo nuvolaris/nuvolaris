@@ -35,7 +35,7 @@ on:
     branches:
 
 jobs:
-  build:
+  check:
     name: Build
     runs-on: ubuntu-latest
     steps:
@@ -47,7 +47,7 @@ jobs:
         uses: apache/skywalking-eyes@main
       - name: Setup
         run: bash .github/cisetup.sh
-      - name: Create k8s Kind Cluster
+      - name: Kind
         uses: helm/kind-action@v1.2.0
         with:
             config: .github/kind.yaml

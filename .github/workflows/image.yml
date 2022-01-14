@@ -37,8 +37,8 @@ on:
     - '[a-z]+-[0-9]*'
 
 jobs:
-  relese:
-    name: Release
+  image:
+    name: Image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -53,15 +53,14 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Create k8s Kind Cluster
+      - name: Setup
+        run: bash .github/cisetup.sh
+      - name: Kind
         uses: helm/kind-action@v1.2.0
         with:
             config: .github/kind.yaml
-      - name: Setup
-        run: bash .github/cisetup.sh
       - name: Test
         run: task test
+      # TODO: build and test the operator
       - name: Image
-        run: |
-            bash .github/cisetup.sh
-            task buildx-and-push
+        run: task buildx-and-push
