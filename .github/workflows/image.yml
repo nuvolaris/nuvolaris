@@ -64,5 +64,9 @@ jobs:
       - name: Test
         run: task test
       # TODO: build and test the operator
+      - name: Buildx
+        uses: crazy-max/ghaction-docker-buildx@v1
+        with:
+          version: latest
       - name: Image
         run: task buildx-and-push
