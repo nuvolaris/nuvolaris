@@ -17,34 +17,23 @@
 #
 import kopf
 import os, os.path
+import subprocess
 import logging
-import nuvolaris
 
-
-def crd(count):
-    return """apiVersion: apps/v1
+def patch(n):
+  return f"""apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: demo-deploy
 spec:
-  replicas: %s
-  selector:
-    matchLabels:
-      app: nginx
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: nginx
-        ports:
-        - containerPort: 80
+  replicas: {n}
 """
 
-def kubectl():
-
+def kubectl(cmd, patch):
+  with open(f"deploy/patch.yaml", "w") as f:
+    f.write(patch)
+  res = subprocess.run(["kubectl", cmd, "-k", "deploy"], capture_output=True)
+  return res.stdout.decode()
 
 @kopf.on.login()
 def sample_login(**kwargs):
@@ -57,10 +46,12 @@ def sample_login(**kwargs):
 
 @kopf.on.create('nuvolaris.org', 'v1', 'samples')
 def sample_create(spec, **kwargs):
-    print(spec)
-    return { "message": "created" }
+    count = spec["count"]
+    message = kubectl("apply", patch(count))
+    return { "message": message }
 
 @kopf.on.delete('nuvolaris.org', 'v1', 'samples')
 def sample_delete(spec, **kwargs):
-    print(spec)
+    count = spec["count"]
+    message = kubectl("delete", patch(count))
     return { "message": "delete" }

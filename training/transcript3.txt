@@ -1,0 +1,20 @@
+# no kustomization
+cat kustomization1.yaml
+cp  kustomization1.yaml deploy/kustomization.yaml
+kubectl kustomize deploy
+
+# change replicas
+cat kustomization2.yaml
+cat patch.yaml
+cp kustomization2.yaml deploy/kustomization.yaml
+cp patch.yaml deploy/patch.yaml
+kubectl kustomize deploy
+
+# run operator 
+## start simple op
+poetry run kopf run -n demo demo2.py
+
+# in another terminal
+kubectl apply -f demo-obj.yaml
+kubectl delete -f demo-obj.yaml
+

@@ -24,7 +24,8 @@ kubectl get samples
 kubectl delete sample obj
 
 ## start simple op
-poetry run kopf run -n demo simple1.py
+poetry run kopf run -n demo demo1.py
+# in another terminal
 kubectl apply -f demo-obj.yaml
 kubectl delete -f demo-obj.yaml
 

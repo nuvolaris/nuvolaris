@@ -15,11 +15,22 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-# A demo custom resource for the Kopf example operators.
-apiVersion: nuvolaris.org/v1
-kind: Sample
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: obj
-  namespace: demo
+  name: demo-deploy
 spec:
-  count: 2
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
