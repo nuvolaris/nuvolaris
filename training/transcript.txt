@@ -15,6 +15,33 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+# ----
+
+## Check nodes abd namespaces
+kubectl get nodes
+kubectl get ns
+kubectl create namespace demo
+kubectl get ns
+kubectl config set-context --current --namespace demo
+
+## Create a pod
+cat pod.yaml
+
+kubectl apply -f demo-pod.yaml
+kubectl get pod
+kubectl delete pod demo-pod
+
+## Create a deployment
+cat demo-deploy.yaml
+kubectl apply -f demo-deployment.yaml
+kubectl get deploy
+kubectl get pod
+kubectl delete -f demo-deployment.yaml
+kubectl get deploy
+kubectl get pod
+
+###
+
 
 ## create crd
 kubectl apply -f demo-crd.yaml
@@ -29,10 +56,26 @@ poetry run kopf run -n demo demo1.py
 kubectl apply -f demo-obj.yaml
 kubectl delete -f demo-obj.yaml
 
+###
 
+# no kustomization
+cat kustomization1.yaml
+cp  kustomization1.yaml deploy/kustomization.yaml
+kubectl kustomize deploy
 
+# change replicas
+cat kustomization2.yaml
+cat patch.yaml
+cp kustomization2.yaml deploy/kustomization.yaml
+cp patch.yaml deploy/patch.yaml
+kubectl kustomize deploy
 
+# run operator 
+## start simple op
+poetry run kopf run -n demo demo2.py
 
-
+# in another terminal
+kubectl apply -f demo-obj.yaml
+kubectl delete -f demo-obj.yaml
 
 
