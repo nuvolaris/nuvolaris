@@ -47,7 +47,7 @@ tasks:
   - wsk action update hello hello.js
   - wsk action invoke hello -r
 
- deploy:
+  deploy:
   - task: kustomization
   - kubectl apply -k deploy
   - kubectl config set-context --current --namespace nuvolaris
