@@ -47,10 +47,14 @@ tasks:
   - wsk action update hello hello.js
   - wsk action invoke hello -r
 
-  deploy:
+ deploy:
   - task: kustomization
   - kubectl apply -k deploy
-  - kubectl -n nuvolaris wait --for=condition=ready pod/nuvolaris-operator
+  - kubectl config set-context --current --namespace nuvolaris
+  - | 
+    while ! kubectl -n nuvolaris wait --for=condition=ready pod/nuvolaris-operator
+    do echo still waiting...
+    done
   - kubectl apply -f operator-obj.yaml
 
   enter: kubectl exec -ti nuvolaris-operator -- bash
