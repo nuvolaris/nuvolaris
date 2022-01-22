@@ -29,6 +29,7 @@ There are currently no releases yet. Our first release is scheduled for January 
 
 Too lazy to read?
 
+- Subscribe our [Youtube Channel](https://www.youtube.com/channel/UCPt5hk7qcOkESjB7kii1byw)
 - Chat with us on [Discord](https://discord.gg/VSGG7aQ2Ds)
 - Discuss with us on [Forum](https://github.com/nuvolaris/nuvolaris/discussions/)
 - Give a look our [Roadmap](docs/ROADMAP.md).
