@@ -29,12 +29,12 @@ There are currently no releases yet. Our first release is scheduled for January 
 
 If you are in a hurry, here a few starting points:
 
-- Check our [YouTube Channe](https://www.youtube.com/channel/UCPt5hk7qcOkESjB7kii1byw)
+- Check our [YouTube Channel](https://www.youtube.com/channel/UCPt5hk7qcOkESjB7kii1byw)
 - Chat with us on [Discord](https://discord.gg/VSGG7aQ2Ds)
 - Read this [Overview](docs/OVERVIEW.md) and our [Roadmap](docs/ROADMAP.md).
 - Discuss on the [Forum](https://github.com/nuvolaris/nuvolaris/discussions/)
 
-If you have Git, Docker and VSCode already installed, **AND YOU HAVE AT LEAST 16 GIGABYTES OF MEMORY** in your machine,  **assign 8 gigabytes to Docker** and start with:
+If you have Git, Docker and VSCode already installed, **AND YOU HAVE AT LEAST 12 GIGABYTES OF MEMORY** in your machine, **assign 8 gigabytes to Docker** and start with:
 
 ```
 git clone https://github.com/nuvolaris/nuvolaris --recurse-submodules
@@ -47,8 +47,7 @@ It can take some time the first time as it will download a large development ima
 
 You can then open the various workspaces of the `nuvolaris-*` subfolders (if they are empty, did you use `--recurse-submodules`?)
 
-
-You can learn more reading [our development guide](docs/DEVEL.md).
+This is the procedure to install everything and play with the source code. Usually however you want to work with each subproject individually. The details are in [our development guide](docs/DEVEL.md).
 
 ### How to submit a contribution
 

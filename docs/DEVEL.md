@@ -23,11 +23,12 @@ This document describes the evelopment procedures for Nuvolaris.
 
 ## Prerequisites
 
-Before starting you need a computer with enough memory. Since we use extensively Docker and create a local development environemnt, you need t [install docker](https://docs.docker.com/get-docker/) either on Windows, OSX or Linux and **assign to Docker at least 8 gb of memory**. 
+Before starting you need a computer with enough memory. Since we use extensively Docker and create a local development environemnt, you need to [install docker](https://docs.docker.com/get-docker/) either on Windows, OSX or Linux and **assign to Docker at least 8 gb of memory**. 
 
 Given the high memory footprinr required, it is pretty unlikely you can work productively on any machine with less than 12G of memory. 
 
-You can then either:
+
+either:
 
 - [Use VSCode and the prebuilt Devcontainer](#use-vscode-and-the-prebuilt-devcontainer) that is the easiest and faster way to work, but you need to use VSCode and work in a Linux-based environment in a container with `bash`.
 
@@ -41,12 +42,14 @@ Before starting development, you need to:
 
 - Install [VSCode](https://code.visualstudio.com/) 
 - Install the [Remote Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension.
-- Fork one of the [nuvolaris subprojects](https://github.com/nuvolaris/nuvolaris) in your account, the clone the fork in your local filesystem
+- Now you can clone all the source code with 
+`git clone --recurse-submodules https://github.com/nuvolaris/nuvolaris`
 - Open the folder with VSCode and then say YES when it asks to "reopen in container"
-- Finally, open the workspace (the file `workspace.code-workspace`) present in every subproject.
+- Finally, open one of the workspace file (the file `workspace.code-workspace`) present in every subproject in the folders `nuvolaris-*`
 
 Note that accessing to code stored in your local filesystem can be slow. In alternative you can put code in a docker volume with this alternative procedure:
 
+- Fork a repository in your account
 - Start VSCode
 - Open the repository in a volume with `F1` | `Remote-Containers: Clone Repositories in a Container Volume` 
 - Log in GitHub and select your fork.
@@ -62,9 +65,8 @@ Before starting you need to preinstall:
 
 - [System Development tools](#system-development-tools)
 - [Java JDK](#java-jdk) v11 or later
-- [Docker](#setup-a-development-kubernetes-cluster) 
 
-Then clone everything with
+Then clone everything with:
 
 ```
 git clone --recurse-submodules https://github.com/nuvolaris/nuvolaris
@@ -80,7 +82,6 @@ cd nuvolaris
 
 Note that it will take a long time only the first time to dowloand and install the used tools. It will also create a local Kubernetes cluster using Kind.
 
-
 ### Java JDK
 
 For Java, we test with [Amazon Corretto](https://docs.aws.amazon.com/corretto/index.html).
@@ -89,9 +90,8 @@ You should be able however to use other Java distribution.
 
 ### System Development Tools
 
-Procedures to install development tools:
+Procedures to install Unix development tools (also valid in the various Windows WSL distributions):
 
 - OSX: `xcode-select --install`
 - Debian or Ubuntu: `sudo apt-get install build-essential procps curl file git`
 - Fedora, CentOS, or Red Hat: `sudo yum groupinstall 'Development Tools' && sudo yum install procps-ng curl file git`
-
