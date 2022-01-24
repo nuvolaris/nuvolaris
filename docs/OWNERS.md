@@ -20,6 +20,6 @@
 Current Project ownership
 
 - [Michele Sciabarra](https://github.com/sciabarracom/)
-- [Leonardi Cigolini](https://github.com/leonardocigolini)
+- [Leonardo Cigolini](https://github.com/leonardocigolini)
 - [Federico Balice](https://github.com/fb-git)
 - [Irina Branovic](https://github.com/irinacodes)
