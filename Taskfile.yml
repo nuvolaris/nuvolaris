@@ -54,8 +54,11 @@ tasks:
   env: env
   cli: poetry run ipython -i profile.ipy
 
-  test: |
+  unit: |
     for test in nuvolaris/{{.TEST}}*.py
     do poetry run python3 -m doctest $test {{.CLI_ARGS}}
     done
 
+  test:
+    - task: unit
+    - cd tests && task test
