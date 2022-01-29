@@ -36,14 +36,14 @@ PruneNuvolaris()
   if [ $cnt -gt 0 ]
   then 
     docker ps -f name=nuvolaris -aq | xargs docker kill
-    docker ps -a | grep vsc-nuvolaris | cut -d' ' -f1 | xargs docker kill
+    docker ps -f name=nuvolaris -aq | xargs docker rm
   else
     echo "No Nuvolaris worker/controller running."
   fi
-  cnt=$(docker ps -f name=nuvolaris -aq | wc -l)
+  cnt=$(docker ps -a | grep vsc-nuvolaris | wc -l)
   if [ $cnt -gt 0 ]
   then 
-    docker ps -f name=nuvolaris -aq | xargs docker rm
+    docker ps -a | grep vsc-nuvolaris | cut -d' ' -f1 | xargs docker kill
     docker ps -a | grep vsc-nuvolaris | cut -d' ' -f1 | xargs docker rm
   else
     echo "No Nuvolaris VS Code devcontainer running."
