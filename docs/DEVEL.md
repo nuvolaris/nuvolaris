@@ -32,7 +32,7 @@ either:
 
 - [Use VSCode and the prebuilt Devcontainer](#use-vscode-and-the-prebuilt-devcontainer) that is the easiest and faster way to work, but you need to use VSCode and work in a Linux-based environment in a container with `bash`.
 
-- [Use VSCode and the prebuilt Devcontainer on a Remote Server](#use-vscode-and-the-prebuilt-devcontainer-on-a-remote-server) for who desn't have enough RAM to work on his machine, or simply prefere to use a remote server to develop.
+- [Use VSCode and the prebuilt Devcontainer on a Remote Server](#use-vscode-and-the-prebuilt-devcontainer-on-a-remote-server) for who doesn't have enough RAM to work on his machine, or simply prefer to use a remote server to develop.
 
 - [Build your own development environment](#build-your-own-development-environment) so you can use your IDE and tools, but the setup is up to you and we provide only generic instructions.
 
@@ -44,8 +44,7 @@ Before starting development, you need to:
 
 - Install [VSCode](https://code.visualstudio.com/) 
 - Install the [Remote Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension.
-- Now you can clone all the source code with 
-`git clone --recurse-submodules https://github.com/nuvolaris/nuvolaris`
+- Now you can clone all the source code with `git clone --recurse-submodules https://github.com/nuvolaris/nuvolaris`
 - Open the folder with VSCode and then say YES when it asks to "reopen in container"
 - Finally, open one of the workspace file (the file `workspace.code-workspace`) present in every subproject in the folders `nuvolaris-*`
 
@@ -60,18 +59,18 @@ Note that accessing to code stored in your local filesystem can be slow. In alte
 
 ## Use VSCode and the prebuilt Devcontainer on a Remote Server
 
-This option is very similar to the one [before](#use-vscode-and-the-prebuilt-devcontainer), the only real difference is that Docker, the rcode and the dependencies will be on the remote server, only VScode will be on your machine.
+This option is very similar to the one [before](#use-vscode-and-the-prebuilt-devcontainer), the only real difference is that Docker, the code and the dependencies will be on the remote server, only VScode will be on your machine.
 
 On the Linux-based remote server you need to:
 - [Install docker](https://docs.docker.com/get-docker/)
-- clone all the source code with git clone --recurse-submodules https://github.com/nuvolaris/nuvolaris
+- clone all the source code with 'git clone --recurse-submodules https://github.com/nuvolaris/nuvolaris'
 
 On your machine:
 - Install [VSCode](https://code.visualstudio.com/) 
 - Install the [Remote Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension.
 - Install the [Remote - SSH](https://code.visualstudio.com/docs/remote/ssh-tutorial#_connect-using-ssh) extension.
 
-When everything is intalled:
+When everything is installed:
 - Use the remote SSH extension to [connect to the Remote Server](https://code.visualstudio.com/docs/remote/ssh-tutorial#_connect-using-ssh)
 - Open the folder with VSCode and then say YES when it asks to "reopen in container"
 - Finally, open one of the workspace file (the file workspace.code-workspace) present in every subproject in the folders nuvolaris-*
