@@ -1,3 +1,4 @@
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -15,23 +16,9 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-#!/bin/bash
-############################################################
-# Help                                                     #
-############################################################
-Help()
+prune_nuvolaris_containers()
 {
-   # Display Help
-   echo "Utility to remove containers started by Nuvolaris development environment."
-   echo
-   echo "Syntax: prune-nuvolaris [-q|h]"
-   echo "options:"
-   echo "q     Quiet mode (skip user confirmation)."
-   echo "h     Print this Help."
-   echo
-}
-PruneNuvolaris()
-{
+  echo "Cleaning up Nuvolaris dev environment..."
   cnt=$(docker ps -f name=nuvolaris -aq | wc -l)
   if [ $cnt -gt 0 ]
   then 
@@ -48,32 +35,7 @@ PruneNuvolaris()
   else
     echo "No Nuvolaris VS Code devcontainer running."
   fi
+  echo "Done."
 }
 
-quiet=false
-while getopts ":h:q" option; do
-  case $option in
-    h) # display Help
-      Help
-      exit;;
-    q) # quiet mode
-      quiet=true;;
-    \?) # Invalid option
-      echo "Error: Invalid option"
-      Help
-      exit;;
-  esac
-done
-
-if [ "$quiet" = true ] 
-then
-  PruneNuvolaris
-else
-  echo "Use -q option to skip confirmation."
-  echo -n "Do you want to stop and remove all Nuvolaris related containers (Y/N)? "
-  read confirm
-  if [ "$confirm" = "Y" ] 
-  then
-    PruneNuvolaris
-  fi
-fi
+prune_nuvolaris_containers
