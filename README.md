@@ -83,8 +83,8 @@ Note that some kind of files are not recognized so you have to fix them adding a
 
 We want to build a *complete* distribution of a serverless environment that:
 
-- is easy to install and manage
-- potentially runs in every Kubernetes, but it is tested against a set of supported distribuytions
+- it is easy to install and manage
+- potentially runs in every Kubernetes, but it is tested against a set of supported distributions
 - includes a number of integrated services
 
 This is the main differentiation from Apache OpenWhisk, as it only provides a basic engine for serverless. Our goals are described in our [**roadmap**](docs/ROADMAP.md) document to read about.
