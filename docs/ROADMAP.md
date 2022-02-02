@@ -19,21 +19,15 @@
 -->
 # Nuvolaris Roadmap
 
-Version 0.1, November 2021. Subject to changes.
+Version 0.2, February 2022. Subject to changes.
 
 ## About
 
 Nuvolaris will be a distribution of Apache OpenWhisk. It will be open source and released under the Apache License.
 
-It should let you to install itself on any supported Kubernetes with a single command:
+The entire platform will be managed by a single CLI allowing both to administer the platform and develop with it.
 
-```
-curl get.nuvolaris.org | kubectl apply -f -
-```
-
-This will give sensible defaults. We can then use [`kustomize`](https://kustomize.io/) to further customize options. Ideally the whole configuration should be a single file as simple as possible.
-
-This command will basically install an operator that will perform all the operations to setup OpenWhisk and his dependencies and additions.
+The platform itself is managed by ab operator, that installs OpenWhisk, and its dependencies and additions.
 
 The core of our work will be to build such an operator.
 
@@ -46,6 +40,7 @@ It should run and be tested to work on more recent versions of:
 - Amazon EKS
 - Azure AKS
 - Google GKE
+- VMware Tanzu
 - Redhat OpenShift
 - Rancher K3S
 - Ubuntu MicroK8s
@@ -72,7 +67,6 @@ The installer should be able to use or connect to those external compoments:
 - a object storage compatible with s3
 - a SQL database service, either MySQL or PostgreSQL
 - a NO-SQL database service, either Couchdb or Mongodb
-- a DynamoDB compatible database service, for example Scylla Alternator
 
 ## Runtimes
 
@@ -84,11 +78,6 @@ The installer should be able to use or connect to those external compoments:
 - use only standard libraries, avoiding customized and proprietary runtimes.
 
 Ideally, Nuvolaris applications should work in every OpenWhisk implementation (IBM, Adobe, Naver, DigitalOcean) as long as a configuration file to connect to additional services is provided.
-
-## Lambda Compatibility
-
-- It should be possible to run Lambda Actions with a compatibilty layer
-- It should be possible to support actions using DynamoDB through a compatible database
 
 ## Development Tools
 
@@ -102,8 +91,7 @@ We need to support Wordpress to be usable as a provider of content for JAMStack 
 
 ## Integrations
 
-We need to integrate Kafka as a serverless provider
-
-We need to integrate Spark as a serverless provider
-
-We need to integrate Tensorflow as a serverless provider.
+We will integrate enterprise products like
+- Kafka for streaming applications
+- Spark for big data applications
+- TensowrFlow for deep learning applications
