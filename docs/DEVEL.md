@@ -25,14 +25,16 @@ This document describes the evelopment procedures for Nuvolaris.
 
 Before starting you need a computer with enough memory. Since we use extensively Docker and create a local development environemnt, you need to [install docker](https://docs.docker.com/get-docker/) either on Windows, OSX or Linux and **assign to Docker at least 8 gb of memory**. 
 
-Given the high memory footprinr required, it is pretty unlikely you can work productively on any machine with less than 12G of memory. 
+The version of Docker we currently use and we have tested is **20.x**, either Docker Desktop or Docker CE. Earlier version may work or not work. Defintely the `docker.io` distributed with Ubuntu *does not work* and you have to update to Docker-CE.
+
+Given the high memory footprinr required, it is pretty unlikely you can work productively on any machine with less than 16G of memory. 
 
 
 either:
 
-- [Use VSCode and the prebuilt Devcontainer](#use-vscode-and-the-prebuilt-devcontainer) that is the easiest and faster way to work, but you need to use VSCode and work in a Linux-based environment in a container with `bash`.
+- [Use VSCode and the prebuilt Development Container](#use-vscode-and-the-prebuilt-devcontainer). That is the easiest and faster way to work, but you need to use VSCode and work in a Linux-based environment in a container with `bash`.
 
-- [Use VSCode and the prebuilt Devcontainer on a Remote Server](#use-vscode-and-the-prebuilt-devcontainer-on-a-remote-server) for who doesn't have enough RAM to work on his machine, or simply prefer to use a remote server to develop.
+- [Use VSCode and the prebuilt Devcontainer on a Remote Server](#use-vscode-and-the-prebuilt-devcontainer-on-a-remote-server) for who doesn't have enough RAM to work on his machine, or simply prefer to use a remote server for development.
 
 - [Build your own development environment](#build-your-own-development-environment) so you can use your IDE and tools, but the setup is up to you and we provide only generic instructions.
 
@@ -42,20 +44,22 @@ Using this option you can directly work and develop each subproject in a develop
 
 Before starting development, you need to: 
 
-- Install [VSCode](https://code.visualstudio.com/) 
+- Install [VSCode](https://code.visualstudio.com/), at least version 1.16.x
 - Install the [Remote Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension.
 - Now you can clone all the source code with `git clone --recurse-submodules https://github.com/nuvolaris/nuvolaris`
 - Open the folder with VSCode and then say YES when it asks to "reopen in container"
 - Finally, open one of the workspace file (the file `workspace.code-workspace`) present in every subproject in the folders `nuvolaris-*`
 
-Note that accessing to code stored in your local filesystem can be slow. In alternative you can put code in a docker volume with this alternative procedure:
+Accessing to code stored in your local filesystem can be slow. Also you may have other problems, especially with Linux if the user you are using has an uid != 1000, since this is the uid used internally by the container.
 
-- Fork a repository in your account
+
+As an alternative you can put code in a docker volume with this alternative procedure, that works for the various `nuvolaris-*` subprojects, but not for the top-level `nuvolaris` project as it uses submodules (not yet supported by VSCode).
+
+- Fork one of the `nuvolaris-*` repository in your account. N
 - Start VSCode
 - Open the repository in a volume with `F1` | `Remote-Containers: Clone Repositories in a Container Volume` 
 - Log in GitHub and select your fork.
 - Open your workspace.
-
 
 ## Use VSCode and the prebuilt Devcontainer on a Remote Server
 
@@ -84,7 +88,8 @@ Developent happens in **modern** Unix-like environments. So you need either Mac 
 Before starting you need to preinstall:
 
 - [System Development tools](#system-development-tools)
-- [Java JDK](#java-jdk) v11 or later
+- [Java JDK](#java-jdk) v8 or later
+- Docker Desktop or CE, version 20.x or later
 
 Then clone everything with:
 
