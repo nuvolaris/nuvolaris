@@ -42,7 +42,7 @@ If you are in a hurry, here a few starting points:
 - Check our [YouTube Channel](https://www.youtube.com/channel/UCPt5hk7qcOkESjB7kii1byw) for our trainings and community calls.
 - Chat with us on [Discord](https://discord.gg/VSGG7aQ2Ds) 
 - Discuss on the [Forum](https://github.com/nuvolaris/nuvolaris/discussions/)
-- Read the [Overview](docs/OVERVIEW.md) and the [Roadmap](docs/ROADMAP.md).
+- Read the [Overview](docs/OVERVIEW.md), the [Roadmap](docs/ROADMAP.md) and the [Developer Guide](docs/DEVEL.md).
 
 ## Quick Start of the Development Environment
 
@@ -53,7 +53,7 @@ Prerequisites:
  - Docker, at least 20.x (either Docker Desktop or Docker CE) 
  - VSCode, at least 1.63.x
  
-then  **assign 8 gigabytes to Docker** and open the project as follows.
+then  `ASSIGN AT LEAST 8 GIGABYTES TO DOCKER`** and open the project as follows.
 
 ![](docs/devenv.png)
 
@@ -63,17 +63,27 @@ git clone https://github.com/nuvolaris/nuvolaris --recurse-submodules
 code nuvolaris
 ```
 
-Then say yes to "Reopen in container". 
+VSCode should detect you are using a development container (because of the directory `.devcontainer`) and ask if you want to use it. Click on the button `Reopen in container`.
 
-It can take some time the first time, as it will download a large development image and setup a development Kubernetes cluster (with [kind](https://kind.sigs.k8s.io/)).
+**NOTE** if the popup does not show up, it is possible you have disabled it. In such a case, click on `F1`, search for the command `Reopen in Container` and execute it.
 
-You can then open the various workspaces of the `nuvolaris-*` subfolders.
 
-If they are empty, did you use `--recurse-submodules`?
+The first time, since it needs to download a large image, it can take some time. It will download the Nuvolaris DevKit  and setup a local development Kubernetes cluster  using [kind](https://kind.sigs.k8s.io/).
+
+Once you see the navigation tree, you will also see a few folders named `nuvolaris-*`. Those subprojects are the actual projects (the top-level project is only an holder). 
+
+You can access to the various suprojects settings opening the files `workspace.code-workspace` in the `nuvolaris-*` subfolders.
+
+**NOTE* If they `nuvolaris-*` folders are empty, this means you did not use `--recurse-submodules` when cloning the folders. You can fix this opening a terminal and typing:
+
+```
+git submodule init
+git submodule update
+```
 
 This is the procedure to install everything and play with the source code. Usually however you want to work with each subproject individually. 
 
-The details are in [our development guide](docs/DEVEL.md).
+Check  [our development guide](docs/DEVEL.md) for more informations.
 
 ## How to contribute
 
