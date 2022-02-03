@@ -1,0 +1,86 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+# ----
+
+## Check nodes abd namespaces
+kubectl get nodes
+kubectl get ns
+kubectl create namespace demo
+kubectl get ns
+kubectl config set-context --current --namespace demo
+
+## Create a pod
+cat demo-pod.yaml
+
+kubectl apply -f demo-pod.yaml
+kubectl get pod
+kubectl delete pod demo-pod
+
+## Create a deployment
+cat demo-deployment.yaml
+kubectl apply -f demo-deployment.yaml
+kubectl get deploy
+kubectl get pod
+kubectl delete -f demo-deployment.yaml
+kubectl get deploy
+kubectl get pod
+
+###
+
+## create crd
+kubectl apply -f demo-crd.yaml
+kubectl get crd
+kubectl create namespace demo
+kubectl apply -f demo-obj.yaml
+kubectl get samples
+kubectl delete sample obj
+
+## start simple op
+poetry init
+poetry install kopf
+poetry run kopf run -n demo demo1.py
+# in another terminal
+cd 1-operator/lab
+cat demo-obj.yaml
+kubectl apply -f demo-obj.yaml
+kubectl delete -f demo-obj.yaml
+
+###
+
+# no kustomization
+mkdir deploy
+cat kustomization1.yaml
+cp demo-deployment.yaml deploy
+
+cat kustomization2.yaml
+cp kustomization2.yaml deploy/kustomization.yaml
+
+cat patch.yaml
+cp patch.yaml deploy/patch.yaml
+
+kubectl kustomize deploy
+
+# run operator 
+## start simple op
+poetry run kopf run -n demo demo2.py
+
+# in another terminal
+kubectl apply -f demo-obj.yaml
+kubectl delete -f demo-obj.yaml
+
+
