@@ -16,6 +16,7 @@
 # under the License.
 #
 # A demo custom resource for the Kopf example operators.
+---
 apiVersion: nuvolaris.org/v1
 kind: Sample
 metadata:

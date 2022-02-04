@@ -25,15 +25,19 @@ def patch(n):
 kind: Deployment
 metadata:
   name: demo-deploy
+  namespace: demo
 spec:
   replicas: {n}
 """
 
 def kubectl(cmd, patch):
+  print(f"kubectl {cmd}")
   with open(f"deploy/patch.yaml", "w") as f:
     f.write(patch)
   res = subprocess.run(["kubectl", cmd, "-k", "deploy"], capture_output=True)
-  return res.stdout.decode()
+  if res.returncode == 0:
+    return res.stdout.decode()
+  return res.stderr.decode()
 
 @kopf.on.login()
 def sample_login(**kwargs):

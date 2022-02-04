@@ -17,70 +17,62 @@
 #
 # ----
 
-## Check nodes abd namespaces
+### Demo CRD
+# check
 kubectl get nodes
-kubectl get ns
-kubectl create namespace demo
-kubectl get ns
+cd lab
+kubectl apply -f demo-ns.yaml
 kubectl config set-context --current --namespace demo
-
-## Create a pod
-cat demo-pod.yaml
-
-kubectl apply -f demo-pod.yaml
-kubectl get pod
-kubectl delete pod demo-pod
-
-## Create a deployment
-cat demo-deployment.yaml
-kubectl apply -f demo-deployment.yaml
-kubectl get deploy
-kubectl get pod
-kubectl delete -f demo-deployment.yaml
-kubectl get deploy
-kubectl get pod
-
-###
-
-## create crd
+# create crd and instance
 kubectl apply -f demo-crd.yaml
 kubectl get crd
-kubectl create namespace demo
 kubectl apply -f demo-obj.yaml
-kubectl get samples
-kubectl delete sample obj
+kubectl -n demo get sam
+# cleanup
+kubectl -n demo delete sam/obj
+kubectl -n demo get sam
 
-## start simple op
-poetry init
-poetry install kopf
+### Handling creation of objects
+# install and run kopf
+poetry install
+poetry run kopf
+# run demo1.py
+cat demo1.py
+poetry run kopf run demo1.py
+# note the error - add ns
 poetry run kopf run -n demo demo1.py
-# in another terminal
-cd 1-operator/lab
+# new terminal
+kubectl apply -f demo-obj.yaml
+kubectl -n demo get sam
+kubectl delete -f demo-obj.yaml
+
+### Demo Kustomize
+cat demo-deployment.yaml
+kubectl apply -f demo-deployment.yaml
+kubectl get deploy ; kubectl get po
+kubectl delete deploy demo-deploy
+kubectl get deploy ; kubectl get po
+# kustomize
+cat kustomization.yaml
+cat patch.yaml
+# prepare the customization
+rm -Rvf deploy ; mkdir deploy
+cp demo-deployment.yaml kustomization.yaml patch.yaml deploy
+# apply the kustomization
+kubectl apply -k deploy
+kubectl get deploy ; kubectl get po 
+kubectl delete -k deploy
+kubectl get deploy ; kubectl get po 
+
+### Demo Operator
+# cleanup
+kubectl delete -f demo-obj.yaml
+poetry run kopf run -n demo demo2.py
+# switch terminal
 cat demo-obj.yaml
 kubectl apply -f demo-obj.yaml
-kubectl delete -f demo-obj.yaml
-
-###
-
-# no kustomization
-mkdir deploy
-cat kustomization1.yaml
-cp demo-deployment.yaml deploy
-
-cat kustomization2.yaml
-cp kustomization2.yaml deploy/kustomization.yaml
-
-cat patch.yaml
-cp patch.yaml deploy/patch.yaml
-
-kubectl kustomize deploy
-
-# run operator 
-## start simple op
-poetry run kopf run -n demo demo2.py
-
-# in another terminal
-kubectl apply -f demo-obj.yaml
-kubectl delete -f demo-obj.yaml
+# checking if it worked
+cat deploy/patch.yaml
+kubectl get deploy
 
 
