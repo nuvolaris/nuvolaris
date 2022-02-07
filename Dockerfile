@@ -39,12 +39,12 @@ RUN WSK_VERSION=1.2.0 ;\
 # add user
 RUN useradd -m -s /bin/bash nuvolaris &&\
     echo "nuvolaris ALL=(ALL:ALL) NOPASSWD: ALL" >>/etc/sudoers
-ADD nuvolaris/*.py /home/nuvolaris/nuvolaris/
-ADD deploy /home/nuvolaris/deploy/
-ADD run.sh /home/nuvolaris/run.sh
 USER nuvolaris
 WORKDIR /home/nuvolaris
 # install the operator
+ADD nuvolaris/*.py /home/nuvolaris/nuvolaris/
+ADD deploy /home/nuvolaris/deploy/
+ADD run.sh /home/nuvolaris/run.sh
 RUN curl -sSL https://install.python-poetry.org | python3.9 -
 ADD pyproject.toml poetry.lock /home/nuvolaris/
 ENV PATH=/home/nuvolaris/.local/bin:/usr/local/bin:/usr/bin:/sbin:/bin
