@@ -44,9 +44,9 @@ def sample_login(**kwargs):
     token = '/var/run/secrets/kubernetes.io/serviceaccount/token'
     if os.path.isfile(token):
         logging.debug("found serviceaccount token: login via pykube in kubernetes")
-        return kopf.login_via_pykube(**kwargs)
+        return kopf.login_with_service_account(**kwargs) 
     logging.debug("login via client")
-    return kopf.login_via_client(**kwargs)
+    return  kopf.login_with_kubeconfig(**kwargs)
 
 @kopf.on.create('nuvolaris.org', 'v1', 'samples')
 def sample_create(spec, **kwargs):
