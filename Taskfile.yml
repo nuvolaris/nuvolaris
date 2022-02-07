@@ -61,4 +61,4 @@ tasks:
 
   test:
     - task: unit
-    - cd tests && task test
+    #- cd tests && task test
