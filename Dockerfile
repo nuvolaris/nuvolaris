@@ -48,6 +48,6 @@ ADD run.sh /home/nuvolaris/run.sh
 RUN curl -sSL https://install.python-poetry.org | python3.9 -
 ADD pyproject.toml poetry.lock /home/nuvolaris/
 ENV PATH=/home/nuvolaris/.local/bin:/usr/local/bin:/usr/bin:/sbin:/bin
-RUN sudo chown -R nuvolaris:nuvolaris /home/nuvolaris ;\
-    poetry install
+RUN cd /home/nuvolaris ; poetry install
+RUN sudo chown -R nuvolaris:nuvolaris /home/nuvolaris
 CMD ./run.sh
