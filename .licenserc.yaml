@@ -46,6 +46,7 @@ header:
     - '**/kind/**'
     - '**/task/**'
     - 'workspace.code-workspace'
+    - '.gitkeep'
  
 dependency:
   files:
