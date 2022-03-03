@@ -20,6 +20,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "../nuvolaris-testing"
 		}
 	],
 	"settings": {
