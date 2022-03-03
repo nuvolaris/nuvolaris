@@ -28,7 +28,7 @@ export PS1="[\W]\$ "
 export NODENV_VERSION=16.13.0
 export PYENV_VERSION=3.9.9
 export GOENV_VERSION=1.17.3
-export DOCKER_VERSION=18.03
+export DOCKER_VERSION=19
 export JAVA_VERSION=8
 
 # env roots
@@ -46,24 +46,6 @@ ok() {
     echo OK: "$@"
 }
 
-checkDockerVersion(){
-    SERVER_VERSION=$(docker version -f "{{.Server.Version}}")
-
-    SERVER_VERSION_MAJOR=$(echo "$SERVER_VERSION"| cut -d'.' -f1)
-    SERVER_VERSION_MINOR=$(echo "$SERVER_VERSION"| cut -d'.' -f2)
-
-    DOCKER_VERSION_MAJOR=$(echo "$DOCKER_VERSION"| cut -d'.' -f1)
-    DOCKER_VERSION_MINOR=$(echo "$DOCKER_VERSION"| cut -d'.' -f2)
-
-    if ([ "$SERVER_VERSION_MAJOR" -lt "$DOCKER_VERSION_MAJOR" ]) || \
-       ([ "$SERVER_VERSION_MAJOR" -eq "$DOCKER_VERSION_MAJOR" ] && [ "$SERVER_VERSION_MINOR" -lt "$DOCKER_VERSION_MINOR" ]); then
-        die "Please install docker version >= $DOCKER_VERSION"
-    else
-        ok "docker version $SERVER_VERSION"
-    fi
-
-}
-
 if ! which gcc >/dev/null
 then die "Please install development tools"
 else ok gcc
@@ -74,13 +56,28 @@ then die "Please install git"
 else ok git
 fi
 
-if ! which docker >/dev/null
-then die "Please install docker and assign access to this user"
-else ok docker
+
+if test -S /var/run/docker.sock
+then 
+    if ! which docker >/dev/null
+    then die "Please install docker and assign access to this user"
+    else 
+        DOCKER_CUR_VERSION=$(docker version -f '{{.Server.Version}}'  | awk -F. '{print $1}')
+        if [[ $DOCKER_CUR_VERSION -le $DOCKER_VERSION ]]
+        then die "required at least docker $DOCKER_VERSION, you have $DOCKER_CUR_VERSION"
+        else ok docker
+        fi
+    fi
 fi
 
-if [ -f /.dockerenv ] && [ -S /var/run/docker-host.sock  ] || [ ! -f /.dockerenv ]; then
-  checkDockerVersion
+if ! which java >/dev/null
+then die "Please install java"
+else 
+    JAVA_CUR_VERSION=$(java -version 2>&1 | awk 'NR==1 { gsub("\"", "", $3) ; split($3,a,"."); print(a[1] == "1" ? a[2] : a[1]) }' )
+    if [[ $JAVA_CUR_VERSION -le $JAVA_VERSION ]]
+    then die "required at least java $JAVA_VERSION, you have java $JAVA_CUR_VERSION"
+    else ok java 
+    fi
 fi
 
 if ! which kubectl >/dev/null
@@ -91,17 +88,6 @@ fi
 if ! which wsk >/dev/null
 then die "Please install wsk"
 else ok wsk
-fi
-
-if ! which java >/dev/null
-then die "Please install java"
-else ok java
-fi
-
-if [ "$(java --version |head -1 | cut -d' ' -f2 | cut -d'.' -f1)" -lt "$JAVA_VERSION" ]; then
-    die "Please install java version >= $JAVA_VERSION"
-else
-    ok "java version $(java --version |head -1 | cut -d' ' -f2 | cut -d'.' -f1)"
 fi
 
 # Install

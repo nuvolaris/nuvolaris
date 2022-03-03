@@ -42,11 +42,13 @@ RUN apt-get update &&\
    libreadline-dev libffi-dev libsqlite3-dev \
    java-11-amazon-corretto-jdk \
    docker-ce-cli
-# Download kind
+# Download kind and setup a wrapper
 RUN KVER="v0.11.1" ;\
     ARCH="$(dpkg --print-architecture)" ;\
     KURL="https://github.com/kubernetes-sigs/kind/releases/download/$KVER/kind-linux-$ARCH" ;\
-    wget $KURL -O /usr/bin/kind && chmod +x /usr/bin/kind
+    wget $KURL -O /usr/bin/kind.bin ;\
+    /usr/bin/echo -e '#!/bin/bash\nsudo env DOCKER_HOST=unix:///var/run/docker-host.sock /usr/bin/kind.bin "$@"' >/usr/bin/kind ;\
+    chmod +x /usr/bin/kind.bin /usr/bin/kind
 # Download Kubectl
 RUN KVER="v1.23.0" ;\
     ARCH="$(dpkg --print-architecture)" ;\
@@ -66,9 +68,9 @@ RUN ARCH="$(dpkg --print-architecture)" ;\
     unzip /tmp/terraform.zip -d /usr/bin ;\
     rm /tmp/terraform.zip
 # add delta to show diffs
-RUN  FILE="git-delta_0.11.2_$(dpkg --print-architecture).deb" ;\
-     wget "https://github.com/dandavison/delta/releases/download/0.11.2/$FILE" -O "/tmp/$FILE" ;\
-     sudo dpkg -i "/tmp/$FILE" ; rm "/tmp/$FILE"
+RUN FILE="git-delta_0.11.2_$(dpkg --print-architecture).deb" ;\
+    wget "https://github.com/dandavison/delta/releases/download/0.11.2/$FILE" -O "/tmp/$FILE" ;\
+    sudo dpkg -i "/tmp/$FILE" ; rm "/tmp/$FILE"
 # add and configure user
 RUN useradd -m nuvolaris -s /bin/bash &&\
     echo "nuvolaris ALL=(ALL:ALL) NOPASSWD: ALL" >>/etc/sudoers

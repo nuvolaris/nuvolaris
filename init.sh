@@ -31,23 +31,23 @@ then kind delete clusters nuvolaris
      exit 0
 fi
 
+# you are requesting a reset (destroy and recreate)
+if test "$1" == "reset"
+then kind delete clusters nuvolaris
+fi
+
 if test "$1" != ""
 then echo "use either no arguments to create a cluster or destroy to destroy it"
     exit 1
 fi
 
-# setup env for contaner
-KIND=kind
-if [ -f /.dockerenv ] && [ -S /var/run/docker-host.sock  ]
-then KIND="sudo env DOCKER_HOST=unix:///var/run/docker-host.sock kind"
-fi
 
 # if the nuvolaris cluster already running export its configuration
-if $KIND get clusters | grep nuvolaris >/dev/null 2>/dev/null
-then $KIND export kubeconfig --name nuvolaris
+if kind get clusters | grep nuvolaris >/dev/null 2>/dev/null
+then kind export kubeconfig --name nuvolaris
 else
   # create cluster
-  cat <<EOF | $KIND create cluster --wait=1m --name=nuvolaris --config=-
+  cat <<EOF | kind create cluster --wait=1m --name=nuvolaris --config=-
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
@@ -73,7 +73,7 @@ then
   sudo cp /root/.kube/config /home/nuvolaris/.kube/config
   sudo chown nuvolaris:nuvolaris /home/nuvolaris/.kube/config
   # proxy to sockerhost and loop forever
-  exec sudo /usr/bin/socat \
+  test -S /var/run/docker.sock || exec sudo /usr/bin/socat \
   UNIX-LISTEN:/var/run/docker.sock,fork,mode=660,user=nuvolaris \
   UNIX-CONNECT:/var/run/docker-host.sock
 fi
