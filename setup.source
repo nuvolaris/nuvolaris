@@ -63,7 +63,7 @@ then
     then die "Please install docker and assign access to this user"
     else 
         DOCKER_CUR_VERSION=$(docker version -f '{{.Server.Version}}'  | awk -F. '{print $1}')
-        if [[ $DOCKER_CUR_VERSION -le $DOCKER_VERSION ]]
+        if [[ $DOCKER_CUR_VERSION -lt $DOCKER_VERSION ]]
         then die "required at least docker $DOCKER_VERSION, you have $DOCKER_CUR_VERSION"
         else ok docker
         fi
@@ -74,7 +74,7 @@ if ! which java >/dev/null
 then die "Please install java"
 else 
     JAVA_CUR_VERSION=$(java -version 2>&1 | awk 'NR==1 { gsub("\"", "", $3) ; split($3,a,"."); print(a[1] == "1" ? a[2] : a[1]) }' )
-    if [[ $JAVA_CUR_VERSION -le $JAVA_VERSION ]]
+    if [[ $JAVA_CUR_VERSION -lt $JAVA_VERSION ]]
     then die "required at least java $JAVA_VERSION, you have java $JAVA_CUR_VERSION"
     else ok java 
     fi
