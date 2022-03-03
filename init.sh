@@ -26,21 +26,17 @@ then echo "Please install Kind from https://kind.sigs.k8s.io/docs/user/quick-sta
 fi
 
 # you are requesting a destroy
+
+# you are requesting a reset (destroy and recreate)
 if test "$1" == "destroy"
 then kind delete clusters nuvolaris
      exit 0
-fi
-
-# you are requesting a reset (destroy and recreate)
-if test "$1" == "reset"
+elif test "$1" == "reset"
 then kind delete clusters nuvolaris
+elif test "$1" != ""
+then echo "use either no arguments to create a cluster, destroy to destroy it, reset to rebuild it"
+     exit 1
 fi
-
-if test "$1" != ""
-then echo "use either no arguments to create a cluster or destroy to destroy it"
-    exit 1
-fi
-
 
 # if the nuvolaris cluster already running export its configuration
 if kind get clusters | grep nuvolaris >/dev/null 2>/dev/null
@@ -52,6 +48,12 @@ kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
 - role: control-plane
+  kubeadmConfigPatches:
+  - |
+    kind: InitConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: "ingress-ready=true"
 - role: worker
   extraPortMappings:
   - containerPort: 30232
@@ -63,6 +65,21 @@ nodes:
   - containerPort: 30896
     hostPort: 7896
     protocol: TCP  
+  - containerPort: 30984
+    hostPort: 5984
+    protocol: TCP  
+  - containerPort: 30017
+    hostPort: 27017
+    protocol: TCP
+  - containerPort: 30444
+    hostPort: 9444
+    protocol: TCP    
+  - containerPort: 80
+    hostPort: 80
+    protocol: TCP
+  - containerPort: 443
+    hostPort: 443
+    protocol: TCP
 EOF
 fi
 
