@@ -1,0 +1,16 @@
+H=$(basename $PWD)
+MSCIABARRA=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
+SCIABARRACOM=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
+GHM=https://msciabarra:$MSCIABARRA@github.com/msciabarra
+GHN=https://msciabarra:$MSCIABARRA@github.com/nuvolaris
+GHA=https://msciabarra:$SCIABARRACOM@github.com/nuvolaris
+git config --global user.email "michele@sciabarra.com"
+git config --global user.name "Michele Sciabarra"
+git remote remove origin
+git remote remove upstream
+git remote remove upstream-admin
+git remote add origin $GHM/$H
+git remote add upstream $GHN/$H
+git remote add upstream-admin $GHA/$H
+git remote -v
+
