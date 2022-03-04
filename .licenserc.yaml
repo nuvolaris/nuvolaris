@@ -47,6 +47,9 @@ header:
     - '**/task/**'
     - 'workspace.code-workspace'
     - '.gitkeep'
+    - 'CODEOWNERS'
+    - '**/inventory/**'
+    - '**/kubeconfig/**'
  
 dependency:
   files:
