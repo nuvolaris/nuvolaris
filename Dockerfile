@@ -67,6 +67,12 @@ RUN ARCH="$(dpkg --print-architecture)" ;\
     curl -sL $TURL -o /tmp/terraform.zip ;\
     unzip /tmp/terraform.zip -d /usr/bin ;\
     rm /tmp/terraform.zip
+RUN NUV_VERSION=v0.1.1 ;\
+    NUV_BASE=https://github.com/nuvolaris/nuvolaris-cli/releases/download ;\
+    ARCH=$(dpkg --print-architecture) ;\
+    NUV_URL="$NUV_BASE/$NUV_VERSION/nuv-$NUV_VERSION-linux-$ARCH.tar.gz" ;\
+    curl -sL "$NUV_URL" | tar xzvf - -C /usr/bin/
+
 # add delta to show diffs
 RUN FILE="git-delta_0.11.2_$(dpkg --print-architecture).deb" ;\
     wget "https://github.com/dandavison/delta/releases/download/0.11.2/$FILE" -O "/tmp/$FILE" ;\
