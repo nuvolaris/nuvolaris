@@ -113,16 +113,13 @@ export PATH="$GOBIN:$GOENV_ROOT/bin:$NODENV_ROOT/bin:$PYENV_ROOT/bin:$PATH"
 
 eval "$(nodenv init -)"
 nodenv install $NODENV_VERSION -s
-echo $NODENV_VERSION >.node-version
 
 eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
 pyenv install $PYENV_VERSION -s
-echo $PYENV_VERSION >.python-version
 
 eval "$(goenv init -)"
 goenv install $GOENV_VERSION -s
-echo $GOENV_VERSION >.go-version
 
 # install task
 if ! which task >/dev/null
@@ -179,10 +176,10 @@ if test -e kubeconfig
 then export KUBECONFIG=$PWD/kubeconfig
 fi
 
-alias k="kubectl"
-alias ka="kubectl apply"
-alias kg="kubectl get"
-alias kd="kubectl delete"
+alias k="kubectl -n nuvolaris"
+alias ka="kubectl -n nuvolaris apply"
+alias kg="kubectl -n nuvolaris get"
+alias kd="kubectl -n nuvolaris delete"
 alias kns="kubectl config  set-context --current --namespace"
 
 # local setup
