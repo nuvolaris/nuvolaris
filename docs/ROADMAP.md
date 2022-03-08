@@ -40,10 +40,10 @@ It should run and be tested to work on more recent versions of:
 - Amazon EKS
 - Azure AKS
 - Google GKE
-- VMware Tanzu
 - Redhat OpenShift
+- Ubuntu Charmed Kubernetes
 - Rancher K3S
-- Ubuntu MicroK8s
+- VMware Tanzu
 
 More Kubernetes distributions we can add the better.
 
@@ -63,8 +63,8 @@ And it should be possible to use either locally installed or cloud versions of t
 
 The installer should be able to use or connect to those external compoments:
 
-- a cache based on redis
 - a object storage compatible with s3
+- a cache based on redis
 - a SQL database service, either MySQL or PostgreSQL
 - a NO-SQL database service, either Couchdb or Mongodb
 

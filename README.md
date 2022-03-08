@@ -23,7 +23,6 @@ Welcome to the Nuvolaris project.
 
 Nuvolaris is an [ongoing project](#about) to build an Open Source distribution of [Apache OpenWhisk](https://openwhisk.apache.org) licensed released under the [Apache Licence 2.0](LICENSE) (like OpenWhisk itself).
 
-
 We want to build a *complete* distribution of a serverless environment that:
 
 - it is easy to install and manage
@@ -32,19 +31,25 @@ We want to build a *complete* distribution of a serverless environment that:
 
 This is the main differentiation from Apache OpenWhisk, as it only provides a basic engine for serverless. Our goals are described in our [**roadmap**](docs/ROADMAP.md) document to read about.
 
-There are currently no releases yet. Our first release is scheduled for February 2022.
 
 ## TL;DR
 
 If you are in a hurry, here a few starting points:
 
-- Check our issue tracker for [unassigned and open issues](https://github.com/nuvolaris/nuvolaris/issues).
+- Download the [latest release](https://github.com/nuvolaris/nuvolaris/releases) of the CLI to install Nuvolaris, 
 - Check our [YouTube Channel](https://www.youtube.com/channel/UCPt5hk7qcOkESjB7kii1byw) for our trainings and community calls.
 - Chat with us on [Discord](https://discord.gg/VSGG7aQ2Ds) 
-- Discuss on the [Forum](https://github.com/nuvolaris/nuvolaris/discussions/)
-- Read the [Overview](docs/OVERVIEW.md), the [Roadmap](docs/ROADMAP.md) and the [Developer Guide](docs/DEVEL.md).
 
-## Quick Start of the Development Environment
+## Do you want to help?
+
+If you are a developer, here a few more resources to read:
+
+- If you want to test the cutting edge,  download a [pre-release](https://github.com/nuvolaris/nuvolaris-cli/releases) of the CLI and report issues
+- Check our issue tracker for [unassigned and open issues](https://github.com/nuvolaris/nuvolaris/issues).
+- Read the [Overview](docs/OVERVIEW.md) and the [Roadmap](docs/ROADMAP.md) 
+- Check the [Developer Guide](docs/DEVEL.md) and the [Build Guide](doc/BUILD.md).
+
+## Quick Start with our Development Environment
 
 Prerequisites:
 
@@ -53,10 +58,9 @@ Prerequisites:
  - Docker, at least 20.x (either Docker Desktop or Docker CE) 
  - VSCode, at least 1.63.x
  
-then  `ASSIGN AT LEAST 8 GIGABYTES TO DOCKER`** and open the project as follows.
+then  **`ASSIGN AT LEAST 8 GIGABYTES TO DOCKER`** and open the project as follows.
 
 ![](docs/devenv.png)
-
 
 ```
 git clone https://github.com/nuvolaris/nuvolaris --recurse-submodules
@@ -122,10 +126,15 @@ Note that some kind of files are not recognized so you have to fix them adding a
 
 ## What is the next activity?
 
-We split activities in milestones. We give to them a friendly name and we name milestones after characters the movies of The Matrix franchise. 
+We split activities in [milestones](https://github.com/nuvolaris/nuvolaris/milestones?direction=asc&sort=title&state=open).
 
-The  current milestone (the first one) is [Neo](docs/Neo.md).
-The next one will be Trinity. Future Milestones will be named Morpheus, Agent Smith and so on.
+We name milestones after characters of the movies of The Matrix franchise. 
+
+We reached the first milestone, [Neo](docs/Neo.md).
+
+The current milestone is [Trinity](doc/Trinity.md).
+
+The next milestones will be Morpheus, yet to be planned.
 
 The milestone to reach when we release 1.0 is [Matrix](docs/Matrix.md).
  

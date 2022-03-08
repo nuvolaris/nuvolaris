@@ -19,7 +19,7 @@
 -->
 # Developer Guide
 
-This document describes the evelopment procedures for Nuvolaris.
+This document describes the development procedures for Nuvolaris.
 
 ## Prerequisites
 
