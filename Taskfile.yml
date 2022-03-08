@@ -18,6 +18,7 @@
 version: '3'
 
 vars:
+  BASETAG: v0.2.0-trinity
   IMAGE: nuvolaris/nuvolaris-operator
   REPO: ghcr.io
   TAG:
@@ -34,6 +35,8 @@ tasks:
       - poetry install
     status:
       - test -e $GOBIN/kopf
+
+  tag: git tag -d $(git tag) ; git tag -f {{.BASETAG}}.$(date +%y%m%d%H)
 
   buildx-and-push:
   - docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} . --push
