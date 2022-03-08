@@ -17,7 +17,7 @@
 #
 FROM ubuntu:20.04
 ENV STANDALONE_IMAGE=ghcr.io/nuvolaris/openwhisk-standalone
-ENV STANDALONE_TAG=neo-21.1230.16
+ENV STANDALONE_TAG=0.2.0-trinity.22030822
 # configure dpkg && timezone
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 ENV TZ=Europe/London
