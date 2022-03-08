@@ -18,7 +18,7 @@
 version: '3'
 
 vars:
-  BASETAG: v0.2.0-trinity
+  BASETAG: 0.2.0-trinity
   IMAGE: nuvolaris/nuvolaris-operator
   REPO: ghcr.io
   TAG:
