@@ -25,27 +25,12 @@ on:
 jobs:
 
   # Create the release
-  setup:
+  release:
     name: Create Release
     runs-on: ubuntu-latest
     steps:
     - name: Create Release
       uses: softprops/action-gh-release@v1
-
-  # Get the repo, build the binaries and publish them on the release
-  releases-matrix:
-    needs: setup
-    name: Release Go Binaries
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        # build and publish in parallel: linux/amd64, linux/arm64, windows/amd64, darwin/amd64, darwin/arm64
-        goos: [linux, windows, darwin]
-        goarch: [amd64, arm64]
-        exclude:
-          - goarch: arm64
-            goos: windows 
-    steps:
     - name: Checkout
       uses: actions/checkout@v2
       with:
@@ -60,12 +45,49 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    - name: Release Go Binaries
+    # not using the release matrix because builds fails for unknown reasons
+    - name: Release Go Binaries linux-amd64
       uses: wangyoucao577/go-release-action@v1.22
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        goos: ${{ matrix.goos }}
-        goarch: ${{ matrix.goarch }}
+        goos: "linux"
+        goarch: "amd64"
+        project_path: "./nuv"
+        binary_name: "nuv"
+        extra_files: LICENSE nuv.txt
+    - name: Release Go Binaries linux-arm64
+      uses: wangyoucao577/go-release-action@v1.22
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        goos: "linux"
+        goarch: "arm64"
+        project_path: "./nuv"
+        binary_name: "nuv"
+        extra_files: LICENSE nuv.txt
+    - name: Release Go Binaries darwin-amd64
+      uses: wangyoucao577/go-release-action@v1.22
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        goos: "darwin"
+        goarch: "amd64"
+        project_path: "./nuv"
+        binary_name: "nuv"
+        extra_files: LICENSE nuv.txt
+    - name: Release Go Binaries darwin-arm64
+      uses: wangyoucao577/go-release-action@v1.22
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        goos: "darwin"
+        goarch: "arm64"
+        project_path: "./nuv"
+        binary_name: "nuv"
+        extra_files: LICENSE nuv.txt
+    - name: Release Go Binaries windows-amd64
+      uses: wangyoucao577/go-release-action@v1.22
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        goos: "windows"
+        goarch: "amd64"
         project_path: "./nuv"
         binary_name: "nuv"
         extra_files: LICENSE nuv.txt
