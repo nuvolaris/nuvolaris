@@ -23,6 +23,9 @@
 		},
 		{
 			"path": "../nuvolaris-testing"
+		},
+		{
+			"path": "../nuvolaris-controller"
 		}
 	],
 	"settings": {
