@@ -21,7 +21,7 @@
 
 Welcome to the Nuvolaris project. 
 
-Nuvolaris is an [ongoing project](#about) to build an Open Source distribution of [Apache OpenWhisk](https://openwhisk.apache.org) licensed released under the [Apache Licence 2.0](LICENSE) (like OpenWhisk itself).
+Nuvolaris is an [ongoing project](#about) to build an Open Source distribution of [Apache OpenWhisk](https://openwhisk.apache.org) released under the [Apache Licence 2.0](LICENSE) (like OpenWhisk itself).
 
 We want to build a *complete* distribution of a serverless environment that:
 
