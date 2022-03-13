@@ -16,6 +16,7 @@
 # under the License.
 #
 import re
+import yaml
 
 # takes a string, split in lines and search for the word (a re)
 # if field is a number, splits the line in fields separated by spaces and print the selected field

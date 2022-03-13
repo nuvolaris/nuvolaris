@@ -22,3 +22,21 @@ metadata:
   namespace: nuvolaris
 spec:
   debug: false
+apiVersion: nuvolaris.org/v1
+kind: Whisk
+metadata:
+  name: standalone
+  namespace: nuvolaris
+spec:
+  debug: false
+  couchdb:
+     whisk_admin: s0meP@ass
+  mongodb:
+     whisk_admin: 0therPa55
+  bucket:
+     id: AKIAIOSFODNN7EXAMPLE
+     key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+     region: eu-central-1
+  openwhisk:
+     whisk.system: 789c46b1-71f6-4ed5-8c54-816aa4f8c502:abczO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP
+     guest: 23bc46b1-71f6-4ed5-8c54-816aa4f8c502:123zO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP

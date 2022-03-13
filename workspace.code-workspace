@@ -22,7 +22,10 @@
 			"path": "."
 		},
 		{
-			"path": "../nuvolaris-testing"
+			"path": "openwhisk/ansible"
+		},
+		{
+			"path": "../nuvolaris-cli"
 		},
 		{
 			"path": "../nuvolaris-controller"

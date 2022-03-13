@@ -15,16 +15,20 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-__pycache__/
-__pypackages__
-.pdm.toml
-.*-version
-kubeconfig
-openwhisk-deploy-kube/
-kustomization.yaml
-playground
-examples/
-aliases
-deploy/extract/
-node_modules/
-nuvolaris/files/
+import nuvolaris.kustomize as nku
+import nuvolaris.kube as kube
+import os, os.path
+import logging
+
+def mongodb_create():
+    spec = nku.kustom_list("mongodb")
+    return kube.apply(spec)
+
+
+def mongodb_delete():
+    spec = nku.kustom_list("mongodb")
+    return kube.delete(spec)
+
+
+def init():
+    return "TODO"
