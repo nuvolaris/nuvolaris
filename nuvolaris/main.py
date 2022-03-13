@@ -20,7 +20,6 @@ import os, os.path
 import logging
 import nuvolaris.couchdb as couchdb
 import nuvolaris.mongodb as mongodb
-import nuvolaris.mongodb as mongodb
 import nuvolaris.whisk as whisk
 import nuvolaris.bucket as bucket
 
@@ -37,9 +36,9 @@ def main_login(**kwargs):
 # tested by an integration test
 @kopf.on.create('nuvolaris.org', 'v1', 'whisks')
 def main_create(spec, **kwargs):
-    logging.debug(res)
-    res = bucket.create()
+    bucket.create()
     couchdb.create()
+    couchdb.init()
     mongodb.create()
     mongodb.init()
     whisk.create()

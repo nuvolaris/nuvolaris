@@ -3,7 +3,6 @@ import nuvolaris.kube as kube
 import os, os.path
 import logging
 
-
 WHISK_IMG = os.environ.get("STANDALONE_IMAGE", "ghcr.io/nuvolaris/openwhisk-standalone")
 WHISK_TAG = os.environ.get("STANDALONE_TAG", "latest")
 

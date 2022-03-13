@@ -1,0 +1,69 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+---
+# Recreates a document in a database.
+# dbName - name of the database, where the view should be stored
+# doc - the new document for the db
+
+- set_fact:
+    create: False
+    docWithRev: {}
+    document: "{{ doc }}"
+
+# fetches the revision of previous view (to update it) if it exists
+- name: check for {{ doc['_id'] }} document in {{ dbName }} database
+  uri:
+    url: "{{ db.protocol }}://{{ db.host }}:{{ db.port }}/{{ dbName }}/{{ doc['_id'] }}"
+    return_content: yes
+    method: GET
+    status_code: 200, 404
+    user: "{{ db.credentials.admin.user }}"
+    password: "{{ db.credentials.admin.pass }}"
+    force_basic_auth: yes
+  register: response
+
+- set_fact:
+    existingDoc: "{{ response['content']|from_json }}"
+  when: response.status == 200
+
+- name: extract revision from previous document
+  vars:
+    revision: "{{ existingDoc['_rev'] }}"
+  set_fact:
+    docWithRev: "{{ doc | combine({'_rev': revision}) }}"
+  when: response.status == 200
+
+- name: check if a doc update is required
+  set_fact:
+    create: True
+  when: (response.status == 200 and existingDoc != docWithRev) or response.status == 404 # Create doc, if it did not exist before or if update is required.
+
+- set_fact:
+    document: "{{ docWithRev }}"
+  when: docWithRev['_id'] is defined and create == True
+
+- name: recreate or update the document on the {{ dbName }} database
+  uri:
+    url: "{{ db.protocol }}://{{ db.host }}:{{ db.port }}/{{ dbName }}"
+    method: POST
+    status_code: 200, 201
+    body_format: json
+    body: "{{ document }}"
+    user: "{{ db.credentials.admin.user }}"
+    password: "{{ db.credentials.admin.pass }}"
+    force_basic_auth: yes
+  when: create == True

@@ -16,22 +16,25 @@ db_auth = f"{db_base}{db_prefix}subjects"
 loader = FileSystemLoader(["./nuvolaris/templates", "./nuvolaris/files"])
 env = Environment(loader=loader)
 
-def user(username, password):
-    user = env.get_template("user.json")
-    return user.render(item={"value":{"user":username, "pass":password}})
- 
-def permission():
-    permission = env.get_template("permission.json")
-    return """
-      {
-        "admins": {
-          "names": [ "{{ adminList | join('", "') }}" ],
-          "roles": []
-        },
-        "members": {
-          "names": [ "{{ readerList | union(writerList) | join('", "') }}" ],
-          "roles": []
-        }
-      }
-     """
+def sample_request():
+  return req.get(db_base).text
 
+def sample_expand(username, password):
+  return env.get_template("createUser.json").render(item={
+    "value": {
+      "user": username,
+      "pass": password 
+    }
+  })
+
+def init(secrets):
+  print("SAMPLE EXPAND")
+  [ [username, password] ] = list(secrets["couchdb"].items())
+  print(sample_expand(username=username, password=password))
+  # implement here orig/initdb.yml
+  print("SAMPLE REQUEST", sample_request())
+
+if __name__ == "__main__":
+  import yaml
+  secrets = yaml.safe_load(open("tests/operator-obj.yaml"))["spec"]
+  init(secrets)

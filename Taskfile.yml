@@ -62,6 +62,7 @@ tasks:
     - poetry run kopf run -n nuvolaris -m nuvolaris nuvolaris/main.py {{.CLI_ARGS}}
 
   env: env
+
   cli: poetry run ipython -i profile.ipy
 
   unit: |
@@ -72,3 +73,10 @@ tasks:
   test:
     - task: unit
     #- cd tests && task test
+
+  start-couchdb: kubectl apply -f deploy/couchdb
+
+  init-couchdb: poetry run python nuvolaris/couchdb_init.py
+  
+  stop-couchdb: kubectl delete -f deploy/couchdb
+  

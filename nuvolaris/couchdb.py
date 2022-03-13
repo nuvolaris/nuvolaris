@@ -19,15 +19,19 @@ import nuvolaris.kustomize as nku
 import nuvolaris.kube as kube
 import os, os.path
 import requests as r
-import logging
+import kopf
 
 def create():
     spec = nku.kustom_list("couchdb")
-    return kube.apply(spec)
+    res = kube.apply(spec)
+    logging.info(res)
+    return res
 
 def delete():
     spec = nku.kustom_list("couchdb")
-    return kube.delete(spec)
+    logging.info(res)
+    res = kube.delete(spec)
+    return 
 
 def init():
     return "TODO"
