@@ -42,6 +42,7 @@ RUN useradd -m -s /bin/bash nuvolaris && \
 WORKDIR /home/nuvolaris
 # install the operator
 ADD nuvolaris/*.py /home/nuvolaris/nuvolaris/
+ADD openwhisk/ansible/files/*.json /home/nuvolaris/openwhisk/ansible/files/
 ADD deploy /home/nuvolaris/deploy/
 ADD run.sh pyproject.toml poetry.lock /home/nuvolaris/
 RUN chown -R nuvolaris:nuvolaris /home/nuvolaris

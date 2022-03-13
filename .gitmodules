@@ -1,0 +1,3 @@
+[submodule "openwhisk"]
+	path = openwhisk
+	url = https://github.com/nuvolaris/openwhisk

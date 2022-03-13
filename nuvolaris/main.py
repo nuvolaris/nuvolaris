@@ -15,15 +15,18 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-import nuvolaris.kustomize as nku
-import nuvolaris.kube as kube
 import kopf
 import os, os.path
 import logging
+import nuvolaris.couchdb as couchdb
+import nuvolaris.mongodb as mongodb
+import nuvolaris.mongodb as mongodb
+import nuvolaris.whisk as whisk
+import nuvolaris.bucket as bucket
 
 # tested by an integration test
 @kopf.on.login()
-def whisk_login(**kwargs):
+def main_login(**kwargs):
     token = '/var/run/secrets/kubernetes.io/serviceaccount/token'
     if os.path.isfile(token):
         logging.debug("found serviceaccount token: login via pykube in kubernetes")
@@ -33,18 +36,20 @@ def whisk_login(**kwargs):
 
 # tested by an integration test
 @kopf.on.create('nuvolaris.org', 'v1', 'whisks')
-def whisk_create(spec, **kwargs):
-    IMG = os.environ.get("STANDALONE_IMAGE", "ghcr.io/nuvolaris/openwhisk-standalone")
-    TAG = os.environ.get("STANDALONE_TAG", "latest")
-    logging.debug("whisk_create: %s:%s" % (IMG,TAG) )
-    spec = nku.kustom_list("openwhisk-standalone", nku.image(IMG, newTag=TAG))
-    kopf.adopt(spec)
-    logging.debug(spec)
-    kube.apply(spec)
+def main_create(spec, **kwargs):
+    logging.debug(res)
+    res = bucket.create()
+    couchdb.create()
+    mongodb.create()
+    mongodb.init()
+    whisk.create()
     return {'message': 'created'}
 
 # tested by an integration test
 @kopf.on.delete('nuvolaris.org', 'v1', 'whisks')
-def whisk_delete(spec, **kwargs):
-    print("whisk_delete")
+def main_delete(spec, **kwargs):
+    res = whisk.delete()
+    mongodb.delete()
+    couchdb.delete()
+    bucket.delete()
     return {'message': 'deleted'}
