@@ -28,3 +28,4 @@ aliases
 deploy/extract/
 node_modules/
 nuvolaris/files/
+.env

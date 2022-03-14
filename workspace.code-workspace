@@ -25,10 +25,7 @@
 			"path": "openwhisk/ansible"
 		},
 		{
-			"path": "../nuvolaris-cli"
-		},
-		{
-			"path": "../nuvolaris-controller"
+			"path": "testkit"
 		}
 	],
 	"settings": {
