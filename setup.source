@@ -56,7 +56,6 @@ then die "Please install git"
 else ok git
 fi
 
-
 if test -S /var/run/docker.sock
 then 
     if ! which docker >/dev/null
@@ -165,6 +164,18 @@ then curl -sfLo $HOME/.local/bin/cs https://git.io/coursier-cli-"$(uname | tr LD
 else ok coursier
 fi
 eval "$(cs setup --env 2>/dev/null)"
+
+# install hcloud
+if ! which hcloud >/dev/null
+then go install github.com/hetznercloud/cli/cmd/hcloud@latest
+else ok hcloud
+fi
+
+# install linode-cli
+if ! which linode-cli >/dev/null
+then pip install linode-cli
+else ok linode-cli
+fi
 
 # extra
 if test -e ~/.localrc

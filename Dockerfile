@@ -28,55 +28,94 @@ RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor > /u
 RUN ARCH=$(dpkg --print-architecture) ;\
     echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu bionic stable" > /etc/apt/sources.list.d/docker.list &&\
     add-apt-repository 'deb https://apt.corretto.aws stable main'
+RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" |  tee -a /etc/apt/sources.list.d/google-cloud-sdk.list &&\
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
 # install software
 RUN apt-get update &&\
- apt-get -y install \
+   apt-get -y install \
    sudo socat telnet \
    inetutils-ping \
    lsb-release \
-   build-essential \
    ca-certificates \
+   apt-transport-https \
+   build-essential \
    git gnupg curl wget jq \
    zlib1g-dev libbz2-dev libncurses5-dev \
    libgdbm-dev libnss3-dev libssl-dev \
    libreadline-dev libffi-dev libsqlite3-dev \
    java-11-amazon-corretto-jdk \
-   docker-ce-cli
-# Download kind and setup a wrapper
-RUN KVER="v0.11.1" ;\
-    ARCH="$(dpkg --print-architecture)" ;\
-    KURL="https://github.com/kubernetes-sigs/kind/releases/download/$KVER/kind-linux-$ARCH" ;\
-    wget $KURL -O /usr/bin/kind.bin ;\
-    /usr/bin/echo -e '#!/bin/bash\nsudo env DOCKER_HOST=unix:///var/run/docker-host.sock /usr/bin/kind.bin "$@"' >/usr/bin/kind ;\
-    chmod +x /usr/bin/kind.bin /usr/bin/kind
-# Download Kubectl
-RUN KVER="v1.23.0" ;\
-    ARCH="$(dpkg --print-architecture)" ;\
-    KURL="https://dl.k8s.io/release/$KVER/bin/linux/$ARCH/kubectl" ;\
-    wget $KURL -O /usr/bin/kubectl && chmod +x /usr/bin/kubectl
-# Download WSK
-RUN WSK_VERSION=1.2.0 ;\
-    WSK_BASE=https://github.com/apache/openwhisk-cli/releases/download ;\
-    ARCH=$(dpkg --print-architecture) ;\
-    WSK_URL="$WSK_BASE/$WSK_VERSION/OpenWhisk_CLI-$WSK_VERSION-linux-$ARCH.tgz" ;\
-    curl -sL "$WSK_URL" | tar xzvf - -C /usr/bin/
-# Download terraform
-RUN ARCH="$(dpkg --print-architecture)" ;\
-    TVER=1.1.0 ;\
-    TURL="https://releases.hashicorp.com/terraform/$TVER/terraform_${TVER}_linux_${ARCH}.zip" ;\
-    curl -sL $TURL -o /tmp/terraform.zip ;\
-    unzip /tmp/terraform.zip -d /usr/bin ;\
-    rm /tmp/terraform.zip
-RUN NUV_VERSION=v0.1.1 ;\
-    NUV_BASE=https://github.com/nuvolaris/nuvolaris-cli/releases/download ;\
-    ARCH=$(dpkg --print-architecture) ;\
-    NUV_URL="$NUV_BASE/$NUV_VERSION/nuv-$NUV_VERSION-linux-$ARCH.tar.gz" ;\
-    curl -sL "$NUV_URL" | tar xzvf - -C /usr/bin/
-
+   docker-ce-cli \
+   google-cloud-cli
 # add delta to show diffs
 RUN FILE="git-delta_0.11.2_$(dpkg --print-architecture).deb" ;\
     wget "https://github.com/dandavison/delta/releases/download/0.11.2/$FILE" -O "/tmp/$FILE" ;\
-    sudo dpkg -i "/tmp/$FILE" ; rm "/tmp/$FILE"
+    dpkg -i "/tmp/$FILE" ; rm "/tmp/$FILE"
+# Download Kubectl
+RUN VER="v1.23.0" ;\
+    ARCH="$(dpkg --print-architecture)" ;\
+    URL="https://dl.k8s.io/release/$VER/bin/linux/$ARCH/kubectl" ;\
+    wget $URL -O /usr/bin/kubectl && chmod +x /usr/bin/kubectl
+# Download kind and setup a wrapper
+RUN VER="v0.11.1" ;\
+    ARCH="$(dpkg --print-architecture)" ;\
+    URL="https://github.com/kubernetes-sigs/kind/releases/download/$VER/kind-linux-$ARCH" ;\
+    wget $URL -O /usr/bin/kind.bin ;\
+    /usr/bin/echo -e '#!/bin/bash\nsudo env DOCKER_HOST=unix:///var/run/docker-host.sock /usr/bin/kind.bin "$@"' >/usr/bin/kind ;\
+    chmod +x /usr/bin/kind.bin /usr/bin/kind
+# Download terraform
+RUN ARCH="$(dpkg --print-architecture)" ;\
+    VER=1.1.0 ;\
+    URL="https://releases.hashicorp.com/terraform/$VER/terraform_${VER}_linux_${ARCH}.zip" ;\
+    curl -sL $URL -o /tmp/terraform.zip ;\
+    unzip /tmp/terraform.zip -d /usr/bin ;\
+    rm /tmp/terraform.zip
+# Add the aws cli and eksctl
+RUN mkdir /tmp/awscli ;\
+    curl -sL "https://awscli.amazonaws.com/awscli-exe-linux-$(arch).zip" -o "/tmp/awscli/awscliv2.zip" ;\
+    cd /tmp/awscli ; unzip awscliv2.zip ;\
+    ./aws/install ;\
+    rm -Rvf /tmp/awscli
+# Install eksctl
+RUN curl -sL "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_$(dpkg --print-architecture).tar.gz" |\
+    tar xzf - -C /usr/bin
+# Install azure cli
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+# Download openshift installer
+RUN VER=4.10.4 ;\
+    BASE=https://mirror.openshift.com/pub/openshift-v4/clients/ocp ;\
+    ARCH=$(dpkg --print-architecture) ;\
+    URL="$BASE/$VER/openshift-install-linux-$VER.tar.gz" ;\
+    curl -sL "$URL" | tar xzvf - -C /usr/bin/
+# install juju
+RUN mkdir /tmp/juju ; cd /tmp/juju ;\
+    curl -sL https://launchpad.net/juju/2.9/2.9.0/+download/juju-2.9.0-linux-$(dpkg --print-architecture).tar.xz | tar xJvf - ;\
+    install -o root -g root -m 0755 juju /usr/bin/juju ;\
+    rm -Rvf /tmp/juju
+# Install doctl
+RUN DO_VERSION=1.71.0 ;\
+    DO_BASE=https://github.com/digitalocean/doctl/releases/download ;\
+    ARCH=$(dpkg --print-architecture) ;\
+    DO_URL="$DO_BASE/v$DO_VERSION/doctl-$DO_VERSION-linux-$ARCH.tar.gz" ;\
+    curl -sL "$DO_URL" | tar xzvf - -C /usr/bin/
+# k3sup
+RUN VER=0.11.3 ;\
+    BASE=https://github.com/alexellis/k3sup/releases/download ;\
+    ARCH=-$(dpkg --print-architecture) ;\
+    if [[ $ARCH == "amd64" ]] ; then ARCH="" ; fi ;\
+    URL="$BASE/$VER/k3sup${ARCH}" ;\
+    curl -sL "$URL" >/usr/bin/k3sup ; chmod +x /usr/bin/k3sup
+# Download WSK
+RUN VER=1.2.0 ;\
+    BASE=https://github.com/apache/openwhisk-cli/releases/download ;\
+    ARCH=$(dpkg --print-architecture) ;\
+    URL="$BASE/$VER/OpenWhisk_CLI-$VER-linux-$ARCH.tgz" ;\
+    curl -sL "$URL" | tar xzvf - -C /usr/bin/
+# Install nuv 
+RUN VER=v0.1.2 ;\
+    BASE=https://github.com/nuvolaris/nuvolaris-cli/releases/download ;\
+    ARCH=$(dpkg --print-architecture) ;\
+    URL="$BASE/$VER/nuv-$VER-linux-$ARCH.tar.gz" ;\
+    curl -sL "$URL" | tar xzvf - -C /usr/bin/
 # add and configure user
 RUN useradd -m nuvolaris -s /bin/bash &&\
     echo "nuvolaris ALL=(ALL:ALL) NOPASSWD: ALL" >>/etc/sudoers
