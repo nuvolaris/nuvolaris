@@ -16,8 +16,8 @@
 # under the License.
 #
 import kopf
-import os, os.path
 import logging
+import os, os.path
 import nuvolaris.couchdb as couchdb
 import nuvolaris.mongodb as mongodb
 import nuvolaris.whisk as whisk
@@ -36,19 +36,29 @@ def main_login(**kwargs):
 # tested by an integration test
 @kopf.on.create('nuvolaris.org', 'v1', 'whisks')
 def main_create(spec, **kwargs):
-    bucket.create()
-    couchdb.create()
-    couchdb.init()
-    mongodb.create()
-    mongodb.init()
-    whisk.create()
-    return {'message': 'created'}
+    message = []
+    #bucket.create()
+    #couchdb.create()
+    #couchdb.init()
+    #mongodb.create()
+    #mongodb.init()
+    message.append(whisk.create())
+    return {'message': "\n".join(message) }
 
 # tested by an integration test
 @kopf.on.delete('nuvolaris.org', 'v1', 'whisks')
 def main_delete(spec, **kwargs):
-    res = whisk.delete()
-    mongodb.delete()
-    couchdb.delete()
-    bucket.delete()
-    return {'message': 'deleted'}
+    message = []
+    message.append(whisk.delete())
+    #mongodb.delete()
+    #couchdb.delete()
+    #bucket.delete()
+    return {'message': "\n".join(message)}
+
+@kopf.on.field("service", field='status.loadBalancer')
+def main_service_update(old, new, **kwargs):
+    if "ingress" in new and len(new['ingress']) >0:
+        apiHost = new['ingress'][0]
+        nodeLabels = kube.kubectl("get", "nodes", jsonpath='{.items[].metadata.labels}')
+        print(whisk_apihostapiHost, nodeLabels)
+        

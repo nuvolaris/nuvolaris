@@ -16,4 +16,5 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+kubectl apply -f deploy/crd/whisk-crd.yaml
 poetry run kopf run -n nuvolaris -m nuvolaris nuvolaris/main.py

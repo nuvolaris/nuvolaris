@@ -15,35 +15,27 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-apiVersion: apps/v1
-kind: Deployment
+---
+apiVersion: v1
+kind: ServiceAccount
 metadata:
+  name: nuvolaris-operator
   namespace: nuvolaris
-  name: standalone
-spec:
-  selector:
-    matchLabels:
-      app: standalone
-  template:
-    metadata:
-      labels:
-        app: standalone
-    spec:
-      serviceAccountName: standalone
-      containers:
-      - name: openwhisk-standalone
-        image: ghcr.io/nuvolaris/openwhisk-standalone:latest
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 3233
-          name: apihost
-        - containerPort: 3232
-          name: playground
-        - containerPort: 7896
-          name: debugger
-        lifecycle:
-          preStop:
-            exec:
-              command: [
-                "bash", "-c", "kill $(ps -C java -o pid=)"
-              ]
+  labels:
+    app: nuvolaris-operator
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: nuvolaris-operator-crb
+  namespace: nuvolaris
+  labels:
+    app: nuvolaris-operator
+subjects:
+- kind: ServiceAccount
+  namespace: nuvolaris
+  name: nuvolaris-operator
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
