@@ -37,6 +37,10 @@ header:
     - '**/openwhisk/**'
     - '**/openwhisk-*/**'
     - '**/parthenon/**'
+    - '**/*.kubeconfig'
+    - '**/license-eye'
+    - '**/id_rsa*'
+    - '**/.gitkeep'
  
 dependency:
   files:

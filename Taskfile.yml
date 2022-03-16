@@ -80,3 +80,11 @@ tasks:
   
   stop-couchdb: kubectl delete -f deploy/couchdb
   
+
+  use: |
+    if test -z "{{.CLI_ARGS}}"
+    then kubectl config view -o json | jq '.contexts | .[].name' -r  |  awk '{print NR, $0}'
+    else CTX=$(kubectl config view -o json | jq '.contexts | .[].name' -r | awk 'NR=={{.CLI_ARGS}} { print}')
+         kubectl config use-context "$CTX"
+         kubectl get nodes
+    fi

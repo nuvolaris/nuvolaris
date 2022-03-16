@@ -15,9 +15,15 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-[submodule "openwhisk"]
-	path = openwhisk
-	url = https://github.com/nuvolaris/openwhisk
-[submodule "nuvolaris-test"]
-	path = nuvolaris-test
-	url = https://github.com/nuvolaris/nuvolaris-test
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: nuvolaris
+  name: apihost-external
+spec:
+  type: LoadBalancer
+  selector:
+    app: standalone
+  ports:
+  - port: 80
+    targetPort: 3233
