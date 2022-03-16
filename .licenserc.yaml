@@ -53,7 +53,12 @@ header:
     - 'CODEOWNERS'
     - '**/inventory/**'
     - '**/kubeconfig/**'
- 
+    - '**/*.kubeconfig'
+    - '**/id_rsa*'
+    - '**/.env'
+    - '**/aliases'
+    - '**/playground'
+
 dependency:
   files:
     - go.mod
