@@ -56,7 +56,7 @@ RUN VER="v1.23.0" ;\
     URL="https://dl.k8s.io/release/$VER/bin/linux/$ARCH/kubectl" ;\
     wget $URL -O /usr/bin/kubectl && chmod +x /usr/bin/kubectl
 # Download kind and setup a wrapper
-RUN VER="v0.11.1" ;\
+RUN VER="v0.12.0" ;\
     ARCH="$(dpkg --print-architecture)" ;\
     URL="https://github.com/kubernetes-sigs/kind/releases/download/$VER/kind-linux-$ARCH" ;\
     wget $URL -O /usr/bin/kind.bin ;\

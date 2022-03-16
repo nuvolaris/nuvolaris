@@ -19,7 +19,7 @@ version: '3'
 
 vars:
   MODULES: controller runtimes operator cli config testing
-  BASETAG: v0.2.0-trinity
+  BASETAG: 0.2.0-trinity
   IMAGE: nuvolaris/nuvolaris-devkit
   REPO: ghcr.io
   TAG:
@@ -33,7 +33,9 @@ tasks:
 
   default: true
 
-  tag: git tag -d $(git tag) ; git tag -f {{.BASETAG}}.$(date +%y%m%d%H)
+  image-tag: git tag -d $(git tag) ; git tag -f {{.BASETAG}}.$(date +%y%m%d%H)
+
+  cli-tag: git tag -d $(git tag) ; git tag -f v{{.BASETAG}}.$(date +%y%m%d%H)
 
   buildx-and-push:
     cmds:

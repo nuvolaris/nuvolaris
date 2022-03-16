@@ -53,8 +53,8 @@ nodes:
     kind: InitConfiguration
     nodeRegistration:
       kubeletExtraArgs:
-        node-labels: "ingress-ready=true,nuvolaris-apihost=http://localhost:3033"
-- role: worker
+        node-labels: "ingress-ready=true,nuvolaris-apihost=localhost,nuvolaris-apiport=3233,nuvolaris-protocol=http"
+- role: worker        
   extraPortMappings:
   - containerPort: 30232
     hostPort: 3232
