@@ -27,7 +27,7 @@ fi
 export PS1="[\W]\$ "
 export NODENV_VERSION=16.13.0
 export PYENV_VERSION=3.9.9
-export GOENV_VERSION=1.17.3
+export GOENV_VERSION=1.18
 export DOCKER_VERSION=19
 export JAVA_VERSION=8
 
