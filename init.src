@@ -15,6 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+task config
 kubectl config set-context --current --namespace nuvolaris
 export $(xargs <./nuvolaris-test/.env)
 export O=deploy/nuvolaris-operator
