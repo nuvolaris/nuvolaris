@@ -19,6 +19,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: wsk-prewarm-nodejs14
+  namespace: nuvolaris
 spec:
   containers:
   - name: nodejs
