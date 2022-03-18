@@ -126,3 +126,29 @@ def apply(obj, namespace="nuvolaris"):
     if not isinstance(obj, str):
         obj = json.dumps(obj)
     return kubectl("apply", "-f", "-", namespace=namespace, input=obj)
+
+# patch an object
+def patch(name, data, namespace="nuvolaris", tpe="merge"):
+    """
+    >>> from nuvolaris.testutil import nprint
+    >>> nprint(kubectl("apply", "-f", "deploy/test/_crd.yaml"))
+    customresourcedefinition.apiextensions.k8s.io/samples.nuvolaris.org created
+    >>> nprint(kubectl("apply", "-f", "deploy/test/_obj.yaml"))
+    sample.nuvolaris.org/obj created
+    >>> nprint(kubectl("get", "sample/obj"))
+    NAME   MESSAGE
+    obj    
+    >>> nprint(patch("sample/obj", {"spec": {"message": "hello"}}))
+    sample.nuvolaris.org/obj patched
+    >>> nprint(kubectl("get", "sample/obj"))
+    NAME   MESSAGE
+    obj    hello
+    >>> nprint(kubectl("delete", "-f", "deploy/test/_obj.yaml"))
+    sample.nuvolaris.org "obj" deleted
+    >>> nprint(kubectl("delete", "-f", "deploy/test/_crd.yaml"))
+    customresourcedefinition.apiextensions.k8s.io "samples.nuvolaris.org" deleted
+    """
+    if not type(data) == str:
+        data = json.dumps(data)
+    res = kubectl("patch", name, "--type", tpe, "-p", data)
+    return res

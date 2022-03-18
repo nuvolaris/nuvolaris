@@ -66,3 +66,9 @@ def catch(f):
     try: print(f().strip())
     except Exception as e:
         print(type(e), str(e).strip())
+
+# print not blank lines only
+def nprint(out):
+    for line in out.split("\n"):
+        if line.strip() != "":
+            print(line)

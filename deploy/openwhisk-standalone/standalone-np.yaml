@@ -16,43 +16,43 @@
 # under the License.
 #
 apiVersion: v1
-kind: ServiceAccount
+kind: Service
 metadata:
-  name: controller
   namespace: nuvolaris
-  labels:
+  name: controller
+spec:
+  type: NodePort
+  selector:
     app: controller
+  ports:
+  - port: 3233
+    targetPort: 3233
+    nodePort: 30233
 ---
-kind: Role
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: v1
+kind: Service
 metadata:
-  name: controller
   namespace: nuvolaris
-  labels:
+  name: playground
+spec:
+  type: NodePort
+  selector:
     app: controller
-rules:
-- apiGroups: ["extensions", "apps"]
-  resources: ["deployments"]
-  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
-- apiGroups: [""]
-  resources: ["pods"]
-  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
-- apiGroups: [""]
-  resources: ["pods/log"]
-  verbs: ["get", "list"]
+  ports:
+  - port: 3232
+    targetPort: 3232
+    nodePort: 30232
 ---
-kind: RoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: v1
+kind: Service
 metadata:
-  name: controller
   namespace: nuvolaris
-  labels:
+  name: debugger
+spec:
+  type: NodePort
+  selector:
     app: controller
-subjects:
-- kind: ServiceAccount
-  namespace: nuvolaris
-  name:  controller 
-roleRef:
-  kind: Role
-  name: controller
-  apiGroup: rbac.authorization.k8s.io
+  ports:
+  - port: 7896
+    targetPort: 7896
+    nodePort: 30896

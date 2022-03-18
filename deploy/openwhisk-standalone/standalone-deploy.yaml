@@ -19,20 +19,20 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: nuvolaris
-  name: standalone
+  name: controller
 spec:
   selector:
     matchLabels:
-      app: standalone
+      app: controller
   template:
     metadata:
       labels:
-        app: standalone
+        app: controller
     spec:
-      serviceAccountName: standalone
+      serviceAccountName: controller
       containers:
       - name: openwhisk-standalone
-        image: ghcr.io/nuvolaris/openwhisk-standalone:latest
+        image: ghcr.io/nuvolaris/openwhisk-standalone:0.2.0-trinity.22031709
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3233
@@ -45,5 +45,5 @@ spec:
           preStop:
             exec:
               command: [
-                "bash", "-c", "kill $(ps -C java -o pid=)"
+                "/home/bin/stop"
               ]

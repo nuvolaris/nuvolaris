@@ -15,44 +15,41 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-apiVersion: v1
-kind: Service
-metadata:
-  namespace: nuvolaris
-  name: apihost
-spec:
-  type: NodePort
-  selector:
-    app: standalone
-  ports:
-  - port: 3233
-    targetPort: 3233
-    nodePort: 30233
 ---
-apiVersion: v1
-kind: Service
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
 metadata:
+  name: whisks.nuvolaris.org
   namespace: nuvolaris
-  name: playground
 spec:
-  type: NodePort
-  selector:
-    app: standalone
-  ports:
-  - port: 3232
-    targetPort: 3232
-    nodePort: 30232
----
-apiVersion: v1
-kind: Service
-metadata:
-  namespace: nuvolaris
-  name: debugger
-spec:
-  type: NodePort
-  selector:
-    app: standalone
-  ports:
-  - port: 7896
-    targetPort: 7896
-    nodePort: 30896
+  scope: Namespaced
+  group: nuvolaris.org
+  names:
+    kind: Whisk
+    plural: whisks
+    singular: whisk
+    shortNames:
+      - wsk
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      subresources: { status: { } } 
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                debug:
+                  type: boolean
+            status:
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+      additionalPrinterColumns:
+        - name: Debug
+          type: string
+          priority: 0
+          jsonPath: .spec.debug
+          description: Debugging enabled

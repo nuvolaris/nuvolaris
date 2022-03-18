@@ -39,7 +39,7 @@ tasks:
 
   prebuild: cp -v openwhisk/ansible/files/*.json nuvolaris/files
 
-  tag: git tag -d $(git tag) ; git tag -f {{.BASETAG}}.$(date +%y%m%d%H)
+  image-tag: git tag -d $(git tag) ; git tag -f {{.BASETAG}}.$(date +%y%m%d%H)
 
   buildx-and-push:
     deps: [prebuild]
@@ -80,17 +80,22 @@ tasks:
   
   stop-couchdb: kubectl delete -f deploy/couchdb
   
+  config: task config -d nuvolaris-test
 
-  use: |
-    if test -z "{{.CLI_ARGS}}"
-    then kubectl config view -o json | jq '.contexts | .[].name' -r  |  awk '{print NR, $0}'
-         echo current: "$(kubectl config current-context)"
-    else CTX=$(kubectl config view -o json | jq '.contexts | .[].name' -r | awk 'NR=={{.CLI_ARGS}} { print}')
-         kubectl config use-context "$CTX"
-         kubectl get nodes
-    fi
+  use: 
+    cmds: 
+      - |
+        if test -z "{{.CLI_ARGS}}"
+        then kubectl config view -o json | jq '.contexts | .[].name' -r  |  awk '{print NR, $0}'
+            echo current: "$(kubectl config current-context)"
+        else CTX=$(kubectl config view -o json | jq '.contexts | .[].name' -r | awk 'NR=={{.CLI_ARGS}} { print}')
+            kubectl config use-context "$CTX"
+            kubectl get nodes
+        fi
+    silent: true
 
   1: task use -- 1
   2: task use -- 2
   3: task use -- 3
-  
+  4: task use -- 4
+  5: task use -- 5

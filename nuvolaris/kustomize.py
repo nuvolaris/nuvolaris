@@ -49,8 +49,11 @@ def kustomize(where, *what):
         dirs = os.listdir(f"deploy/{where}")
         dirs.sort()
         for file in dirs:
-            if file != "kustomization.yaml":
-                f.write(f"- {file}\n")
+            if file == "kustomization.yaml":
+              continue
+            if file.startswith("_"):
+              continue
+            f.write(f"- {file}\n")
     return kube.kubectl("kustomize", dir)
 
 

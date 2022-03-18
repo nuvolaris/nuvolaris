@@ -18,14 +18,15 @@
 import kopf
 import logging
 import os, os.path
+import nuvolaris.kube as kube
 import nuvolaris.couchdb as couchdb
 import nuvolaris.mongodb as mongodb
-import nuvolaris.whisk as whisk
+import nuvolaris.openwhisk as openwhisk
 import nuvolaris.bucket as bucket
 
 # tested by an integration test
 @kopf.on.login()
-def main_login(**kwargs):
+def login(**kwargs):
     token = '/var/run/secrets/kubernetes.io/serviceaccount/token'
     if os.path.isfile(token):
         logging.debug("found serviceaccount token: login via pykube in kubernetes")
@@ -35,30 +36,38 @@ def main_login(**kwargs):
 
 # tested by an integration test
 @kopf.on.create('nuvolaris.org', 'v1', 'whisks')
-def main_create(spec, **kwargs):
+def whisk_create(spec, name, **kwargs):
     message = []
     #bucket.create()
     #couchdb.create()
     #couchdb.init()
     #mongodb.create()
     #mongodb.init()
-    message.append(whisk.create())
-    return {'message': "\n".join(message) }
+    message.append(openwhisk.create())
+    msg = "\n".join(message)
+    logging.debug(msg)
+    return msg 
 
 # tested by an integration test
 @kopf.on.delete('nuvolaris.org', 'v1', 'whisks')
-def main_delete(spec, **kwargs):
+def whisk_delete(spec, **kwargs):
     message = []
-    message.append(whisk.delete())
+    message.append(openwhisk.delete())
+    message.append(openwhisk.cleanup())
     #mongodb.delete()
     #couchdb.delete()
     #bucket.delete()
-    return {'message': "\n".join(message)}
+    msg = "\n".join(message)
+    logging.debug(msg)
+    return msg
 
+# tested by integration test
 @kopf.on.field("service", field='status.loadBalancer')
-def main_service_update(old, new, **kwargs):
+def service_update(old, new, name, **kwargs):
+    nodeLabels = kube.kubectl("get", "nodes", jsonpath='{.items[].metadata.labels}')
+    ingress = []
     if "ingress" in new and len(new['ingress']) >0:
-        apiHost = new['ingress'][0]
-        nodeLabels = kube.kubectl("get", "nodes", jsonpath='{.items[].metadata.labels}')
-        print(whisk_apihostapiHost, nodeLabels)
-        
+        ingress = new['ingress']
+    
+    apihost = openwhisk.apihost(ingress, nodeLabels)
+    openwhisk.annotate(f"apihost={apihost}")

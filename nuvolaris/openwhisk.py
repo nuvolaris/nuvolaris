@@ -30,18 +30,18 @@ def apihost(apiHost, nodeLabels):
     """
     >>> a = []
     >>> l =  [ {"beta.kubernetes.io/arch": "arm64", "nuvolaris-apihost": "localhost", "nuvolaris-apiport": "3233", "nuvolaris-protocol": "http"} ]
-    >>> whisk_apihost(a,l)
-    http://localhost:3233
+    >>> apihost(a,l)
+    'http://localhost:3233'
     >>> a = [ { "hostname": "elb.amazonaws.com"} ]
     >>> l = []
-    >>> whisk_apihost(a, l)
-    http://elb.amazonaws.com
+    >>> apihost(a, l)
+    'http://elb.amazonaws.com'
     >>> a = [ { "hostname": "elb.amazonaws.com"} ]
     >>> l =  [ { "nuvolaris-apiport": "3233", "nuvolaris-protocol": "https"} ]
-    >>> whisk_apihost(a, l)
-    https://elb.amazonaws.com:3233
+    >>> apihost(a, l)
+    'https://elb.amazonaws.com:3233'
     """
-    url = urllib.parse.urlparse("http://localhost")
+    url = urllib.parse.urlparse("http://pending")
     if len(apiHost) > 0 and "hostname" in apiHost[0]:
         url = url._replace(netloc = apiHost[0]['hostname'])
 
@@ -52,18 +52,19 @@ def apihost(apiHost, nodeLabels):
             url = url._replace(scheme = node["nuvolaris-protocol"])
         if "nuvolaris-apiport" in node:
             url = url._replace(netloc = url.hostname+":"+node["nuvolaris-apiport"])
-
     return url.geturl()
-
 
 def create():
     spec = nku.kustom_list("openwhisk-standalone", nku.image(WHISK_IMG, newTag=WHISK_TAG))
-    info = kube.apply(spec)
-    logging.debug(info)    
-    return "created whisk"
+    return kube.apply(spec)
 
 def delete():
     spec = nku.kustom_list("openwhisk-standalone", nku.image(WHISK_IMG, newTag=WHISK_TAG))
-    info = kube.delete(spec)
-    logging.debug(info)
-    return "deleted whisk"
+    return kube.delete(spec)
+
+def cleanup():
+    return kube.kubectl("delete", "pod", "--all")
+
+def annotate(keyval):
+    kube.kubectl("annotate", "cm/config",  keyval, "--overwrite")
+
