@@ -92,7 +92,7 @@ Check  [our development guide](docs/DEVEL.md) for more informations.
 ## How to contribute
 
 - Either find an open and unassigned issue, or open one by yourself in the [Issue Tracker](https://github.com/nuvolaris/nuvolaris/issues) describing what you want to do.
-- Please discuss with us and ensure you want to do is approved by the [project owners](OWNERS.md), if you want to be sure your PR will be merged We can still merge unsolicited PR, but if you do not discuss it before there is some risk that for some reason we may unable to merge it. 
+- Please discuss with us and ensure you want to do is approved by the [project owners](docs/OWNERS.md), if you want to be sure your PR will be merged We can still merge unsolicited PR, but if you do not discuss it before there is some risk that for some reason we may unable to merge it. 
 - Get an issue assigned. **Seriously**. 
 - Code it!
 ## How to submit a contribution
