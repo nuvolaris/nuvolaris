@@ -15,4 +15,6 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-bash --init-file setup.source
+export BASH_SILENCE_DEPRECATION_WARNING=1
+BASE="$(dirname $0)"
+bash --init-file $BASE/setup.source

@@ -23,8 +23,13 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
 then echo "You must source this script with bash, not execute it." ; kill -INT $$
 fi
 
+# prompt
+parse_git_branch() {
+     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'
+}
+export PS1="[\[\e[32m\]\W:\[\e[91m\]\$(parse_git_branch)\[\e[00m\]]$ "
+
 # versions
-export PS1="[\W]\$ "
 export NODENV_VERSION=16.13.0
 export PYENV_VERSION=3.9.9
 export GOENV_VERSION=1.18.0
