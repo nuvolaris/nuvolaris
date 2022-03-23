@@ -37,8 +37,12 @@ tasks:
     status:
       - test -e $GOBIN/kopf
 
-  prebuild: cp -v openwhisk/ansible/files/*.json nuvolaris/files
-
+  prebuild: 
+    - | 
+        if test -d ../nuvolaris-controller
+        then cp -v ../nuvolaris-controller/openwhisk/ansible/files/*.json nuvolaris/files
+        else echo "not found ../nuvolaris-controller/openwhisk"
+        fi
   image-tag: git tag -d $(git tag) ; git tag -f {{.BASETAG}}.$(date +%y%m%d%H)
 
   buildx-and-push:
