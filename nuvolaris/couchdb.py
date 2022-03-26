@@ -17,6 +17,7 @@
 #
 import nuvolaris.kustomize as nku
 import nuvolaris.kube as kube
+import nuvolaris.couchdb_util as cu
 import os, os.path
 import requests as r
 import kopf
@@ -34,4 +35,5 @@ def delete():
     return 
 
 def init():
+    cu.create_db("subjects")
     return "TODO"

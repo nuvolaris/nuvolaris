@@ -135,9 +135,9 @@ def delete_doc(database, doc):
 def test_doc():
   """
   >>> from nuvolaris.couchdb_util import *
-  >>> create_db("subjects")
+  >>> db = "test"
+  >>> create_db(db)
   True
-  >>> db = "subjects"
   >>> get_doc(db, "test") == None
   True
   >>> doc = {"_id":"test", "value":"hello" }
@@ -154,9 +154,8 @@ def test_doc():
   True
   >>> delete_doc(db, doc)
   False
-  >>> delete_db("subjects")
+  >>> delete_db(db)
   True
-
   """
   pass
 
@@ -164,21 +163,9 @@ def test_doc():
 # template = "test.json"
 # data = {"item": {"value": {"user": "mic", "pass": "pw"}}}
 # data = {"item": "hello"}
-def update_template(database, template, data):
+def update_templated_doc(database, template, data):
     """
     """
     tpl = env.get_template(template)
     doc = json.loads(tpl.render(data))
     res = update_doc(database, doc)
-
-def init(secrets):
-  print("SAMPLE EXPAND")
-  [ [username, password] ] = list(secrets["couchdb"].items())
-  print(sample_expand(username=username, password=password))
-  # implement here orig/initdb.yml
-  print("SAMPLE REQUEST", sample_request())
-
-if __name__ == "__main__":
-  import yaml
-  secrets = yaml.safe_load(open("tests/operator-obj.yaml"))["spec"]
-  init(secrets)
