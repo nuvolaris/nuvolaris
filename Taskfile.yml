@@ -31,7 +31,7 @@ dotenv:
 tasks:
 
   setup:
-    deps: [prebuild]
+    #deps: [prebuild]
     cmds:
       - poetry install
     status:
@@ -56,10 +56,11 @@ tasks:
 
   buildx: docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} .
 
-  run: 
-    cmds:
-    - kubectl apply -f tests/deploy/operator-crd.yaml
-    - poetry run kopf run -n nuvolaris -m nuvolaris nuvolaris/main.py {{.CLI_ARGS}}
+  run: ./run.sh
+
+  deploy: kubectl -n nuvolaris apply -f deploy/nuvolaris-operator/whisk.yaml
+
+  undeploy: kubectl -n nuvolaris delete -f deploy/nuvolaris-operator/whisk.yaml
 
   env: env
 
