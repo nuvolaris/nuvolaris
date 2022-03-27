@@ -31,18 +31,18 @@ dotenv:
 tasks:
 
   setup:
-    #deps: [prebuild]
     cmds:
       - poetry install
     status:
       - test -e $GOBIN/kopf
 
-  prebuild: 
+  update-files: 
     - | 
         if test -d ../nuvolaris-controller
         then cp -v ../nuvolaris-controller/openwhisk/ansible/files/*.json nuvolaris/files
         else echo "not found ../nuvolaris-controller/openwhisk"
         fi
+
   image-tag: git tag -d $(git tag) ; git tag -f {{.BASETAG}}.$(date +%y%m%d%H)
 
   buildx-and-push:

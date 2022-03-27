@@ -17,7 +17,6 @@
 #
 import os, json
 import requests as req
-from jinja2 import Environment, FileSystemLoader
 
 db_protocol   = os.environ.get("DB_PROTOCOL", "http")
 db_prefix     = os.environ.get("DB_PREFIX", "nuvolaris_") 
@@ -29,11 +28,6 @@ db_port       = os.environ.get("DB_PORT", "5984")
 
 db_auth = req.auth.HTTPBasicAuth(db_username,db_password)
 db_base = f"{db_protocol}://{db_host}:{db_port}/{db_prefix}"
-
-loader = FileSystemLoader(["./nuvolaris/templates", "./nuvolaris/files"])
-env = Environment(loader=loader)
-
-
 
 # check if database exists, return boolean
 def check_db(database):
@@ -120,17 +114,26 @@ def update_doc(database, doc):
     return r.status_code in [200,201]
   return False
 
-def delete_doc(database, doc):
+def delete_doc(database, id):
   global db_auth, db_base
-  if '_id' in doc:
-    cur = get_doc(database, doc['_id'])
-    if cur and '_rev' in cur:
+  cur = get_doc(database, id)
+  if cur and '_rev' in cur:
       url = f"{db_base}{database}/{cur['_id']}?rev={cur['_rev']}"
       r = req.delete(url, auth=db_auth)
       return r.status_code == 200
-    return False
   return False
- 
+
+from jinja2 import Environment, FileSystemLoader
+loader = FileSystemLoader(["./nuvolaris/templates", "./nuvolaris/files"])
+env = Environment(loader=loader)
+
+def update_templated_doc(database, template, data):
+    """
+    """
+    tpl = env.get_template(template)
+    doc = json.loads(tpl.render(data))
+    return update_doc(database, doc)
+
 
 def test_doc():
   """
@@ -150,22 +153,23 @@ def test_doc():
   True
   >>> get_doc(db, "test")['value']  
   'world'
-  >>> delete_doc(db, doc)
+  >>> delete_doc(db, "test")
   True
-  >>> delete_doc(db, doc)
+  >>> delete_doc(db, "test")
   False
+  >>> update_templated_doc(db, "test.json", {"item": "first"})
+  True
+  >>> get_doc(db, "test")['value']
+  'first'
+  >>> update_templated_doc(db, "test.json", {"item": "second"})
+  True
+  >>> get_doc(db, "test")['value']
+  'second'
+  >>> delete_doc(db, "test")
+  True
   >>> delete_db(db)
   True
   """
   pass
 
-# database = "subjects"
-# template = "test.json"
-# data = {"item": {"value": {"user": "mic", "pass": "pw"}}}
-# data = {"item": "hello"}
-def update_templated_doc(database, template, data):
-    """
-    """
-    tpl = env.get_template(template)
-    doc = json.loads(tpl.render(data))
-    res = update_doc(database, doc)
+
