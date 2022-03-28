@@ -29,3 +29,23 @@ metadata:
   namespace: nuvolaris
 spec:
   debug: false
+  openwhisk:
+    whisk-system: 789c46b1-71f6-4ed5-8c54-816aa4f8c502:abczO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP
+    nuvolaris: 23bc46b1-71f6-4ed5-8c54-816aa4f8c502:123zO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP
+  couchdb:
+    user: whisk_admin
+    password: s0meP@ass
+  invoker:
+    user: invoker_admin
+    password: s0meP@ass1
+  controller:
+    user: controller_admin
+    password: s0meP@ass2
+  mongodb:
+    user: admin
+    password: 0therPa55
+  bucket:
+    id: AKIAIOSFODNN7EXAMPLE
+    key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+    region: eu-central-1
+  

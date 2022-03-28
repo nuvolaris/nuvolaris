@@ -1,0 +1,23 @@
+import nuvolaris.couchdb as cdb
+import nuvolaris.testutil as tu
+import nuvolaris.couchdb_util as cu
+import requests as req
+
+config = tu.load_yaml("deploy/nuvolaris-operator/whisk.yaml")['spec']
+
+assert(cu.configure_single_node())
+assert(cu.configure_no_reduce_limit())
+
+assert(cu.create_db("test"))
+assert(cu.update_doc("test", {"_id":"test"}))
+assert(cu.get_doc("test", "test", db_auth=None)['_id'] == 'test')
+assert(cu.add_user("hello", "world"))
+assert(cu.add_role("test", ["hello"]))
+assert(cu.get_doc("test", "test", db_auth=None) is None)
+assert(cu.get_doc("test", "test", db_auth=req.auth.HTTPBasicAuth("hello", "world"))['_id'] == 'test')
+
+assert(cdb.init_system(config))
+assert(cdb.init_subjects(config))
+assert(cdb.add_subjects(config))
+assert(cdb.init_activations(config))
+assert(cdb.init_actions(config))

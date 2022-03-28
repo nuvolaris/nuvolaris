@@ -15,9 +15,6 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-[submodule "openwhisk"]
-	path = openwhisk
-	url = https://github.com/nuvolaris/openwhisk
 [submodule "nuvolaris-test"]
 	path = nuvolaris-test
 	url = https://github.com/nuvolaris/nuvolaris-test

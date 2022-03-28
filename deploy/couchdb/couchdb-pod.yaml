@@ -21,6 +21,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: couchdb
+  namespace: nuvolaris
 spec:
   replicas: 1
   selector:

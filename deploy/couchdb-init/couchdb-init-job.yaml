@@ -22,6 +22,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: nuvolaris-init-couchdb
+  namespace: nuvolaris
   labels:
     name: nuvolaris-init-couchdb
     app: nuvolaris-openwhisk

@@ -20,7 +20,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: couchdb
-  labels:
+  namespace: nuvolaris
 spec:
   type: NodePort
   selector:

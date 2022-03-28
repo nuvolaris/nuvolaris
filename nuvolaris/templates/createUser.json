@@ -1,7 +1,0 @@
-{
-    "name": "{{ item.value.user }}",
-    "password": "{{ item.value.pass }}",
-    "roles": [],
-    "type": "user"
-  }
-  

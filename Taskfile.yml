@@ -31,13 +31,17 @@ dotenv:
 tasks:
 
   setup:
-    #deps: [prebuild]
     cmds:
       - poetry install
     status:
       - test -e $GOBIN/kopf
 
-  prebuild: cp -v openwhisk/ansible/files/*.json nuvolaris/files
+  update-files: 
+    - | 
+        if test -d ../nuvolaris-controller
+        then cp -v ../nuvolaris-controller/openwhisk/ansible/files/*.json nuvolaris/files
+        else echo "not found ../nuvolaris-controller/openwhisk"
+        fi
 
   image-tag: git tag -d $(git tag) ; git tag -f {{.BASETAG}}.$(date +%y%m%d%H)
 
@@ -56,7 +60,7 @@ tasks:
 
   buildx: docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} .
 
-  run: ./run.sh
+  run: run.sh
 
   deploy: kubectl -n nuvolaris apply -f deploy/nuvolaris-operator/whisk.yaml
 
@@ -71,12 +75,19 @@ tasks:
     do poetry run python3 -m doctest $test {{.CLI_ARGS}}
     done
 
+  integration:
+    - poetry run ipython test/couchdb_test.ipy
+  
   test:
+    - task: start-couchdb
     - task: unit
-    #- cd tests && task test
+    - task: integration
+    - task: stop-couchdb
 
-  start-couchdb: kubectl apply -f deploy/couchdb
-
+  start-couchdb:
+    - kubectl apply -f deploy/nuvolaris-operator/nuvolaris-ns.yaml
+    - kubectl apply -f deploy/couchdb
+  
   init-couchdb: poetry run python nuvolaris/couchdb_init.py
   
   stop-couchdb: kubectl delete -f deploy/couchdb

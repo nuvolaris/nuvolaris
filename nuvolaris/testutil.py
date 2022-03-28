@@ -21,8 +21,6 @@ import yaml
 # takes a string, split in lines and search for the word (a re)
 # if field is a number, splits the line in fields separated by spaces and print the selected field
 # the output is always space trimmed for easier check
-
-
 def grep(input, word, field=None, sort=False):
     r"""
     >>> import nuvolaris.testutil as tu
@@ -72,3 +70,11 @@ def nprint(out):
     for line in out.split("\n"):
         if line.strip() != "":
             print(line)
+
+# load an YAML file
+def load_yaml(file):
+    f = open(file)
+    l = list(yaml.load_all(f, yaml.Loader))
+    if len(l)  > 0:
+        return l[0]
+    return {}
