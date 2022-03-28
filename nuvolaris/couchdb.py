@@ -99,7 +99,8 @@ def add_subjects(config):
     return res
 
 def init(config):
-    res = check(init_system(config), "init_system", True) 
+    res = check(init_system(config), "init_system", True)
     res = check(init_subjects(config), "init_subjects", res) 
-    res = check(init_activations(), "init_activations", res)
-    return check(init_actions(), "init_actions", res)
+    res = check(init_activations(config), "init_activations", res)
+    res = check(init_actions(config), "init_actions", res)
+    return check(add_subjects(config), "add_subjects", res)

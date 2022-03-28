@@ -21,6 +21,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: nuvolaris-db.config
+  namespace: nuvolaris
+
   labels:
     app: nuvolaris-openwhisk
 data:
