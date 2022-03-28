@@ -75,15 +75,19 @@ tasks:
     do poetry run python3 -m doctest $test {{.CLI_ARGS}}
     done
 
+  integration:
+    - poetry run ipython test/couchdb_test.ipy
+  
   test:
+    - task: start-couchdb
     - task: unit
-    #- cd tests && task test
+    - task: integration
+    - task: stop-couchdb
 
   start-couchdb:
     - kubectl apply -f deploy/nuvolaris-operator/nuvolaris-ns.yaml
     - kubectl apply -f deploy/couchdb
   
-
   init-couchdb: poetry run python nuvolaris/couchdb_init.py
   
   stop-couchdb: kubectl delete -f deploy/couchdb
