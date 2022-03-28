@@ -1,0 +1,11 @@
+{
+    "_id": "{{ name }}",
+    "subject": "{{ name }}",
+    "namespaces": [
+      {
+        "name": "{{ name }}",
+        "uuid": "{{ uuid }}",
+        "key": "{{ key }}"
+      }
+    ]
+}
