@@ -60,7 +60,7 @@ tasks:
 
   buildx: docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} .
 
-  run: ./run.sh
+  run: run.sh
 
   deploy: kubectl -n nuvolaris apply -f deploy/nuvolaris-operator/whisk.yaml
 
@@ -79,7 +79,10 @@ tasks:
     - task: unit
     #- cd tests && task test
 
-  start-couchdb: kubectl apply -f deploy/couchdb
+  start-couchdb:
+    - kubectl apply -f deploy/nuvolaris-operator/nuvolaris-ns.yaml
+    - kubectl apply -f deploy/couchdb
+  
 
   init-couchdb: poetry run python nuvolaris/couchdb_init.py
   
