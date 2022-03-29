@@ -41,15 +41,15 @@ spec:
           properties:
             spec:
               type: object
-              properties:
-                debug:
-                  type: boolean
+              x-kubernetes-preserve-unknown-fields: true
             status:
               type: object
-              x-kubernetes-preserve-unknown-fields: true
+              properties:
+                phase:
+                  type: string
       additionalPrinterColumns:
-        - name: Debug
+        - name: Phase
           type: string
           priority: 0
-          jsonPath: .spec.debug
-          description: Debugging enabled
+          jsonPath: .status.Phase
+          description: status message

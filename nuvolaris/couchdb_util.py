@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-import os, json
+import os, json, time
 import requests as req
 
 db_protocol   = os.environ.get("DB_PROTOCOL", "http")
@@ -29,6 +29,19 @@ db_port       = os.environ.get("DB_PORT", "5984")
 db_auth = req.auth.HTTPBasicAuth(db_username,db_password)
 db_url = f"{db_protocol}://{db_host}:{db_port}"
 db_base = f"{db_url}/{db_prefix}"
+
+def wait_db_ready(max_seconds):
+    start = time.time()
+    while time.time() - start < max_seconds*60:
+      try:
+        r = req.get(f"{db_url}/_utils", timeout=1)
+        if r.status_code == 200:
+          return True
+        print(r.status_code)
+      except:
+        print(".", end='')
+        pass
+    return False
 
 # check if database exists, return boolean
 def check_db(database):
@@ -62,7 +75,6 @@ def recreate_db(database, recreate=False):
     msg += " created"
     create_db(database)
   return msg
-
 
 def test_db():
     """
@@ -169,9 +181,10 @@ def test_doc():
   """
   pass
 
+
 def configure_single_node():
   global db_auth, db_url
-  url = f"{db_url}//_cluster_setup"
+  url = f"{db_url}/_cluster_setup"
   data = {"action": "enable_single_node", "singlenode": True, "bind_address": "0.0.0.0", "port": 5984}
   r = req.post(url, auth=db_auth, json=data) 
   return r.status_code == 201

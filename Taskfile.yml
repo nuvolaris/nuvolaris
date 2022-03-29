@@ -36,6 +36,7 @@ tasks:
     status:
       - test -e $GOBIN/kopf
 
+  # update configuration files from openwhisk source
   update-files: 
     - | 
         if test -d ../nuvolaris-controller
@@ -75,22 +76,18 @@ tasks:
     do poetry run python3 -m doctest $test {{.CLI_ARGS}}
     done
 
-  integration:
-    - poetry run ipython test/couchdb_test.ipy
+  integ: |
+    for test in tests/{{.TEST}}*.ipy
+    do poetry run ipython $test {{.CLI_ARGS}}
+    done
   
   test:
-    - task: start-couchdb
     - task: unit
-    - task: integration
-    - task: stop-couchdb
-
-  start-couchdb:
-    - kubectl apply -f deploy/nuvolaris-operator/nuvolaris-ns.yaml
-    - kubectl apply -f deploy/couchdb
+    - task: integ
+  
   
   init-couchdb: poetry run python nuvolaris/couchdb_init.py
   
-  stop-couchdb: kubectl delete -f deploy/couchdb
   
   config: task config -d nuvolaris-test
 
