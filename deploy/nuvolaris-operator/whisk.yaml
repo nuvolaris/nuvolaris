@@ -28,24 +28,29 @@ metadata:
   name: standalone
   namespace: nuvolaris
 spec:
-  debug: false
-  openwhisk:
+  components-enabled:
+    couchdb: true
+    standalone: true
+  volumes:
+    couchdb: 20
+    mongodb: 20
+  openwhisk-initial-subjects:
     whisk-system: 789c46b1-71f6-4ed5-8c54-816aa4f8c502:abczO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP
     nuvolaris: 23bc46b1-71f6-4ed5-8c54-816aa4f8c502:123zO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP
-  couchdb:
+  couchdb-admin:
     user: whisk_admin
     password: s0meP@ass
-  invoker:
-    user: invoker_admin
-    password: s0meP@ass1
-  controller:
-    user: controller_admin
-    password: s0meP@ass2
-  mongodb:
+  mongodb-admin:
     user: admin
     password: 0therPa55
-  bucket:
+  bucket-admin:
     id: AKIAIOSFODNN7EXAMPLE
     key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
     region: eu-central-1
+  couchdb-for-invoker:
+    user: invoker_admin
+    password: s0meP@ass1
+  couchdb-for-controller:
+    user: controller_admin
+    password: s0meP@ass2
   

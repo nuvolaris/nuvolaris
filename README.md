@@ -23,11 +23,11 @@ This is the Kubernetes Operator of the [bit.ly/nuvolaris](nuvolaris project). Fo
 
 You can discuss it in the #[nuvolaris-operator](https://discord.gg/RzJ4FHR2aR) discord channel and in the forum under the category [operator](https://github.com/nuvolaris/nuvolaris/discussions/categories/operator).
 
-Please read the [development document](https://github.com/nuvolaris/nuvolaris/blob/main/docs/DEVEL.md) for instructions how to setup the development environment and develop this module.
+If you are interested in developing it, please read the [design document](DESIGN.doc). Please also read the [development environment document](https://github.com/nuvolaris/nuvolaris/blob/main/docs/DEVEL.md) to learn how to setup it.
 
-## References
+## Developer notes
+The operator is built in Python with [kopf](https://kopf.readthedocs.io/en/stable/). You can find some [examples here](https://github.com/nolar/kopf/tree/main/examples).
 
-This operator is built in Python with [kopf](https://kopf.readthedocs.io/en/stable/).
+The operator uses under the hood [kustomize](https://kustomize.io/) and [kubectl](https://kubernetes.io/docs/reference/kubectl/) to interact with Kubernetes.
 
-You can find some [examples here](https://github.com/nolar/kopf/tree/main/examples).
 

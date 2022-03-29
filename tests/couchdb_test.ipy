@@ -3,8 +3,12 @@ import nuvolaris.testutil as tu
 import nuvolaris.couchdb_util as cu
 import requests as req
 
+!kubectl apply -f deploy/nuvolaris-operator/nuvolaris-ns.yaml
+!kubectl apply -f deploy/couchdb
+
 config = tu.load_yaml("deploy/nuvolaris-operator/whisk.yaml")['spec']
 
+assert(cu.wait_db_ready(60))
 assert(cu.configure_single_node())
 assert(cu.configure_no_reduce_limit())
 
@@ -21,3 +25,5 @@ assert(cdb.init_subjects(config))
 assert(cdb.add_subjects(config))
 assert(cdb.init_activations(config))
 assert(cdb.init_actions(config))
+
+!kubectl delete -f deploy/couchdb
