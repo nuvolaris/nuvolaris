@@ -76,36 +76,6 @@ def recreate_db(database, recreate=False):
     create_db(database)
   return msg
 
-def test_db():
-    """
-    >>> from nuvolaris.couchdb_util import *
-    >>> check_db("subjects")
-    False
-    >>> create_db("subjects")
-    True
-    >>> check_db("subjects")
-    True
-    >>> create_db("subjects")
-    False
-    >>> delete_db("subjects")
-    True
-    >>> delete_db("subjects")
-    False
-    >>> check_db("subjects")
-    False
-    >>> recreate_db("subjects")
-    'recreate_db: created'
-    >>> check_db("subjects")
-    True
-    >>> recreate_db("subjects")
-    'recreate_db:'
-    >>> recreate_db("subjects", recreate=True)
-    'recreate_db: deleted created'
-    >>> delete_db("subjects")
-    True
-    """
-    pass
-
 def get_doc(database, id, db_auth=db_auth, db_base=db_base):
   url = f"{db_base}{database}/{id}"
   r = req.get(url, auth=db_auth) 
@@ -144,42 +114,6 @@ def update_templated_doc(database, template, data):
     doc = json.loads(tpl.render(data))
     return update_doc(database, doc)
 
-def test_doc():
-  """
-  >>> from nuvolaris.couchdb_util import *
-  >>> db = "test"
-  >>> create_db(db)
-  True
-  >>> get_doc(db, "test") == None
-  True
-  >>> doc = {"_id":"test", "value":"hello" }
-  >>> update_doc(db,  doc)
-  True
-  >>> get_doc(db, "test")['value']  
-  'hello'
-  >>> doc['value'] = 'world'
-  >>> update_doc(db,  doc)
-  True
-  >>> get_doc(db, "test")['value']  
-  'world'
-  >>> delete_doc(db, "test")
-  True
-  >>> delete_doc(db, "test")
-  False
-  >>> update_templated_doc(db, "test.json", {"item": "first"})
-  True
-  >>> get_doc(db, "test")['value']
-  'first'
-  >>> update_templated_doc(db, "test.json", {"item": "second"})
-  True
-  >>> get_doc(db, "test")['value']
-  'second'
-  >>> delete_doc(db, "test")
-  True
-  >>> delete_db(db)
-  True
-  """
-  pass
 
 
 def configure_single_node():
