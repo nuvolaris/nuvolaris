@@ -17,12 +17,12 @@
 #
 import kopf
 import logging
-import os, os.path
+import json, flatdict, os, os.path
 import nuvolaris.kube as kube
 import nuvolaris.couchdb as couchdb
 import nuvolaris.mongodb as mongodb
-import nuvolaris.openwhisk as openwhisk
 import nuvolaris.bucket as bucket
+import nuvolaris.openwhisk as openwhisk
 
 # tested by an integration test
 @kopf.on.login()
@@ -37,16 +37,23 @@ def login(**kwargs):
 # tested by an integration test
 @kopf.on.create('nuvolaris.org', 'v1', 'whisks')
 def whisk_create(spec, name, **kwargs):
-    message = []
+
+    #logging.info(spec)
+    #       "CIDKMRB"
+    state = "-------"
+    #message = []
     #bucket.create()
     #couchdb.create()
     #couchdb.init()
     #mongodb.create()
     #mongodb.init()
-    message.append(openwhisk.create())
-    msg = "\n".join(message)
-    logging.debug(msg)
-    return msg 
+    #message.append(openwhisk.create())
+    #msg = "\n".join(message)
+    #logging.debug(msg)
+    #print(json.dumps(spec, indent=4))
+    d = dict(flatdict.FlatDict(spec, delimiter="."))
+    print(json.dumps(d, indent=2))
+    return {"state":state}
 
 # tested by an integration test
 @kopf.on.delete('nuvolaris.org', 'v1', 'whisks')

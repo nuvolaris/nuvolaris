@@ -28,6 +28,7 @@ PyYAML = "^6.0"
 pykube = "^0.15.0"
 Jinja2 = "^3.0.3"
 requests = "^2.27.1"
+flatdict = "^4.0.1"
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.31.0"

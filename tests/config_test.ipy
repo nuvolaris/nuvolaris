@@ -1,0 +1,35 @@
+import nuvolaris.config as cfg
+
+print("*** config_test ***")
+
+assert(cfg.get("g") == None)
+
+assert(cfg.configure("hello", {"a": {"b": 1, "c":  { "d": 2 , "e": 3}, "f": 4}, "g": 5 }  )  )
+
+assert(cfg.configure("hi", {"a":1}) == False)
+
+assert(cfg.get("a") == None)
+
+assert(cfg.get("g") == 5)
+
+assert(len(cfg.getall("a")) == 4)
+
+assert(len(cfg.getall("a.c")) == 2)
+
+assert(len(cfg.keys()) == 5)
+
+assert(len(cfg.keys("a.c")) == 2)
+
+assert(cfg.configure("hello", None))
+
+assert(cfg.configure("hi", {"a":1}, [{"nuvolaris-hello": "world", "something": "else" }, {}, {"nothing":"here"}]))
+
+assert(cfg.get("a") == 1 )
+
+assert(cfg.get("hello") == "world")
+
+
+
+
+
+

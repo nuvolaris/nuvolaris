@@ -45,11 +45,11 @@ spec:
             status:
               type: object
               properties:
-                phase:
+                state:
                   type: string
       additionalPrinterColumns:
-        - name: Phase
+        - name: CIDKMRB
           type: string
           priority: 0
-          jsonPath: .status.Phase
-          description: status message
+          jsonPath: .status.state
+          description: state

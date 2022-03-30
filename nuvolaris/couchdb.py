@@ -44,8 +44,8 @@ def check(f, what, res):
 def init_system(config):
     res = check(cu.configure_single_node(), "configure_single_node", True)
     res = check(cu.configure_no_reduce_limit(), "configure_no_reduce_limit", res)
-    res = check(cu.add_user(config['couchdb-for-controller']['user'], config['couchdb-for-controller']['password']), "add_user: controller", res)
-    return check(cu.add_user(config['couchdb-for-invoker']['user'], config['couchdb-for-invoker']['password']), "add_user: invoker", res)
+    res = check(cu.add_user(config['couchdb']['controller']['user'], config['couchdb']['controller']['password']), "add_user: controller", res)
+    return check(cu.add_user(config['couchdb']['invoker']['user'], config['couchdb']['invoker']['password']), "add_user: invoker", res)
 
 def init_subjects(config):
     subjects_design_docs = [
@@ -54,7 +54,7 @@ def init_subjects(config):
         "namespace_throttlings_design_document_for_subjects_db.json"]
     db = "subjects"
     res = check(cu.create_db(db), "create_db: subjects", True)
-    members = [config['couchdb-for-invoker']['user'], config['couchdb-for-controller']['user']]
+    members = [config['couchdb']['controller']['user'], config['couchdb']['controller']['user']]
     res = check(cu.add_role(db, members), "add_role: subjects", res)
     for i in subjects_design_docs:
         res = check(cu.update_templated_doc(db, i, {}), f"add {i}", res)
@@ -70,7 +70,7 @@ def init_activations(config):
     ]
     db = "activations"
     res = check(cu.create_db(db), "create_db: activations", True)
-    members = [config['couchdb-for-invoker']['user'], config['couchdb-for-controller']['user']]
+    members = [config['couchdb']['controller']['user'], config['couchdb']['controller']['user']]
     res = check(cu.add_role(db, members), "add_role: activations", res)
     for i in activations_design_docs:
         res = check(cu.update_templated_doc(db, i, {}), f"add {i}", res)
@@ -83,7 +83,7 @@ def init_actions(config):
     ]
     db = "whisks"
     res = check(cu.create_db(db), "create_db: whisks", True)
-    members = [config['couchdb-for-invoker']['user'], config['couchdb-for-controller']['user']]
+    members = [config['couchdb']['controller']['user'], config['couchdb']['controller']['user']]
     res = check(cu.add_role(db, members), "add_role: actions", res)
     for i in whisks_design_docs:
         res = check(cu.update_templated_doc(db, i, {}), f"add {i}", res)
@@ -92,8 +92,8 @@ def init_actions(config):
 def add_subjects(config):
     res = True
     db = "subjects"
-    for name in config['openwhisk-initial-subjects'].keys():
-        [uuid, key] = config['openwhisk-initial-subjects'][name].split(":")
+    for name in config['openwhisk']['namespaces'].keys():
+        [uuid, key] = config['openwhisk']['namespaces'][name].split(":")
         data = { "name": name, "key": key, "uuid": uuid}
         res = check(cu.update_templated_doc(db, "subject.json", data), f"add {name}", res)
     return res

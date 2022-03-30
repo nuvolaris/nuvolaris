@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-import os, json, time
+import os, json, time, sys
 import requests as req
 
 db_protocol   = os.environ.get("DB_PROTOCOL", "http")
@@ -39,7 +39,7 @@ def wait_db_ready(max_seconds):
           return True
         print(r.status_code)
       except:
-        print(".", end='')
+        print(".", end='', file=sys.stderr)
         pass
     return False
 

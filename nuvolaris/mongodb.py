@@ -24,11 +24,9 @@ def mongodb_create():
     spec = nku.kustom_list("mongodb")
     return kube.apply(spec)
 
-
 def mongodb_delete():
     spec = nku.kustom_list("mongodb")
     return kube.delete(spec)
-
 
 def init():
     return "TODO"

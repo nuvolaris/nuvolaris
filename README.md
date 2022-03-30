@@ -30,4 +30,3 @@ The operator is built in Python with [kopf](https://kopf.readthedocs.io/en/stabl
 
 The operator uses under the hood [kustomize](https://kustomize.io/) and [kubectl](https://kubernetes.io/docs/reference/kubectl/) to interact with Kubernetes.
 
-

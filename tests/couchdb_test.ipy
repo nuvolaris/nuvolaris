@@ -16,13 +16,15 @@
 # under the License.
 #
 
-import nuvolaris.couchdb as cdb
-import nuvolaris.testutil as tu
-import nuvolaris.couchdb_util as cu
-import requests as req
+print("*** couchdb_test ***")
 
 !kubectl apply -f deploy/nuvolaris-operator/nuvolaris-ns.yaml
 !kubectl apply -f deploy/couchdb
+
+import nuvolaris.couchdb_util as cu
+import nuvolaris.couchdb as cdb
+import nuvolaris.testutil as tu
+import requests as req
 
 config = tu.load_yaml("deploy/nuvolaris-operator/whisk.yaml")['spec']
 
