@@ -43,6 +43,7 @@ if kind get clusters | grep nuvolaris >/dev/null 2>/dev/null
 then kind export kubeconfig --name nuvolaris
 else
   # create cluster
+  mkdir -p $HOME/.nuvolaris/data
   cat <<EOF | kind create cluster --wait=1m --name=nuvolaris --config=-
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
@@ -53,7 +54,7 @@ nodes:
     kind: InitConfiguration
     nodeRegistration:
       kubeletExtraArgs:
-        node-labels: "ingress-ready=true,nuvolaris-apihost=localhost,nuvolaris-apiport=3233,nuvolaris-protocol=http"
+        node-labels: "ingress-ready=true,nuvolaris-apihost=localhost,nuvolaris-apiport=3233,nuvolaris-protocol=http,nuvolaris-kube=kind,nuvolaris-hostpath=data"
 - role: worker        
   extraPortMappings:
   - containerPort: 30232
@@ -74,12 +75,18 @@ nodes:
   - containerPort: 30444
     hostPort: 9444
     protocol: TCP    
+  - containerPort: 6379
+    hostPort: 30379
+    protocol: TCP
   - containerPort: 80
     hostPort: 80
     protocol: TCP
   - containerPort: 443
     hostPort: 443
     protocol: TCP
+  extraMounts:
+  - hostPath: $HOME/.nuvolaris/data
+    containerPath: /data
 EOF
 fi
 

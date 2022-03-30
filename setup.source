@@ -187,11 +187,6 @@ if test -e ~/.localrc
 then source ~/.localrc
 fi
 
-# if there is a kubeconfig configuration, use it
-if test -e kubeconfig
-then export KUBECONFIG=$PWD/kubeconfig
-fi
-
 alias k="kubectl -n nuvolaris"
 alias ka="kubectl -n nuvolaris apply"
 alias kg="kubectl -n nuvolaris get"
