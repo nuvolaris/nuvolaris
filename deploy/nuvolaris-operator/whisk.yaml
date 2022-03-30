@@ -21,36 +21,52 @@ metadata:
   name: standalone
   namespace: nuvolaris
 spec:
+  # not used - should enable debugger for openwhisk
   debug: false
-apiVersion: nuvolaris.org/v1
-kind: Whisk
-metadata:
-  name: standalone
-  namespace: nuvolaris
-spec:
-  components-enabled:
+  ## if empty, assigned by the system with a load balancer
+  apihost: ""
+  apiport: ""
+  protocol: ""
+  # if empty allocate a volume with default storage class othewise allocate volumes in the hostpath
+  # useful only for kind
+  hostpath: ""
+  components:
+    # start openwhisk
+    openwhisk: true
+    # start couchdb
     couchdb: true
-    standalone: true
-  volumes:
-    couchdb: 20
-    mongodb: 20
-  openwhisk-initial-subjects:
-    whisk-system: 789c46b1-71f6-4ed5-8c54-816aa4f8c502:abczO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP
-    nuvolaris: 23bc46b1-71f6-4ed5-8c54-816aa4f8c502:123zO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP
-  couchdb-admin:
-    user: whisk_admin
-    password: s0meP@ass
-  mongodb-admin:
-    user: admin
-    password: 0therPa55
-  bucket-admin:
+    # start kafka
+    kafka: false
+    # start mongodb
+    mongodb: false
+    # start redis
+    redis: false
+    # start s3ninja
+    s3ninja: false
+  openwhisk:
+    namespaces:
+      whisk-system: 789c46b1-71f6-4ed5-8c54-816aa4f8c502:abczO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP
+      nuvolaris: 23bc46b1-71f6-4ed5-8c54-816aa4f8c502:123zO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP
+  couchdb:
+    volume-size: 10
+    admin:
+      user: whisk_admin
+      password: s0meP@ass
+    controller:
+      user: invoker_admin
+      password: s0meP@ass1
+    invoker:
+      user: controller_admin
+      password: s0meP@ass2
+  mongodb:
+    volume-size: 10
+    admin: 
+      user: admin
+      password: 0therPa55
+  kafka:
+    volume-size: 10
+  s3:
+    volume-size: 10
     id: AKIAIOSFODNN7EXAMPLE
     key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
     region: eu-central-1
-  couchdb-for-invoker:
-    user: invoker_admin
-    password: s0meP@ass1
-  couchdb-for-controller:
-    user: controller_admin
-    password: s0meP@ass2
-  
