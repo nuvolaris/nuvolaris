@@ -54,7 +54,7 @@ nodes:
     kind: InitConfiguration
     nodeRegistration:
       kubeletExtraArgs:
-        node-labels: "ingress-ready=true,nuvolaris-apihost=localhost,nuvolaris-apiport=3233,nuvolaris-protocol=http,nuvolaris-kube=kind,nuvolaris-hostpath=data"
+        node-labels: "ingress-ready=true,nuvolaris-apihost=localhost,nuvolaris-apiport=3233,nuvolaris-protocol=http,nuvolaris-kube=kind"
 - role: worker        
   extraPortMappings:
   - containerPort: 30232
@@ -84,9 +84,6 @@ nodes:
   - containerPort: 443
     hostPort: 443
     protocol: TCP
-  extraMounts:
-  - hostPath: $HOME/.nuvolaris/data
-    containerPath: /data
 EOF
 fi
 
