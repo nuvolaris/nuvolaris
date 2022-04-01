@@ -45,11 +45,53 @@ spec:
             status:
               type: object
               properties:
-                state:
+                openwhisk:
+                  type: string
+                invoker:
+                  type: string
+                couchdb:
+                  type: string
+                kafka:
+                  type: string
+                mongodb:
+                  type: string
+                redis:
+                  type: string
+                s3bucket:
                   type: string
       additionalPrinterColumns:
-        - name: CIDKMRB
+        - name: OpenWhisk
           type: string
           priority: 0
-          jsonPath: .status.state
-          description: state
+          jsonPath: .status.openwhisk
+          description: OpenWhisk
+        - name: Invoker
+          type: string
+          priority: 0
+          jsonPath: .status.invoker
+          description: Invoker
+        - name: CouchDB
+          type: string
+          priority: 0
+          jsonPath: .status.couchdb
+          description: CouchDB
+        - name: Kafka
+          type: string
+          priority: 0
+          jsonPath: .status.kafka
+          description: Kafka
+        - name: MongoDB
+          type: string
+          priority: 0
+          jsonPath: .status.mongodb
+          description: MongoDB
+        - name: Redis
+          type: string
+          priority: 0
+          jsonPath: .status.redis
+          description: Redis
+        - name: S3Bucket
+          type: string
+          priority: 0
+          jsonPath: .status.s3bucket
+          description: S3Bucket

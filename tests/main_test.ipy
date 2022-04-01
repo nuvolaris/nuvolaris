@@ -16,48 +16,37 @@
 # under the License.
 #
 
-import nuvolaris.config as cfg
+# I want to test that it deploys
+# - couchdb only
+# - openwhisk and no couchdb
+# - openwhisk with couchdb and no volumes
+# - openwhisk with couchdb and the volumes hostpath
+# - openwhisk with couchdb and the volumes 
 
-print("*** config_test ***")
+import yaml
+import nuvolaris.testutil as tu
+import nuvolaris.config as cfg
+import nuvolaris.kube as kube
+
+from nuvolaris.main import *
+
+(name, spec) = tu.load_sample_config()
+cfg.configure(name, spec)
+
+cfg.getall("components")
+cfg.put("components.couchdb", False)
 
 cfg.clean()
 
-assert(len(cfg.getall("")) == 0)
+print(whisk_create(spec, name))
 
-assert(cfg.configure("hello", {"a": {"b": 1, "c":  { "d": 2 , "e": 3}, "f": 4}, "g": 5 }  )  )
+from unittest.mock import MagicMock
+from unittest.mock import patch
+from unittest.mock import create_autospec
 
-assert(cfg.configure("hi", {"a":1}) == False)
-
-assert(cfg.get("a") == None)
-
-assert(cfg.get("g") == 5)
-
-assert(len(cfg.getall("a")) == 4)
-
-assert(len(cfg.getall("a.c")) == 2)
-
-assert(len(cfg.keys()) == 5)
-
-assert(len(cfg.keys("a.c")) == 2)
-
-assert(cfg.configure("hello", None))
-
-assert(cfg.configure("hi", {"a":1}, [{"nuvolaris-hello": "world", "something": "else" }, {}, {"nothing":"here"}]))
-
-assert(cfg.get("a") == 1 )
-
-assert(cfg.get("hello") == "world")
-
-assert( len(cfg.getall("")) == 2)
-
-assert(cfg.put("a", 2))
-assert(cfg.get("a") == 2)
-assert(cfg.put("b", 3))
-assert(len(cfg.getall("")) == 3)
-
-
-
-
-
-
-
+kfn = create_autospec(kube.kubectl, return_value="ok")
+p = patch('nuvolaris.kube.kubectl', kfn)
+p.start()
+openwhisk.create()
+kube.kubectl("boh")
+p.stop()

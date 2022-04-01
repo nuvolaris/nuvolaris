@@ -18,7 +18,6 @@
 
 print("*** couchdb_util_test ***")
 
-
 def test_db():
     """
     >>> from nuvolaris.couchdb_util import *

@@ -23,6 +23,7 @@ import nuvolaris.couchdb as couchdb
 import nuvolaris.mongodb as mongodb
 import nuvolaris.bucket as bucket
 import nuvolaris.openwhisk as openwhisk
+import nuvolaris.config as cfg
 
 # tested by an integration test
 @kopf.on.login()
@@ -37,23 +38,72 @@ def login(**kwargs):
 # tested by an integration test
 @kopf.on.create('nuvolaris.org', 'v1', 'whisks')
 def whisk_create(spec, name, **kwargs):
-
     #logging.info(spec)
-    #       "CIDKMRB"
-    state = "-------"
+    #       "CKOIMRS"
+    cfg.configure(spec, name)
+
+    state = {
+        "openwhisk": "?",  # Openwhisk Controller or Standalone
+        "invoker": "?",  # Invoker
+        "couchdb": "?",  # Couchdb
+        "kafka": "?",  # Kafka
+        "redis": "?",  # Redis
+        "mongodb": "?",  # MongoDB
+        "s3bucket": "?"   # S3-compatbile buckets
+    }
+
+    if cfg.get('components.couchdb'):
+        state['couchdb']= "starting"
+        #couchdb.create()
+        #couchdb.init()
+    else:
+        state['couchdb'] = "off"
+
+    if cfg.get('components.kafka'):
+        logging.warn("invoker not yet implemented")
+        state['kafka'] = "n/a"
+    else:
+        state['kafka'] = "off"
+
+    if cfg.get('components.openwhisk'):
+        state['openwhisk'] = "starting"
+        #openwhisk.create()        
+    else:
+        state['O'] = "off"
+
+    if cfg.get('components.invoker'):
+        logging.warn("invoker not yet implemented")
+        state['invoker'] = "n/a"
+    else:
+        state['invoker'] = "off"
+
+    if cfg.get('components.mongodb'):
+        logging.warn("invoker not yet implemented")
+        state['mongodb'] = "n/a"
+    else:
+        state['mongodb'] = "off"
+
+    if cfg.get('components.redis'):
+        logging.warn("invoker not yet implemented")
+        state['redis'] = "n/a"
+    else:
+        state['redis'] = "off"
+
+    if cfg.get('components.s3bucket'):
+        logging.warn("invoker not yet implemented")
+        state['s3bucket'] = "n/a"
+    else:
+        state['s3bucket'] = "off"
+
     #message = []
     #bucket.create()
-    #couchdb.create()
-    #couchdb.init()
     #mongodb.create()
     #mongodb.init()
     #message.append(openwhisk.create())
     #msg = "\n".join(message)
     #logging.debug(msg)
     #print(json.dumps(spec, indent=4))
-    d = dict(flatdict.FlatDict(spec, delimiter="."))
-    print(json.dumps(d, indent=2))
-    return {"state":state}
+    return state
 
 # tested by an integration test
 @kopf.on.delete('nuvolaris.org', 'v1', 'whisks')

@@ -114,8 +114,6 @@ def update_templated_doc(database, template, data):
     doc = json.loads(tpl.render(data))
     return update_doc(database, doc)
 
-
-
 def configure_single_node():
   global db_auth, db_url
   url = f"{db_url}/_cluster_setup"
@@ -143,4 +141,3 @@ def add_role(database: str, members: list[str] = [], admins: list[str] =[]):
   url = f"{db_base}{database}/_security"
   res = req.put(url, auth=db_auth, json=roles)
   return res.status_code in [200, 201, 421]
-

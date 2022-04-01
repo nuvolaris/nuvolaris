@@ -16,6 +16,7 @@
 # under the License.
 #
 # this module wraps kubectl
+import nuvolaris.testutil as tu
 import subprocess
 import json
 import logging
@@ -24,6 +25,8 @@ import yaml
 output = ""
 error = ""
 returncode = -1
+
+dry_run = False
 
 # execute kubectl commands
 # default namespace is nuvolaris, you can change with keyword arg namespace
@@ -51,6 +54,14 @@ def kubectl(*args, namespace="nuvolaris", input=None, jsonpath=None):
     >>> tu.grep(kube.kubectl("delete", "cm/test"), "configmap")
     configmap "test" deleted
     """
+
+    # dry run and mocks
+    #if tu.is_dry_run('kube'):
+    #    return f"kubectl {' '.join(args)}"
+    #mock = mock_kube(args)
+    #if mock:
+    #    return mock
+
     cmd = ["kubectl", "-n", namespace]
     cmd += list(args)
     if jsonpath:

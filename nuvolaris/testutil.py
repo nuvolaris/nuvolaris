@@ -15,8 +15,10 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-import re
+import nuvolaris.config as cfg
 import yaml
+import re
+
 
 # takes a string, split in lines and search for the word (a re)
 # if field is a number, splits the line in fields separated by spaces and print the selected field
@@ -78,3 +80,35 @@ def load_yaml(file):
     if len(l)  > 0:
         return l[0]
     return {}
+
+_dry_run = {}
+
+def set_dry_run(x, val=True):
+    _dry_run[x] = val
+
+def is_dry_run(x):
+    return _dry_run.get(x, False) 
+
+_mocked_kube = None
+
+def mock_kube(request, response):
+    global _mocked_kube
+    if _mocked_kube == None:
+        _mocked_kube = {}
+    _mocked_kube[request] = response
+
+def mocked_kube(*args):
+    global _mocked_kube
+    if _mocked_kube:
+        cmd = " ".join(args)
+        for key in list(_mocked_kube.keys()):
+            if key.startswith(cmd):
+                return _mocked_kube[key]
+    return None
+
+
+def load_sample_config(suffix=""):
+    with open(f"deploy/nuvolaris-operator/whisk{suffix}.yaml") as f: 
+        c = yaml.safe_load(f)
+        name = f"{c['metadata']['namespace']}:{c['metadata']['name']}"
+        return (name, c['spec'])

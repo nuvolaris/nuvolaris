@@ -30,11 +30,14 @@ spec:
   # if empty allocate a volume with default storage class othewise allocate volumes in the hostpath
   # useful only for kind
   hostpath: ""
+  # CICKMDS
   components:
-    # start openwhisk
+    # start openwhisk controller
     openwhisk: true
+    # start openwhisk invoker
+    invoker: false    
     # start couchdb
-    couchdb: true
+    couchdb: false
     # start kafka
     kafka: false
     # start mongodb
@@ -42,7 +45,7 @@ spec:
     # start redis
     redis: false
     # start s3ninja
-    s3ninja: false
+    s3bucket: false
   openwhisk:
     namespaces:
       whisk-system: 789c46b1-71f6-4ed5-8c54-816aa4f8c502:abczO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP

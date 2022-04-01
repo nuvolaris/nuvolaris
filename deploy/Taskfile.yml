@@ -48,3 +48,8 @@ tasks:
           helm template {{.TEMPLATES}}/.. -s templates/{{.YAML}} | tee extract/{{.YAML}}
           echo "*** saved in extract/{{.YAML}}"
       fi
+
+  deploy: kubectl -n nuvolaris apply -f deploy/nuvolaris-operator/whisk.yaml
+
+  undeploy:
+   -  kubectl -n nuvolaris get wsk/standalone -o yaml | grep -v Finalizer | kubectl appy -f -
