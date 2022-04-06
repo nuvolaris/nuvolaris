@@ -20,7 +20,6 @@ import flatdict, json
 _config = None
 _name = None
 
-
 # define a configuration singleton with a name
 # update to the configurations should retain that name
 # delete the configuration

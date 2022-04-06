@@ -20,6 +20,7 @@
 import os, io, yaml
 import nuvolaris.kube as kube
 import nuvolaris.kustomize as nku
+import nuvolaris.template as ntp
 
 # execute the kustomization of a folder under "deploy"
 # sperficied with `where`
@@ -30,13 +31,15 @@ import nuvolaris.kustomize as nku
 # it returns the expanded kustomization
 def kustomize(where, *what):
     """Test kustomize
-
     >>> import nuvolaris.kustomize as ku
     >>> import nuvolaris.testutil as tu
     >>> tu.grep(ku.kustomize("test", ku.image("nginx", "busybox")), "kind|image:", sort=True)
     - image: busybox
     kind: Pod
     kind: Service
+    >>> tu.grep(ku.kustomize("test", configMapTemplate("test-cm", "test", "test.json", {"item":"value"})), r"_id|value")
+    "_id": "test",
+    "value": "value"
     """
     # prepare the kustomization
     dir = f"deploy/{where}"
@@ -56,11 +59,9 @@ def kustomize(where, *what):
             f.write(f"- {file}\n")
     return kube.kubectl("kustomize", dir)
 
-
 # generate image kustomization
 def image(name, newName=None, newTag=None):
     """Test image
-
     >>> import nuvolaris.kustomize as ku
     >>> print(ku.image("busybox"), end='')
     images:
@@ -84,6 +85,42 @@ def image(name, newName=None, newTag=None):
     if newTag:  r += f"  newTag: {newTag}\n"
     return r
 
+# generate a configmap kustomization expanding a template
+def configMapTemplate(name, where, template, data):
+    """   
+    >>> import nuvolaris.testutil as tu
+    >>> print(configMapTemplate("test-cm", "test", "test.json", {"item":"value"}), end='')
+    configMapGenerator:
+    - name: test-cm
+      files:
+      - test.json=_test.json
+    """
+    out = f"deploy/{where}/_{template}"
+    file = ntp.spool_template(template, out, data)
+    return f"""configMapGenerator:
+- name: {name}
+  files:
+  - {template}=_{template}
+"""
+
+def secretLiteral(name, *args):
+  """
+  >>> import nuvolaris.testutil as tu
+  >>> import nuvolaris.kustomize as ku
+  >>> tu.grep(ku.secretLiteral("test-sec", "user=mike", "pass=hello"), r"name:|user=|pass=")
+  - name: test-sec
+  - user=mike
+  - pass=hello
+  """
+  res = f"""secretGenerator:
+- name: {name}
+  namespace: nuvolaris
+  literals:
+"""
+  for arg in args:
+    res += f"   - {arg}\n"
+  return res
+
 # returns a list of kustomized objects
 def kustom_list(where, *what):
   """
@@ -100,4 +137,3 @@ def kustom_list(where, *what):
   stream = io.StringIO(yml)
   res = list(yaml.load_all(stream, yaml.Loader))
   return {"apiVersion": "v1", "kind": "List", "items": res }
-

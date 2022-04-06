@@ -15,8 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-import nuvolaris.kustomize as nku
+import nuvolaris.kustomize as kus
 import nuvolaris.kube as kube
+import nuvolaris.config as cfg
 import kopf
 import os, os.path
 import logging
@@ -55,11 +56,17 @@ def apihost(apiHost, nodeLabels):
     return url.geturl()
 
 def create():
-    spec = nku.kustom_list("openwhisk-standalone", nku.image(WHISK_IMG, newTag=WHISK_TAG))
+    config = kus.image(WHISK_IMG, newTag=WHISK_TAG)
+    data = { 
+        "admin_user": cfg.get("couchdb.admin.user"),
+        "admin_password": cfg.get("couchdb.admin.password")
+    }
+    config += kus.configMapTemplate("openwhisk-config", "openwhisk-standalone",  "standalone-kcf.conf", data)
+    spec = kus.kustom_list("openwhisk-standalone", config)
     return kube.apply(spec)
 
 def delete():
-    spec = nku.kustom_list("openwhisk-standalone", nku.image(WHISK_IMG, newTag=WHISK_TAG))
+    spec = kus.kustom_list("openwhisk-standalone", kus.image(WHISK_IMG, newTag=WHISK_TAG))
     return kube.delete(spec)
 
 def cleanup():

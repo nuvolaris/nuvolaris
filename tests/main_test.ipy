@@ -27,26 +27,16 @@ import yaml
 import nuvolaris.testutil as tu
 import nuvolaris.config as cfg
 import nuvolaris.kube as kube
+import nuvolaris.main as main 
 
-from nuvolaris.main import *
-
+cfg.clean()
 (name, spec) = tu.load_sample_config()
 cfg.configure(name, spec)
 
-cfg.getall("components")
+cfg.getall("couchdb.admin")
 cfg.put("components.couchdb", False)
 
-cfg.clean()
+kube.mocker.config("apply", "ok")
+kube.mocker.echo()
+print(main.whisk_create(spec, name))
 
-print(whisk_create(spec, name))
-
-from unittest.mock import MagicMock
-from unittest.mock import patch
-from unittest.mock import create_autospec
-
-kfn = create_autospec(kube.kubectl, return_value="ok")
-p = patch('nuvolaris.kube.kubectl', kfn)
-p.start()
-openwhisk.create()
-kube.kubectl("boh")
-p.stop()

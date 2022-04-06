@@ -15,47 +15,20 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-
-import nuvolaris.config as cfg
-
-cfg.clean()
-
-assert(len(cfg.getall("")) == 0)
-
-assert(cfg.configure("hello", {"a": {"b": 1, "c":  { "d": 2 , "e": 3}, "f": 4}, "g": 5 }  )  )
-
-assert(cfg.configure("hi", {"a":1}) == False)
-
-assert(cfg.get("a") == None)
-
-assert(cfg.get("g") == 5)
-
-assert(len(cfg.getall("a")) == 4)
-
-assert(len(cfg.getall("a.c")) == 2)
-
-assert(len(cfg.keys()) == 5)
-
-assert(len(cfg.keys("a.c")) == 2)
-
-assert(cfg.configure("hello", None))
-
-assert(cfg.configure("hi", {"a":1}, [{"nuvolaris-hello": "world", "something": "else" }, {}, {"nothing":"here"}]))
-
-assert(cfg.get("a") == 1 )
-
-assert(cfg.get("hello") == "world")
-
-assert( len(cfg.getall("")) == 2)
-
-assert(cfg.put("a", 2))
-assert(cfg.get("a") == 2)
-assert(cfg.put("b", 3))
-assert(len(cfg.getall("")) == 3)
-
-
-
-
-
-
-
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod
+  labels:
+    app: test-pod 
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+      volumeMounts:
+      - name: index-cm
+        mountPath: "/usr/share/nginx/html"
+  volumes:
+  - name: index-cm
+    configMap:
+      name: index

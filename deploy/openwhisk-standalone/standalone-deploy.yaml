@@ -47,3 +47,11 @@ spec:
               command: [
                 "/home/bin/stop"
               ]
+        volumeMounts:
+        - name: standalone-kcf
+          mountPath: "/home/etc/standalone-kcf.conf"
+          subPath: "standalone-kcf.conf"        
+      volumes:
+      - name: standalone-kcf
+        configMap:
+          name: standalone-kcf

@@ -73,22 +73,22 @@ tasks:
 
   unit: |
     for test in nuvolaris/{{.TEST}}*.py
-    do poetry run python3 -m doctest $test {{.CLI_ARGS}}
+    do echo "*** $test"
+       poetry run python3 -m doctest $test {{.CLI_ARGS}}
     done
 
   integ: |
     for test in tests/{{.TEST}}*.ipy
-    do poetry run ipython $test {{.CLI_ARGS}}
+    do  echo "*** $test"
+        poetry run ipython $test {{.CLI_ARGS}}
     done
   
   test:
     - task: unit
     - task: integ
   
-  
   init-couchdb: poetry run python nuvolaris/couchdb_init.py
-  
-  
+    
   config: task config -d nuvolaris-test
 
   use: 

@@ -16,83 +16,54 @@
 # under the License.
 #
 
-print("*** couchdb_util_test ***")
+import nuvolaris.config as cfg
+import nuvolaris.testutil as tu
 
-def test_db():
-    """
-    >>> from nuvolaris.couchdb_util import *
-    >>> check_db("subjects")
-    False
-    >>> create_db("subjects")
-    True
-    >>> check_db("subjects")
-    True
-    >>> create_db("subjects")
-    False
-    >>> delete_db("subjects")
-    True
-    >>> delete_db("subjects")
-    False
-    >>> check_db("subjects")
-    False
-    >>> recreate_db("subjects")
-    'recreate_db: created'
-    >>> check_db("subjects")
-    True
-    >>> recreate_db("subjects")
-    'recreate_db:'
-    >>> recreate_db("subjects", recreate=True)
-    'recreate_db: deleted created'
-    >>> delete_db("subjects")
-    True
-    """
-    pass
+#!kubectl delete -f deploy/couchdb
+!rm -f deploy/couchdb/kustomization.yaml
+!kubectl apply -f deploy/nuvolaris-operator/nuvolaris-ns.yaml
+!kubectl apply -f deploy/couchdb
+!kubectl -n nuvolaris wait --for=condition=ready pod -l name=couchdb
 
+# init
+(name, spec) = tu.load_sample_config()
+assert(cfg.configure(name, spec))
+assert(cfg.put("couchdb.host", "localhost"))
+import nuvolaris.couchdb_util 
+db = nuvolaris.couchdb_util.CouchDB()
 
-def test_doc():
-  """
-  >>> from nuvolaris.couchdb_util import *
-  >>> db = "test"
-  >>> create_db(db)
-  True
-  >>> get_doc(db, "test") == None
-  True
-  >>> doc = {"_id":"test", "value":"hello" }
-  >>> update_doc(db,  doc)
-  True
-  >>> get_doc(db, "test")['value']  
-  'hello'
-  >>> doc['value'] = 'world'
-  >>> update_doc(db,  doc)
-  True
-  >>> get_doc(db, "test")['value']  
-  'world'
-  >>> delete_doc(db, "test")
-  True
-  >>> delete_doc(db, "test")
-  False
-  >>> update_templated_doc(db, "test.json", {"item": "first"})
-  True
-  >>> get_doc(db, "test")['value']
-  'first'
-  >>> update_templated_doc(db, "test.json", {"item": "second"})
-  True
-  >>> get_doc(db, "test")['value']
-  'second'
-  >>> delete_doc(db, "test")
-  True
-  >>> delete_db(db)
-  True
-  """
-  pass
+# database init
+assert( not db.check_db("subjects"))
+assert(db.create_db("subjects"))
+assert(db.check_db("subjects"))
+assert(not db.create_db("subjects"))
+assert(db.delete_db("subjects"))
+assert(not db.delete_db("subjects"))
+assert(not db.check_db("subjects"))
+assert(db.recreate_db("subjects") == 'recreate_db: created')
+assert(db.check_db("subjects"))
+assert(db.recreate_db("subjects") == 'recreate_db:')
+assert(db.recreate_db("subjects", recreate=True) == 'recreate_db: deleted created')
+assert(db.delete_db("subjects"))
 
-if __name__ == "__main__":
+assert(db.create_db("test"))
+assert(db.get_doc("test", "test") == None) 
+doc = {"_id":"test", "value":"hello" }
+assert(db.update_doc("test",  doc))
 
-    !kubectl apply -f deploy/nuvolaris-operator/nuvolaris-ns.yaml
-    !kubectl apply -f deploy/couchdb
-    !kubectl -n nuvolaris wait --for=condition=ready pod -l name=couchdb
+assert(db.get_doc("test", "test")['value']  == 'hello')
+doc['value'] = 'world'
+assert(db.update_doc("test",  doc))
+assert(db.get_doc("test", "test")['value']  == 'world')
+assert(db.delete_doc("test", "test"))
+assert(not db.delete_doc(db, "test"))
+assert(db.update_templated_doc("test", "test.json", {"item": "first"}))
+assert(db.get_doc("test", "test")['value'] == 'first')
+assert(db.update_templated_doc("test", "test.json", {"item": "second"}))
+assert(db.get_doc("test", "test")['value'] == 'second')
+assert(db.delete_doc("test", "test"))
+assert(db.delete_db("test"))
 
-    import doctest
-    doctest.testmod()
-
-    !kubectl delete -f deploy/couchdb
+# cleanup
+!kubectl delete -f deploy/couchdb
+!kubectl wait deploy/couchdb --for=delete

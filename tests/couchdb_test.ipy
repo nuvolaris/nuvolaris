@@ -16,34 +16,57 @@
 # under the License.
 #
 
-print("*** couchdb_test ***")
-
+!rm -f deploy/couchdb/kustomization
 !kubectl apply -f deploy/nuvolaris-operator/nuvolaris-ns.yaml
 !kubectl apply -f deploy/couchdb
 
+import nuvolaris.couchdb as cdb
+import nuvolaris.testutil as tu
+import nuvolaris.config as cfg
+import requests as req
+
+(name, spec) = tu.load_sample_config()
+assert(cfg.configure(name, spec))
+assert(cfg.put("couchdb.host", "localhost"))
+import nuvolaris.couchdb_util
+db = nuvolaris.couchdb_util.CouchDB()
+
+assert(db.wait_db_ready(60))
+assert(db.configure_single_node())
+assert(db.configure_no_reduce_limit())
+
+assert(db.create_db("test"))
+assert(db.update_doc("test", {"_id":"test"}))
+assert(db.get_doc("test", "test", no_auth=True)['_id'] == 'test')
+assert(db.add_user("hello", "world"))
+assert(db.add_role("test", ["hello"]))
+assert(db.get_doc("test", "test", no_auth=True) == None)
+assert(db.get_doc("test", "test", user="boh", password="mah") == None)
+assert(db.get_doc("test", "test", user="hello", password="world")['_id'] == 'test')
+
+assert(cdb.init_system(db))
+assert(cdb.init_subjects(db))
+assert(cdb.init_activations(db))
+assert(cdb.init_actions(db))
+assert(cdb.add_initial_subjects(db))
+
+!kubectl delete -f deploy/couchdb
+!kubectl wait deploy/couchdb --for=delete
+
+#!kubectl apply -f deploy/couchdb
+#
+#cdb.create()
+#cdb.init()
+#assert(cdb.init())
+#!kubectl delete -f deploy/couchdb
+#!kubectl wait deploy/couchdb --for=delete
+
+
+"""
+# TODO check the database
 import nuvolaris.couchdb_util as cu
 import nuvolaris.couchdb as cdb
 import nuvolaris.testutil as tu
 import requests as req
-
-config = tu.load_yaml("deploy/nuvolaris-operator/whisk.yaml")['spec']
-
-assert(cu.wait_db_ready(60))
-assert(cu.configure_single_node())
-assert(cu.configure_no_reduce_limit())
-
-assert(cu.create_db("test"))
-assert(cu.update_doc("test", {"_id":"test"}))
-assert(cu.get_doc("test", "test", db_auth=None)['_id'] == 'test')
-assert(cu.add_user("hello", "world"))
-assert(cu.add_role("test", ["hello"]))
-assert(cu.get_doc("test", "test", db_auth=None) is None)
-assert(cu.get_doc("test", "test", db_auth=req.auth.HTTPBasicAuth("hello", "world"))['_id'] == 'test')
-
-assert(cdb.init_system(config))
-assert(cdb.init_subjects(config))
-assert(cdb.add_subjects(config))
-assert(cdb.init_activations(config))
-assert(cdb.init_actions(config))
-
-!kubectl delete -f deploy/couchdb
+cdb.init()
+"""

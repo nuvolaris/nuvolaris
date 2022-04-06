@@ -51,5 +51,14 @@ tasks:
 
   deploy: kubectl -n nuvolaris apply -f deploy/nuvolaris-operator/whisk.yaml
 
-  undeploy:
-   -  kubectl -n nuvolaris get wsk/standalone -o yaml | grep -v Finalizer | kubectl appy -f -
+  undeploy-del: >
+    kubectl -n nuvolaris delete wsk/standalone
+
+  undeploy-patch: >
+    kubectl -n nuvolaris patch wsk/standalone --type=merge --patch '{"metadata": {"finalizers":[] } }'
+  
+  undeploy: 
+    deps:
+      - undeploy-del
+      - undeploy-patch
+  

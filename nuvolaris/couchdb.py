@@ -20,18 +20,23 @@ import logging
 import nuvolaris.kustomize as nku
 import nuvolaris.kube as kube
 import nuvolaris.couchdb_util as cu
+import nuvolaris.config as cfg
+import nuvolaris.couchdb_util
 
 def create():
-    spec = nku.kustom_list("couchdb")
+    user = f"db_password={cfg.get('couchdb.admin.password')}"
+    pasw =  f"db_username={cfg.get('couchdb.admin.user')}"
+    secret =  nku.secretLiteral("couchdb-auth", user, pasw)
+    spec = nku.kustom_list("couchdb", secret)
     res = kube.apply(spec)
     logging.info(res)
     return res
 
 def delete():
     spec = nku.kustom_list("couchdb")
-    logging.info(res)
     res = kube.delete(spec)
-    return 
+    logging.info(res)
+    return res 
 
 def check(f, what, res):
     if f:
@@ -41,26 +46,28 @@ def check(f, what, res):
         logging.warn(f"ERR: {what}")
         return False
 
-def init_system(config):
-    res = check(cu.configure_single_node(), "configure_single_node", True)
-    res = check(cu.configure_no_reduce_limit(), "configure_no_reduce_limit", res)
-    res = check(cu.add_user(config['couchdb']['controller']['user'], config['couchdb']['controller']['password']), "add_user: controller", res)
-    return check(cu.add_user(config['couchdb']['invoker']['user'], config['couchdb']['invoker']['password']), "add_user: invoker", res)
+def init_system(db):
+    res = check(db.wait_db_ready(60), "wait_db_ready", True)
+    res = check(db.configure_single_node(), "configure_single_node", res)
+    res = check(db.configure_no_reduce_limit(), "configure_no_reduce_limit", res)
+    res = check(db.add_user(cfg.get('couchdb.controller.user'), cfg.get('couchdb.controller.password')), "add_user: controller", res)
+    return check(db.add_user(cfg.get('couchdb.invoker.user'), cfg.get('couchdb.invoker.password')), "add_user: invoker", res)
 
-def init_subjects(config):
+def init_subjects(db):
     subjects_design_docs = [
         "auth_design_document_for_subjects_db_v2.0.0.json",
         "filter_design_document.json",
         "namespace_throttlings_design_document_for_subjects_db.json"]
-    db = "subjects"
-    res = check(cu.create_db(db), "create_db: subjects", True)
-    members = [config['couchdb']['controller']['user'], config['couchdb']['controller']['user']]
-    res = check(cu.add_role(db, members), "add_role: subjects", res)
+    dbn = "subjects"
+    res = check(db.wait_db_ready(60), "wait_db_ready", True)
+    res = check(db.create_db(dbn), "create_db: subjects", res)
+    members = [cfg.get('couchdb.controller.user'), cfg.get('couchdb.invoker.user')]
+    res = check(db.add_role(dbn, members), "add_role: subjects", res)
     for i in subjects_design_docs:
-        res = check(cu.update_templated_doc(db, i, {}), f"add {i}", res)
+        res = check(db.update_templated_doc(dbn, i, {}), f"add {i}", res)
     return res
 
-def init_activations(config):
+def init_activations(db):
     activations_design_docs = [
         "whisks_design_document_for_activations_db_v2.1.0.json",
         "whisks_design_document_for_activations_db_filters_v2.1.1.json",
@@ -68,39 +75,42 @@ def init_activations(config):
         "activations_design_document_for_activations_db.json",
         "logCleanup_design_document_for_activations_db.json"
     ]
-    db = "activations"
-    res = check(cu.create_db(db), "create_db: activations", True)
-    members = [config['couchdb']['controller']['user'], config['couchdb']['controller']['user']]
-    res = check(cu.add_role(db, members), "add_role: activations", res)
+    dbn = "activations"
+    res = check(db.wait_db_ready(60), "wait_db_ready", True)
+    res = check(db.create_db(dbn), "create_db: activations", res)
+    members = [cfg.get('couchdb.controller.user'), cfg.get('couchdb.invoker.user')]
+    res = check(db.add_role(dbn, members), "add_role: activations", res)
     for i in activations_design_docs:
-        res = check(cu.update_templated_doc(db, i, {}), f"add {i}", res)
+        res = check(db.update_templated_doc(dbn, i, {}), f"add {i}", res)
     return res
 
-def init_actions(config):
+def init_actions(db):
     whisks_design_docs = [
         "whisks_design_document_for_entities_db_v2.1.0.json",
         "filter_design_document.json"
     ]
-    db = "whisks"
-    res = check(cu.create_db(db), "create_db: whisks", True)
-    members = [config['couchdb']['controller']['user'], config['couchdb']['controller']['user']]
-    res = check(cu.add_role(db, members), "add_role: actions", res)
+    dbn = "whisks"
+    res = check(db.wait_db_ready(60), "wait_db_ready", True)
+    res = check(db.create_db(dbn), "create_db: whisks", res)
+    members = [cfg.get('couchdb.controller.user'), cfg.get('couchdb.invoker.user')]
+    res = check(db.add_role(dbn, members), "add_role: actions", res)
     for i in whisks_design_docs:
-        res = check(cu.update_templated_doc(db, i, {}), f"add {i}", res)
+        res = check(db.update_templated_doc(dbn, i, {}), f"add {i}", res)
     return res
 
-def add_subjects(config):
-    res = True
-    db = "subjects"
-    for name in config['openwhisk']['namespaces'].keys():
-        [uuid, key] = config['openwhisk']['namespaces'][name].split(":")
+def add_initial_subjects(db):
+    res = check(db.wait_db_ready(60), "wait_db_ready", True)
+    dbn = "subjects"
+    for _, (name, value) in enumerate(cfg.getall("openwhisk.namespaces").items()):
+        [uuid, key] = value.split(":")
         data = { "name": name, "key": key, "uuid": uuid}
-        res = check(cu.update_templated_doc(db, "subject.json", data), f"add {name}", res)
+        res = check(db.update_templated_doc(dbn, "subject.json", data), f"add {name}", res)
     return res
 
-def init(config):
-    res = check(init_system(config), "init_system", True)
-    res = check(init_subjects(config), "init_subjects", res) 
-    res = check(init_activations(config), "init_activations", res)
-    res = check(init_actions(config), "init_actions", res)
-    return check(add_subjects(config), "add_subjects", res)
+def init():
+    db = nuvolaris.couchdb_util.CouchDB()
+    res = check(init_system(db), "init_system", True)
+    res = check(init_subjects(db), "init_subjects", res) 
+    res = check(init_activations(db), "init_activations", res)
+    res = check(init_actions(db), "init_actions", res)
+    return check(add_initial_subjects(db), "add_subjects", res)

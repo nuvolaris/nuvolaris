@@ -18,12 +18,12 @@
 import kopf
 import logging
 import json, flatdict, os, os.path
+import nuvolaris.config as cfg
 import nuvolaris.kube as kube
 import nuvolaris.couchdb as couchdb
 import nuvolaris.mongodb as mongodb
 import nuvolaris.bucket as bucket
 import nuvolaris.openwhisk as openwhisk
-import nuvolaris.config as cfg
 
 # tested by an integration test
 @kopf.on.login()
@@ -38,8 +38,6 @@ def login(**kwargs):
 # tested by an integration test
 @kopf.on.create('nuvolaris.org', 'v1', 'whisks')
 def whisk_create(spec, name, **kwargs):
-    #logging.info(spec)
-    #       "CKOIMRS"
     cfg.configure(spec, name)
 
     state = {
@@ -54,8 +52,7 @@ def whisk_create(spec, name, **kwargs):
 
     if cfg.get('components.couchdb'):
         state['couchdb']= "starting"
-        #couchdb.create()
-        #couchdb.init()
+        couchdb.create()
     else:
         state['couchdb'] = "off"
 
@@ -67,9 +64,9 @@ def whisk_create(spec, name, **kwargs):
 
     if cfg.get('components.openwhisk'):
         state['openwhisk'] = "starting"
-        #openwhisk.create()        
+        openwhisk.create()        
     else:
-        state['O'] = "off"
+        state['openwhisk'] = "off"
 
     if cfg.get('components.invoker'):
         logging.warn("invoker not yet implemented")

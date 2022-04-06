@@ -51,6 +51,18 @@ def grep(input, word, field=None, sort=False):
         lines.sort()
     print("\n".join(lines))
 
+
+# print a file
+def cat(file):
+    with open(file, "r") as f:
+        print(f.read())
+
+# print a file
+def fread(file):
+    with open(file, "r") as f:
+        return f.read()
+
+
 # capture and print an exception with its type
 # or just print the output of the fuction
 def catch(f):
@@ -81,31 +93,69 @@ def load_yaml(file):
         return l[0]
     return {}
 
-_dry_run = {}
+# mocking and spying kube support
+class MockKube:
+    """
+    >>> from nuvolaris.testutil import *
+    >>> m = MockKube()
+    >>> m.invoke()
+    >>> m.config("", "ok")
+    >>> m.invoke()
+    'ok'
+    >>> m = MockKube()
+    >>> m.config("apply", "applied")
+    >>> m.invoke()
+    >>> m.echo()
+    >>> m.invoke("apply", "-f")
+    kubectl apply -f
+    'applied'
+    >>> m.peek()
+    kubectl apply -f
+    'apply -f'
+    >>> m.dump()
+    ''
+    >>> m.save("hello")
+    >>> m.dump()
+    'hello'
+    """ 
+    def __init__(self):
+        self.reset()
 
-def set_dry_run(x, val=True):
-    _dry_run[x] = val
+    def reset(self):
+        self.map = {}
+        self.queue = []
+        self.saved = []
+        self.echoFlag = False
+        self.enabled = False
 
-def is_dry_run(x):
-    return _dry_run.get(x, False) 
+    def echo(self, flag=True):
+        self.echoFlag = flag
 
-_mocked_kube = None
+    def peek(self, index=-1):
+        res = self.queue[index][0]
+        print("kubectl", res)
+        return res
 
-def mock_kube(request, response):
-    global _mocked_kube
-    if _mocked_kube == None:
-        _mocked_kube = {}
-    _mocked_kube[request] = response
+    def dump(self, index=-1):
+        return self.queue[index][1]
 
-def mocked_kube(*args):
-    global _mocked_kube
-    if _mocked_kube:
-        cmd = " ".join(args)
-        for key in list(_mocked_kube.keys()):
-            if key.startswith(cmd):
-                return _mocked_kube[key]
-    return None
+    def save(self, data, index=-1):
+        self.queue[index] = (self.queue[index][0], data)
 
+    def config(self, request, response):
+        self.enabled = True
+        self.map[request] = response
+
+    def invoke(self, *args):
+        if self.enabled:
+            cmd = " ".join(args)
+            for key in list(self.map.keys()):
+                if cmd.startswith(key):
+                    if self.echoFlag:
+                        print("kubectl", cmd)
+                    self.queue.append( (cmd,"") )
+                    return self.map[key]
+        return None
 
 def load_sample_config(suffix=""):
     with open(f"deploy/nuvolaris-operator/whisk{suffix}.yaml") as f: 

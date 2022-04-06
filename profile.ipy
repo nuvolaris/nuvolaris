@@ -19,7 +19,12 @@
 %autoreload 2
 import logging
 logging.basicConfig(level=logging.DEBUG)
+
 import nuvolaris.kube as kube
+import nuvolaris.kustomize as kus
+import nuvolaris.config as cfg
 import nuvolaris.testutil as tu
-import nuvolaris.kustomize as nku
+import nuvolaris.couchdb as cdb
+import requests as req
+
 import sys, os, os.path, yaml, json

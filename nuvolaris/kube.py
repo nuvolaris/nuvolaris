@@ -28,6 +28,8 @@ returncode = -1
 
 dry_run = False
 
+mocker = tu.MockKube()
+
 # execute kubectl commands
 # default namespace is nuvolaris, you can change with keyword arg namespace
 # default output is text
@@ -55,12 +57,11 @@ def kubectl(*args, namespace="nuvolaris", input=None, jsonpath=None):
     configmap "test" deleted
     """
 
-    # dry run and mocks
-    #if tu.is_dry_run('kube'):
-    #    return f"kubectl {' '.join(args)}"
-    #mock = mock_kube(args)
-    #if mock:
-    #    return mock
+    # support for mocked requests
+    mres = mocker.invoke(*args)
+    if mres:
+        mocker.save(input)
+        return mres
 
     cmd = ["kubectl", "-n", namespace]
     cmd += list(args)

@@ -51,10 +51,11 @@ spec:
       whisk-system: 789c46b1-71f6-4ed5-8c54-816aa4f8c502:abczO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP
       nuvolaris: 23bc46b1-71f6-4ed5-8c54-816aa4f8c502:123zO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP
   couchdb:
+    host: couchdb
     volume-size: 10
     admin:
       user: whisk_admin
-      password: s0meP@ass
+      password: some_passw0rd
     controller:
       user: invoker_admin
       password: s0meP@ass1
@@ -62,11 +63,13 @@ spec:
       user: controller_admin
       password: s0meP@ass2
   mongodb:
+    host: mongodb
     volume-size: 10
     admin: 
       user: admin
       password: 0therPa55
   kafka:
+    host: kafka
     volume-size: 10
   s3:
     volume-size: 10
