@@ -6,6 +6,7 @@ import requests as req
 cm = kus.configMapTemplate("index", "test-cm", "index.html", {"item":"Hello"})
 res = kus.kustom_list("test-cm", cm)
 kube.apply(res)
-!kubectl -n nuvolaris wait po/test-pod --for=condition=Ready
+kube.wait("pod/test-pod", "condition=Ready")
+#!kubectl -n nuvolaris wait po/test-pod --for=condition=Ready
 assert( req.get("http://localhost:3233").text.find("Hello") >0 )
 kube.delete(res)
