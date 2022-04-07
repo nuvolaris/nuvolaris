@@ -17,32 +17,27 @@
 #
 
 import nuvolaris.config as cfg
+import nuvolaris.testutil as tu
+import nuvolaris.openwhisk as ow
+import nuvolaris.kube as kube
+import os
 
-cfg.clean()
-assert(len(cfg.getall("")) == 0)
-assert(cfg.configure({"a": {"b": 1, "c":  { "d": 2 , "e": 3}, "f": 4}, "g": 5 }  )  )
-assert(not cfg.configure("hi", {"a":1}))
+# apihost
+assert(cfg.configure(tu.load_sample_config(), clean=True))
+assert(ow.apihost([]) == "https://pending")
 
-assert(not cfg.exists("a"))
-assert(not cfg.get("a"))
-assert(cfg.exists("g"))
-assert(cfg.get("g") == 5)
+cfg.put("nuvolaris.apihost", "localhost")
+assert(ow.apihost([]) == 'https://localhost')
 
-assert(len(cfg.getall("a")) == 4)
-assert(len(cfg.getall("a.c")) == 2)
-assert(len(cfg.keys()) == 5)
-assert(len(cfg.keys("a.c")) == 2)
+cfg.put("nuvolaris.protocol", "http")
+cfg.put("nuvolaris.apiport", "3232")
+assert( ow.apihost([]) == 'http://localhost:3232')
 
-assert(not cfg.configure({"a":1}))
+a = [ { "hostname": "elb.amazonaws.com"} ]
+assert( ow.apihost(a) == 'http://localhost:3232')
+assert(cfg.configure(tu.load_sample_config(), clean=True))
+assert( ow.apihost(a) == 'https://elb.amazonaws.com')
 
-cfg.clean()
+import doctest
 
-assert(cfg.configure({"a":1}, [{"nuvolaris-hello": "world", "something": "else" }, {}, {"nothing":"here"}]))
-assert(cfg.get("a") == 1 )
-assert(cfg.get("nuvolaris.hello") == "world")
-assert(len(cfg.getall("")) == 2)
-
-assert(cfg.put("a", 2))
-assert(cfg.get("a") == 2)
-assert(cfg.put("b", 3))
-assert(len(cfg.getall("")) == 3)
+doctest.testfile("tests/openwhisk_test.txt", module_relative=False)

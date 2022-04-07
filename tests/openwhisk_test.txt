@@ -1,0 +1,27 @@
+>>> import nuvolaris.config as cfg
+>>> import nuvolaris.testutil as tu
+>>> import nuvolaris.openwhisk as ow
+>>> import nuvolaris.kube as kube
+>>> cfg.configure(tu.load_sample_config(), clean=True)
+True
+>>> mck = kube.mocker 
+>>> mck.reset()
+>>> mck.config("apply","ok create")
+>>> ow.create()
+'ok create'
+>>> mck.peek()
+'apply -f -'
+>>> dic = tu.json2flatdict(mck.dump())
+>>> tu.grep(tu.get_by_key_sub(dic, "standalone"), "username", field=2)
+"whisk_admin"
+>>> tu.grep(tu.get_by_key_sub(dic, "standalone"), "password", field=2)
+"some_passw0rd"
+>>> mck.config("delete","ok delete")
+>>> ow.delete()
+'ok delete'
+>>> mck.peek()
+'delete -f -'
+>>> tu.json2flatdict(mck.dump())['kind']
+'List'
+>>> ow.delete()
+'not found'

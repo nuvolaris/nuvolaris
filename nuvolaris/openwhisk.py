@@ -18,60 +18,48 @@
 import nuvolaris.kustomize as kus
 import nuvolaris.kube as kube
 import nuvolaris.config as cfg
-import kopf
 import os, os.path
-import logging
 import urllib.parse
+import logging
+import kopf
 
 WHISK_IMG = os.environ.get("STANDALONE_IMAGE", "ghcr.io/nuvolaris/openwhisk-standalone")
 WHISK_TAG = os.environ.get("STANDALONE_TAG", "latest")
+WHISK_SPEC = "state.openwhisk.spec"
 
 # this functtions returns
-def apihost(apiHost, nodeLabels):
-    """
-    >>> a = []
-    >>> l =  [ {"beta.kubernetes.io/arch": "arm64", "nuvolaris-apihost": "localhost", "nuvolaris-apiport": "3233", "nuvolaris-protocol": "http"} ]
-    >>> apihost(a,l)
-    'http://localhost:3233'
-    >>> a = [ { "hostname": "elb.amazonaws.com"} ]
-    >>> l = []
-    >>> apihost(a, l)
-    'http://elb.amazonaws.com'
-    >>> a = [ { "hostname": "elb.amazonaws.com"} ]
-    >>> l =  [ { "nuvolaris-apiport": "3233", "nuvolaris-protocol": "https"} ]
-    >>> apihost(a, l)
-    'https://elb.amazonaws.com:3233'
-    """
-    url = urllib.parse.urlparse("http://pending")
+def apihost(apiHost):
+    url = urllib.parse.urlparse("https://pending")
     if len(apiHost) > 0 and "hostname" in apiHost[0]:
         url = url._replace(netloc = apiHost[0]['hostname'])
-
-    for node in nodeLabels:
-        if "nuvolaris-apihost" in node:
-            url =  url._replace(netloc = node["nuvolaris-apihost"])
-        if "nuvolaris-protocol" in node:
-            url = url._replace(scheme = node["nuvolaris-protocol"])
-        if "nuvolaris-apiport" in node:
-            url = url._replace(netloc = url.hostname+":"+node["nuvolaris-apiport"])
+    if cfg.exists("nuvolaris.apihost"):
+        url =  url._replace(netloc = cfg.get("nuvolaris.apihost"))
+    if cfg.exists("nuvolaris.protocol"):
+        url = url._replace(scheme = cfg.get("nuvolaris.protocol"))
+    if cfg.exists("nuvolaris.apiport"):
+        url = url._replace(netloc = f"{url.hostname}:{cfg.get('nuvolaris.apiport')}")
     return url.geturl()
 
 def create():
     config = kus.image(WHISK_IMG, newTag=WHISK_TAG)
-    data = { 
+    data = {
         "admin_user": cfg.get("couchdb.admin.user"),
         "admin_password": cfg.get("couchdb.admin.password")
     }
     config += kus.configMapTemplate("openwhisk-config", "openwhisk-standalone",  "standalone-kcf.conf", data)
     spec = kus.kustom_list("openwhisk-standalone", config)
+    cfg.put(WHISK_SPEC, spec)
     return kube.apply(spec)
 
 def delete():
-    spec = kus.kustom_list("openwhisk-standalone", kus.image(WHISK_IMG, newTag=WHISK_TAG))
-    return kube.delete(spec)
+    if cfg.exists(WHISK_SPEC):
+        res = kube.delete(cfg.get(WHISK_SPEC))
+        cfg.delete(WHISK_SPEC)
+        return res
+    return "not found"
 
 def cleanup():
     return kube.kubectl("delete", "pod", "--all")
 
 def annotate(keyval):
     kube.kubectl("annotate", "cm/config",  keyval, "--overwrite")
-

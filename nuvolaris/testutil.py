@@ -18,7 +18,8 @@
 import nuvolaris.config as cfg
 import yaml
 import re
-
+import flatdict
+import json
 
 # takes a string, split in lines and search for the word (a re)
 # if field is a number, splits the line in fields separated by spaces and print the selected field
@@ -49,7 +50,8 @@ def grep(input, word, field=None, sort=False):
             lines.append(line)
     if sort:
         lines.sort()
-    print("\n".join(lines))
+    res = "\n".join(lines)
+    print(res)
 
 
 # print a file
@@ -61,7 +63,6 @@ def cat(file):
 def fread(file):
     with open(file, "r") as f:
         return f.read()
-
 
 # capture and print an exception with its type
 # or just print the output of the fuction
@@ -110,7 +111,6 @@ class MockKube:
     kubectl apply -f
     'applied'
     >>> m.peek()
-    kubectl apply -f
     'apply -f'
     >>> m.dump()
     ''
@@ -133,7 +133,6 @@ class MockKube:
 
     def peek(self, index=-1):
         res = self.queue[index][0]
-        print("kubectl", res)
         return res
 
     def dump(self, index=-1):
@@ -160,5 +159,17 @@ class MockKube:
 def load_sample_config(suffix=""):
     with open(f"deploy/nuvolaris-operator/whisk{suffix}.yaml") as f: 
         c = yaml.safe_load(f)
-        name = f"{c['metadata']['namespace']}:{c['metadata']['name']}"
-        return (name, c['spec'])
+        return c['spec']
+
+def json2flatdict(data):
+    return dict(flatdict.FlatterDict(json.loads(data), delimiter="."))
+
+def get_by_key_sub(dic, key):
+    res = []
+    for k in list(dic.keys()):
+        try:
+            k.index(key)
+            res.append(dic[k])
+        except:
+            pass
+    return "\n".join(res)

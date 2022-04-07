@@ -17,26 +17,30 @@
 #
 import kopf
 import logging
-import nuvolaris.kustomize as nku
+import nuvolaris.kustomize as kus
 import nuvolaris.kube as kube
 import nuvolaris.couchdb_util as cu
 import nuvolaris.config as cfg
 import nuvolaris.couchdb_util
 
 def create():
+    logging.info("create couchdb")
     user = f"db_password={cfg.get('couchdb.admin.password')}"
     pasw =  f"db_username={cfg.get('couchdb.admin.user')}"
-    secret =  nku.secretLiteral("couchdb-auth", user, pasw)
-    spec = nku.kustom_list("couchdb", secret)
+    secret =  kus.secretLiteral("couchdb-auth", user, pasw)
+    spec = kus.kustom_list("couchdb", secret)
+    cfg.put("state.couchdb.spec", spec)
     res = kube.apply(spec)
-    logging.info(res)
+    logging.info(f"create couchdb: {res}")
     return res
 
 def delete():
-    spec = nku.kustom_list("couchdb")
-    res = kube.delete(spec)
-    logging.info(res)
-    return res 
+    spec = cfg.get("state.couchdb.spec")
+    res = False
+    if spec:
+        res = kube.delete(spec)
+    logging.info(f"delete couchdb: {res}")
+    return res
 
 def check(f, what, res):
     if f:

@@ -18,29 +18,33 @@
 import flatdict, json
 
 _config = None
-_name = None
 
-# define a configuration singleton with a name
-# update to the configurations should retain that name
-# delete the configuration
-def configure(name: str, spec: dict, labels: list = []):
-    global _config, _name
+# define a configuration 
+# the configuratoin is a map, followed by a list of labels 
+# the map can be a serialized json and will be flattened to a map of values.
+# only labels with a name starting with "nuvolaris-xxx" are included
+# and are accepted and are stored as "nuvolaris.xxx"
+# you can have only a configuration active at a time
+# if you want to set a new configuration you have to clean it
+def configure(spec: dict, labels: list = [], clean: bool = False):
+    global _config
+    if clean:
+        _config = None
     if _config:
-        if name != _name:
-            return False
-    _name = name
+        return False
     _config = dict(flatdict.FlatDict(spec, delimiter="."))
-
     for i in labels:
         for j in list(i.keys()):
             if j.startswith("nuvolaris-"):
-                _config[ j[10:] ] = i[j]
-
+                _config[ f"nuvolaris.{j[10:]}" ] = i[j]
     return True
 
 def clean():
+    global _config
     _config = None
-    _name = None
+
+def exists(key):
+    return key in _config
 
 def get(key):
     if _config:
@@ -51,6 +55,13 @@ def put(key, value):
     if _config:
         _config[key] = value
         return True
+    return False
+
+def delete(key):
+    if _config:
+        if key in _config:
+            del _config[key]
+            return True
     return False
 
 def getall(prefix=""):

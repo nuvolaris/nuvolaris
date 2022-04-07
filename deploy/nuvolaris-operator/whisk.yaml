@@ -20,17 +20,7 @@ kind: Whisk
 metadata:
   name: standalone
   namespace: nuvolaris
-spec:
-  # not used - should enable debugger for openwhisk
-  debug: false
-  ## if empty, assigned by the system with a load balancer
-  apihost: ""
-  apiport: ""
-  protocol: ""
-  # if empty allocate a volume with default storage class othewise allocate volumes in the hostpath
-  # useful only for kind
-  hostpath: ""
-  # CICKMDS
+spec: 
   components:
     # start openwhisk controller
     openwhisk: true

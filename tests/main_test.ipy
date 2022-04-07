@@ -29,14 +29,8 @@ import nuvolaris.config as cfg
 import nuvolaris.kube as kube
 import nuvolaris.main as main 
 
-cfg.clean()
-(name, spec) = tu.load_sample_config()
-cfg.configure(name, spec)
 
-cfg.getall("couchdb.admin")
-cfg.put("components.couchdb", False)
-
-kube.mocker.config("apply", "ok")
-kube.mocker.echo()
-print(main.whisk_create(spec, name))
+#kube.mocker.config("apply", "ok")
+#spec = tu.load_sample_config()
+#main.whisk_create(spec, "standalone")
 

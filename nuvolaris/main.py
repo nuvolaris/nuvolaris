@@ -38,8 +38,8 @@ def login(**kwargs):
 # tested by an integration test
 @kopf.on.create('nuvolaris.org', 'v1', 'whisks')
 def whisk_create(spec, name, **kwargs):
-    cfg.configure(spec, name)
-
+    nodeLabels = kube.kubectl("get", "nodes", jsonpath='{.items[].metadata.labels}')
+    cfg.configure(name, spec, nodeLabels)
     state = {
         "openwhisk": "?",  # Openwhisk Controller or Standalone
         "invoker": "?",  # Invoker
@@ -53,6 +53,7 @@ def whisk_create(spec, name, **kwargs):
     if cfg.get('components.couchdb'):
         state['couchdb']= "starting"
         couchdb.create()
+        couchdb.init()
     else:
         state['couchdb'] = "off"
 
@@ -91,7 +92,6 @@ def whisk_create(spec, name, **kwargs):
         state['s3bucket'] = "n/a"
     else:
         state['s3bucket'] = "off"
-
     #message = []
     #bucket.create()
     #mongodb.create()
@@ -118,7 +118,6 @@ def whisk_delete(spec, **kwargs):
 # tested by integration test
 @kopf.on.field("service", field='status.loadBalancer')
 def service_update(old, new, name, **kwargs):
-    nodeLabels = kube.kubectl("get", "nodes", jsonpath='{.items[].metadata.labels}')
     ingress = []
     if "ingress" in new and len(new['ingress']) >0:
         ingress = new['ingress']
