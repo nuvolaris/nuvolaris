@@ -31,6 +31,8 @@ import nuvolaris.main as main
 
 
 #kube.mocker.config("apply", "ok")
-#spec = tu.load_sample_config()
+#spec = 
+cfg.configure(tu.load_sample_config())
+cfg.getall()
 #main.whisk_create(spec, "standalone")
 

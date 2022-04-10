@@ -16,7 +16,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-kubectl apply -f deploy/nuvolaris-operator/nuvolaris-ns.yaml
+kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
 kubectl apply -f deploy/nuvolaris-operator/operator-roles.yaml
 kubectl apply -f deploy/nuvolaris-operator/whisk-crd.yaml
 poetry run kopf run -n nuvolaris -m nuvolaris nuvolaris/main.py

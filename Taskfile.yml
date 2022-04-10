@@ -23,7 +23,8 @@ vars:
   REPO: ghcr.io
   TAG:
     sh: git describe --tags --abbrev=0 2>/dev/null || echo latest
-  TEST: ""
+  T: ""
+  S: ""
 
 dotenv:
   - .env
@@ -61,24 +62,46 @@ tasks:
 
   buildx: docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} .
 
-  run: run.sh
+  run:
+    cmds: 
+    - ./run.sh
 
-  deploy: kubectl -n nuvolaris apply -f deploy/nuvolaris-operator/whisk.yaml
+  deploy: kubectl -n nuvolaris apply -f deploy/nuvolaris-operator/whisk{{.S}}.yaml
 
   undeploy: kubectl -n nuvolaris delete -f deploy/nuvolaris-operator/whisk.yaml
+
+  undeploy-force: >
+    kubectl -n nuvolaris patch wsk/standalone --type=merge 
+    --patch '{"metadata": {"finalizers":[] } }'
+  
+  clean-ns:
+  - kubectl -n nuvolaris delete deploy --all
+  - kubectl -n nuvolaris delete pod --all
+  - kubectl -n nuvolaris delete svc --all
+  - kubectl -n nuvolaris delete cm --all
+  - kubectl -n nuvolaris delete secret --all
+  - kubectl -n nuvolaris delete wsk --all
+
+  kill-py:
+    ps auwwx | grep python  | awk '{print $2}' | xargs kill -9
 
   env: env
 
   cli: poetry run ipython -i profile.ipy
 
+  wsk-test:
+  - wsk property set --apihost http://localhost:3233 --auth '23bc46b1-71f6-4ed5-8c54-816aa4f8c502:123zO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP'
+  - wsk action update hello tests/hello.js
+  - wsk action invoke hello -r
+
   unit: |
-    for test in nuvolaris/{{.TEST}}*.py
+    for test in nuvolaris/{{.T}}*.py
     do echo "*** $test"
        poetry run python3 -m doctest $test {{.CLI_ARGS}}
     done
 
   integ: |
-    for test in tests/{{.TEST}}*.ipy
+    for test in tests/{{.T}}*.ipy
     do  echo "*** $test"
         poetry run ipython $test {{.CLI_ARGS}}
     done
@@ -108,3 +131,4 @@ tasks:
   3: task use -- 3
   4: task use -- 4
   5: task use -- 5
+

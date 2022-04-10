@@ -1,0 +1,62 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nuvolaris-kcf.config
+  labels:
+    app: nuvolaris-openwhisk
+data:
+  standalone-kcf.conf: |
+    include classpath("standalone.conf")
+
+    whisk {
+      spi {
+        ContainerFactoryProvider = "org.apache.openwhisk.core.containerpool.kubernetes.KubernetesContainerFactoryProvider"
+        LogStoreProvider = "org.apache.openwhisk.core.containerpool.logging.DockerToActivationLogStoreProvider"
+        ArtifactStoreProvider = "org.apache.openwhisk.core.database.CouchDbStoreProvider"
+      }
+
+      couchdb {
+          protocol = http          # One of "https" or "http"
+          host     = nuvolaris-couchdb.nuvolaris.svc.cluster.local    # DB Host
+          port     = 5984          # DB Port
+          username = "whisk_admin"
+          password = "some_passw0rd"
+          provider = "CouchDB"     # Either "Cloudant" or "CouchDB"
+          databases {              # Database names used for various entity classes
+            WhiskAuth       = "test_subjects"
+            WhiskEntity     = "test_whisks"
+            WhiskActivation = "test_activations"
+          }
+      }  
+      
+      kubernetes {
+        timeouts {
+          # Use higher timeout for run as in local dev the required Docker images may not be pre pulled
+          run = 10 minute
+          logs = 1 minute
+        }
+        user-pod-node-affinity {
+          enabled = false
+        }
+        port-forwarding-enabled = false
+        action-namespace = nuvolaris
+      }
+      helm.release = "release"
+      runtime.delete.timeout = "30 seconds"
+    }

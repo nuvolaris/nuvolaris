@@ -38,8 +38,11 @@ def login(**kwargs):
 # tested by an integration test
 @kopf.on.create('nuvolaris.org', 'v1', 'whisks')
 def whisk_create(spec, name, **kwargs):
+
     nodeLabels = kube.kubectl("get", "nodes", jsonpath='{.items[].metadata.labels}')
-    cfg.configure(name, spec, nodeLabels)
+    cfg.configure(spec, nodeLabels)
+    for k in cfg.getall(): logging.info(f"{k} = {cfg.get(k)}")
+
     state = {
         "openwhisk": "?",  # Openwhisk Controller or Standalone
         "invoker": "?",  # Invoker
@@ -52,8 +55,9 @@ def whisk_create(spec, name, **kwargs):
 
     if cfg.get('components.couchdb'):
         state['couchdb']= "starting"
-        couchdb.create()
-        couchdb.init()
+        msg = couchdb.create()
+        logging.info(msg)
+        #couchdb.init()
     else:
         state['couchdb'] = "off"
 
@@ -64,8 +68,9 @@ def whisk_create(spec, name, **kwargs):
         state['kafka'] = "off"
 
     if cfg.get('components.openwhisk'):
-        state['openwhisk'] = "starting"
-        openwhisk.create()        
+        state['openwhisk'] = "on"
+        msg = openwhisk.create()
+        logging.info(msg)    
     else:
         state['openwhisk'] = "off"
 
@@ -92,35 +97,45 @@ def whisk_create(spec, name, **kwargs):
         state['s3bucket'] = "n/a"
     else:
         state['s3bucket'] = "off"
-    #message = []
-    #bucket.create()
-    #mongodb.create()
-    #mongodb.init()
-    #message.append(openwhisk.create())
-    #msg = "\n".join(message)
-    #logging.debug(msg)
-    #print(json.dumps(spec, indent=4))
+
     return state
 
 # tested by an integration test
 @kopf.on.delete('nuvolaris.org', 'v1', 'whisks')
 def whisk_delete(spec, **kwargs):
-    message = []
-    message.append(openwhisk.delete())
-    message.append(openwhisk.cleanup())
-    #mongodb.delete()
-    #couchdb.delete()
-    #bucket.delete()
-    msg = "\n".join(message)
-    logging.debug(msg)
-    return msg
+    logging.info("whisk_delete")
+
+    if cfg.get('components.couchdb'):
+        msg = couchdb.delete()
+        logging.info(msg)
+
+    if cfg.get("components.openwhisk"):
+        msg = openwhisk.delete()
+        logging.info(msg)
+        openwhisk.cleanup()
+
+    return {"couchdb_delete": cfg.get('components.couchdb'), "openwhisk_delete": cfg.get('components.couchdb')}
 
 # tested by integration test
 @kopf.on.field("service", field='status.loadBalancer')
 def service_update(old, new, name, **kwargs):
+    
+    if not name == "apihost":
+        return
+    
+    logging.debug(f"service_update: name={name}")
     ingress = []
     if "ingress" in new and len(new['ingress']) >0:
         ingress = new['ingress']
     
-    apihost = openwhisk.apihost(ingress, nodeLabels)
+    apihost = openwhisk.apihost(ingress)
     openwhisk.annotate(f"apihost={apihost}")
+
+@kopf.on.field("deploy", field='status.availableReplicas')
+def deploy_update(old, new, name, **kwargs):
+    if not name == "couchdb":
+        return 
+    logging.debug("deploy_update: old={old} new={new}")
+    if new == 1:
+        logging.info(f'couchdb.host={cfg.get("couchdb.host")}')
+        logging.info(couchdb.init())

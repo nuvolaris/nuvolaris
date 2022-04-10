@@ -43,55 +43,59 @@ spec:
               type: object
               x-kubernetes-preserve-unknown-fields: true
             status:
-              type: object
-              properties:
-                openwhisk:
-                  type: string
-                invoker:
-                  type: string
-                couchdb:
-                  type: string
-                kafka:
-                  type: string
-                mongodb:
-                  type: string
-                redis:
-                  type: string
-                s3bucket:
-                  type: string
+              x-kubernetes-preserve-unknown-fields: true
+              # type: object
+              # properties:
+              #   wsk_create:
+              #     type: object
+              #     properties:
+              #       openwhisk:
+              #         type: string
+              #       invoker:
+              #         type: string
+              #       couchdb:
+              #         type: string
+              #       kafka:
+              #         type: string
+              #       mongodb:
+              #         type: string
+              #       redis:
+              #         type: string
+              #       s3bucket:
+              #         type: string
       additionalPrinterColumns:
         - name: OpenWhisk
           type: string
           priority: 0
-          jsonPath: .status.openwhisk
+          jsonPath: .status.whisk_create.openwhisk
           description: OpenWhisk
         - name: Invoker
           type: string
           priority: 0
-          jsonPath: .status.invoker
+          jsonPath: .status.whisk_create.invoker
           description: Invoker
         - name: CouchDB
           type: string
           priority: 0
-          jsonPath: .status.couchdb
+          jsonPath: .status.whisk_create.couchdb
           description: CouchDB
         - name: Kafka
           type: string
           priority: 0
-          jsonPath: .status.kafka
+          jsonPath: .status.whisk_create.kafka
           description: Kafka
         - name: MongoDB
           type: string
           priority: 0
-          jsonPath: .status.mongodb
+          jsonPath: .status.whisk_create.mongodb
           description: MongoDB
         - name: Redis
           type: string
           priority: 0
-          jsonPath: .status.redis
+          jsonPath: .status.whisk_create.redis
           description: Redis
         - name: S3Bucket
           type: string
           priority: 0
-          jsonPath: .status.s3bucket
+          jsonPath: .status.whisk_create.s3bucket
           description: S3Bucket
