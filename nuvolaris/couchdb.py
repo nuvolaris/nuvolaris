@@ -26,7 +26,7 @@ import nuvolaris.couchdb_util
 def create():
     logging.info("create couchdb")
     user = f"db_password={cfg.get('couchdb.admin.password')}"
-    pasw =  f"db_username={cfg.get('couchdb.admin.user')}"
+    pasw = f"db_username={cfg.get('couchdb.admin.user')}"
     config =  kus.secretLiteral("couchdb-auth", user, pasw)
     #if cfg.exists("nuvolaris.kube"):
     #    if cfg.get("nuvolaris.kube") == "kind":

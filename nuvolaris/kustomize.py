@@ -101,6 +101,7 @@ def configMapTemplate(name, where, template, data):
     >>> print(configMapTemplate("test-cm", "test", "test.json", {"item":"value"}), end='')
     configMapGenerator:
     - name: test-cm
+      namespace: nuvolaris
       files:
       - test.json=__test.json
     """
@@ -108,6 +109,7 @@ def configMapTemplate(name, where, template, data):
     file = ntp.spool_template(template, out, data)
     return f"""configMapGenerator:
 - name: {name}
+  namespace: nuvolaris
   files:
   - {template}=__{template}
 """

@@ -17,9 +17,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: nuvolaris-kcf.config
-  labels:
-    app: nuvolaris-openwhisk
+  name: standalone-kcf
+  namespace: nuvolaris
 data:
   standalone-kcf.conf: |
     include classpath("standalone.conf")

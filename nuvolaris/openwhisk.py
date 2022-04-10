@@ -46,8 +46,8 @@ def create():
         "admin_user": cfg.get("couchdb.admin.user"),
         "admin_password": cfg.get("couchdb.admin.password")
     }
-    config += kus.configMapTemplate("openwhisk-config", "openwhisk-standalone",  "standalone-kcf.conf", data)
-    spec = kus.kustom_list("openwhisk-standalone", config)
+    #config += kus.configMapTemplate("standalone-kcf", "openwhisk-standalone",  "standalone-kcf.conf", data)
+    spec = kus.kustom_list("openwhisk-standalone", config, templates=["standalone-kcf.yaml"], data=data)
     cfg.put(WHISK_SPEC, spec)
     return kube.apply(spec)
 
