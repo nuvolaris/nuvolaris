@@ -42,6 +42,9 @@ RUN useradd -m -s /bin/bash nuvolaris && \
 WORKDIR /home/nuvolaris
 # install the operator
 ADD nuvolaris/*.py /home/nuvolaris/nuvolaris/
+ADD nuvolaris/files /home/nuvolaris/nuvolaris/files
+ADD nuvolaris/templates /home/nuvolaris/nuvolaris/templates
+ADD deploy/nuvolaris-operator /home/nuvolaris/deploy/nuvolaris-operator
 ADD deploy/openwhisk-standalone /home/nuvolaris/deploy/openwhisk-standalone
 ADD deploy/couchdb /home/nuvolaris/deploy/couchdb
 ADD run.sh pyproject.toml poetry.lock /home/nuvolaris/

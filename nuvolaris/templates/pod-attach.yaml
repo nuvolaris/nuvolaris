@@ -1,0 +1,14 @@
+apiVersion: apps/v1
+kind: Pod
+metadata:
+  name: {{name}}
+  namespace: nuvolaris
+spec:
+  volumes:
+    - name: {{name}}-storage
+      persistentVolumeClaim:
+        claimName: {{name}}-pvc
+  containers:
+    volumeMounts:
+      - name: {{name}}-storage
+        mountPath: {{dir}}

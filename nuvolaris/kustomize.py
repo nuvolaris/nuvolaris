@@ -63,9 +63,9 @@ def kustomize(where, *what, templates=[], data={}):
             f.write(f"- {file}\n")
         # adding extra temmplatized resources
         for template in templates:
-            out = f"deploy/{where}/_{template}"
+            out = f"deploy/{where}/__{template}"
             file = ntp.spool_template(template, out, data)
-            f.write(f"- _{template}\n")
+            f.write(f"- __{template}\n")
     return kube.kubectl("kustomize", dir)
 
 # generate image kustomization
@@ -102,14 +102,14 @@ def configMapTemplate(name, where, template, data):
     configMapGenerator:
     - name: test-cm
       files:
-      - test.json=_test.json
+      - test.json=__test.json
     """
-    out = f"deploy/{where}/_{template}"
+    out = f"deploy/{where}/__{template}"
     file = ntp.spool_template(template, out, data)
     return f"""configMapGenerator:
 - name: {name}
   files:
-  - {template}=_{template}
+  - {template}=__{template}
 """
 
 # genearate a patch from a template
@@ -117,16 +117,17 @@ def patchTemplate(where, template, data):
     """   
     >>> import nuvolaris.testutil as tu
     >>> import os.path
-    >>> print(patchTemplate("couchdb",  "volume.yaml", {}), end='')
+    >>> data = {"name":"test-pod", "dir":"/usr/share/nginx/html"}
+    >>> print(patchTemplate("test",  "pod-attach.yaml", data), end='')
     patches:
-    - path: _couchdb-vol.yaml
-    >>> os.path.exists("deploy/couchdb/_couchdb-vol.yaml")
+    - path: __pod-attach.yaml
+    >>> os.path.exists("deploy/test/__pod-attach.yaml")
     True
     """
-    out = f"deploy/{where}/_{template}"
+    out = f"deploy/{where}/__{template}"
     file = ntp.spool_template(template, out, data)
     return f"""patches:
-- path: _{template}
+- path: __{template}
 """
 
 def secretLiteral(name, *args):
