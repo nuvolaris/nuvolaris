@@ -42,6 +42,7 @@ header:
     - '**/id_rsa*'
     - '**/.gitkeep'
     - 'poetry.lock'
+    - '**/__*'
  
 dependency:
   files:
