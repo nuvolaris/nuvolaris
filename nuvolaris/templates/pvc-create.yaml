@@ -14,10 +14,16 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-# A demo CRD for the Kopf example operators.
+#
 ---
 apiVersion: v1
-kind: ConfigMap
+kind: PersistentVolumeClaim
 metadata:
-  name: test-config
-  namespace: nuvolaris
+  name: {{name}}-pvc
+spec:
+  volumeName: {{name}}-pvc
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{size}}Gi

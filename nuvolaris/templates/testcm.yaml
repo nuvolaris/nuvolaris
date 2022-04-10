@@ -14,30 +14,10 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-#
+# A demo CRD for the Kopf example operators.
 ---
 apiVersion: v1
-kind: PersistentVolume
+kind: ConfigMap
 metadata:
-  name: pv-www
-spec:
-  storageClassName: standard
-  accessModes:
-    - ReadWriteOnce
-  capacity:
-    storage: 2Gi
-  hostPath:
-    path: /data/www
-    type: DirectoryOrCreate
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: pvc
-spec:
-  volumeName: pv-www
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
+  name: {{name}}
+  namespace: nuvolaris

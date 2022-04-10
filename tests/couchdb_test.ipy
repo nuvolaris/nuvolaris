@@ -16,8 +16,8 @@
 # under the License.
 #
 
-!rm -f deploy/couchdb/kustomization 
-!kubectl apply -f deploy/nuvolaris-operator/nuvolaris-ns.yaml
+!rm -f deploy/couchdb/kustomization.yaml deploy/couchdb/_couchdb*
+!kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
 !kubectl apply -f deploy/couchdb
 
 import nuvolaris.couchdb as cdb

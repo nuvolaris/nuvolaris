@@ -15,19 +15,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: couchdb
+  name: {{name}}
   namespace: nuvolaris
 spec:
   volumes:
-    - name: database-storage
+    - name: {{name}}-storage
       persistentVolumeClaim:
-        claimName: couchdb-pvc
+        claimName: {{name}}-pvc
   template:
     spec:
-      volumeMounts:
-        - name: database-storage
-          mountPath: /opt/couchdb/data
+      containers:
+ #       volumeMounts:
+ #         - name: {{name}}-storage
+ #           mountPath: {{dir}}

@@ -29,7 +29,7 @@ import nuvolaris.template as ntp
 # you have to pass a list of kustomizations to apply
 # you can use various helpers in this module to generate customizations
 # it returns the expanded kustomization
-def kustomize(where, *what, extra=[]):
+def kustomize(where, *what, templates=[], data={}):
     """Test kustomize
     >>> import nuvolaris.kustomize as ku
     >>> import nuvolaris.testutil as tu
@@ -37,10 +37,10 @@ def kustomize(where, *what, extra=[]):
     - image: busybox
     kind: Pod
     kind: Service
-    >>> tu.grep(ku.kustomize("test", configMapTemplate("test-cm", "test", "test.json", {"item":"value"})), r"_id|value")
+    >>> tu.grep(ku.kustomize("test", ku.configMapTemplate("test-cm", "test", "test.json", {"item":"value"})), r"_id|value")
     "_id": "test",
     "value": "value"
-    >>> tu.grep(ku.kustomize("test", ku.image("nginx", "busybox"), extra=['_cm.yaml']), "name: test-", sort=True)
+    >>> tu.grep(ku.kustomize("test", ku.image("nginx", "busybox"), templates=['testcm.yaml'], data={"name":"test-config"}), "name: test-", sort=True)
     name: test-config
     name: test-pod
     name: test-svc
@@ -61,8 +61,11 @@ def kustomize(where, *what, extra=[]):
             if file.startswith("_"):
               continue
             f.write(f"- {file}\n")
-        for file in extra:
-          f.write(f"- {file}\n")
+        # adding extra temmplatized resources
+        for template in templates:
+            out = f"deploy/{where}/_{template}"
+            file = ntp.spool_template(template, out, data)
+            f.write(f"- _{template}\n")
     return kube.kubectl("kustomize", dir)
 
 # generate image kustomization
@@ -114,10 +117,10 @@ def patchTemplate(where, template, data):
     """   
     >>> import nuvolaris.testutil as tu
     >>> import os.path
-    >>> print(patchTemplate("couchdb",  "couchdb-vol.patch", {}), end='')
+    >>> print(patchTemplate("couchdb",  "volume.yaml", {}), end='')
     patches:
-    - path: _couchdb-vol.patch
-    >>> os.path.exists("deploy/couchdb/_couchdb-vol.patch")
+    - path: _couchdb-vol.yaml
+    >>> os.path.exists("deploy/couchdb/_couchdb-vol.yaml")
     True
     """
     out = f"deploy/{where}/_{template}"
@@ -145,7 +148,7 @@ def secretLiteral(name, *args):
   return res
 
 # returns a list of kustomized objects
-def kustom_list(where, *what):
+def kustom_list(where, *what, templates=[], data={}):
   """
   >>> import nuvolaris.kustomize as nku
   >>> where = "test"
@@ -156,7 +159,7 @@ def kustom_list(where, *what):
   >>> print(out)
   ['Pod', 'Service']
   """
-  yml = nku.kustomize(where, *what)
+  yml = nku.kustomize(where, *what, templates=templates, data=data)
   stream = io.StringIO(yml)
   res = list(yaml.load_all(stream, yaml.Loader))
   return {"apiVersion": "v1", "kind": "List", "items": res }

@@ -27,8 +27,17 @@ def create():
     logging.info("create couchdb")
     user = f"db_password={cfg.get('couchdb.admin.password')}"
     pasw =  f"db_username={cfg.get('couchdb.admin.user')}"
-    secret =  kus.secretLiteral("couchdb-auth", user, pasw)
-    spec = kus.kustom_list("couchdb", secret)
+    config =  kus.secretLiteral("couchdb-auth", user, pasw)
+    #if cfg.exists("nuvolaris.kube"):
+    #    if cfg.get("nuvolaris.kube") == "kind":
+    #        logging.info("TODO: add hostpath")
+    #else:
+    #    config += kus.patchTemplate("couchdb", "volume.yaml", {
+    #        "name": "couchdb",
+    #        "path": "/opt/couchdb/data"
+    #    })
+
+    spec = kus.kustom_list("couchdb", config)
     cfg.put("state.couchdb.spec", spec)
     res = kube.apply(spec)
     logging.info(f"create couchdb: {res}")

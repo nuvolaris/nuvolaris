@@ -15,12 +15,15 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+---
 apiVersion: v1
-kind: Service
+kind: PersistentVolumeClaim
 metadata:
-  name: test-svc
+  name: test-nginx-pvc
 spec:
-  selector:
-    app: test-pod
-  ports:
-  - port: 80
+  volumeName: test-nginx-pvc
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

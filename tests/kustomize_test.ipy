@@ -2,7 +2,9 @@ import nuvolaris.testutil as tu
 import nuvolaris.kustomize as kus
 import nuvolaris.kube as kube
 import requests as req
+import yaml, sys
 
+# config map
 cm = kus.configMapTemplate("index", "test-cm", "index.html", {"item":"Hello"})
 res = kus.kustom_list("test-cm", cm)
 kube.apply(res)
@@ -10,6 +12,11 @@ kube.wait("pod/test-pod", "condition=Ready")
 assert( req.get("http://localhost:3233").text.find("Hello") >0 )
 kube.delete(res)
 
-#
-d = kus.kustom_list("couchdb", kus.patchTemplate("couchdb", "couchdb-vol.patch", {})),
+# persistent volume
+#data = {"name": "test-nginx", "size": "1", "dir": "/usr/share/nginx/html"}
+#patch = kus.patchTemplate("test-nginx", "pvc-attach.yaml", data) 
+#d = kus.kustom_list("test-nginx", patch, templates=["pvc-create.yaml"], data=data)
+#yaml.dump(d, sys.stdout)
+#kube.apply(d)
 #TODO CHECK the custmization
+

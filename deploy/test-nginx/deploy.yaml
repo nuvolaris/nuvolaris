@@ -15,20 +15,21 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: test-pod
-  labels:
-    app: test-pod 
+  name: test-nginx
+  namespace: nuvolaris
 spec:
-  volumes:
-  - name: www
-    persistentVolumeClaim:
-      claimName: pvc-www
-  containers:
-    - name: nginx
-      image: nginx
-      volumeMounts:
-      - name: www
-        mountPath: /var/www
+  replicas: 1
+  selector:
+    matchLabels:
+      name: test-nginx
+  template:
+    metadata:
+      labels:
+        name: test-nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
