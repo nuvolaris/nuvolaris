@@ -24,7 +24,7 @@ vars:
   TAG:
     sh: git describe --tags --abbrev=0 2>/dev/null || echo latest
   T: ""
-  S: ""
+  S: "dev"
 
 dotenv:
   - .env
@@ -48,12 +48,10 @@ tasks:
   image-tag: git tag -d $(git tag) ; git tag -f {{.BASETAG}}.$(date +%y%m%d%H)
 
   buildx-and-push:
-    deps: [prebuild]
     cmds:
       - docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} . --push
 
   build-and-load:
-    deps: [prebuild]
     cmds:
       - task build
       - kind load docker-image {{.REPO}}/{{.IMAGE}}:{{.TAG}} --name=nuvolaris
@@ -62,19 +60,15 @@ tasks:
 
   buildx: docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} .
 
-  run:
+  dev:
     cmds: 
     - ./run.sh
 
-  deploy: kubectl -n nuvolaris apply -f deploy/nuvolaris-operator/whisk{{.S}}.yaml
+  dev-apply: kubectl -n nuvolaris apply -f deploy/nuvolaris-operator/whisk-{{.S}}.yaml
 
-  undeploy: kubectl -n nuvolaris delete -f deploy/nuvolaris-operator/whisk.yaml
+  dev-delete: kubectl -n nuvolaris delete -f deploy/nuvolaris-operator/whisk-{{.S}}.yaml
 
-  undeploy-force: >
-    kubectl -n nuvolaris patch wsk/standalone --type=merge 
-    --patch '{"metadata": {"finalizers":[] } }'
-  
-  clean-ns:
+  dev-clean:
   - kubectl -n nuvolaris delete deploy --all
   - kubectl -n nuvolaris delete pod --all
   - kubectl -n nuvolaris delete svc --all
@@ -82,7 +76,11 @@ tasks:
   - kubectl -n nuvolaris delete secret --all
   - kubectl -n nuvolaris delete wsk --all
 
-  kill-py:
+  dev-definalize: >
+    kubectl -n nuvolaris patch wsk/standalone --type=merge 
+    --patch '{"metadata": {"finalizers":[] } }'
+
+  dev-kill-py:
     ps auwwx | grep python  | awk '{print $2}' | xargs kill -9
 
   env: env

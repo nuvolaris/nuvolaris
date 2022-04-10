@@ -9,3 +9,7 @@ kube.apply(res)
 kube.wait("pod/test-pod", "condition=Ready")
 assert( req.get("http://localhost:3233").text.find("Hello") >0 )
 kube.delete(res)
+
+#
+d = kus.kustom_list("couchdb", kus.patchTemplate("couchdb", "couchdb-vol.patch", {})),
+#TODO CHECK the custmization

@@ -16,7 +16,7 @@
 # under the License.
 #
 
-!rm -f deploy/couchdb/kustomization
+!rm -f deploy/couchdb/kustomization 
 !kubectl apply -f deploy/nuvolaris-operator/nuvolaris-ns.yaml
 !kubectl apply -f deploy/couchdb
 
@@ -61,10 +61,10 @@ assert(cdb.add_initial_subjects(db))
 #!kubectl wait deploy/couchdb --for=delete
 
 """
-# TODO check the database
 import nuvolaris.couchdb_util as cu
 import nuvolaris.couchdb as cdb
 import nuvolaris.testutil as tu
 import requests as req
 cdb.init()
+# TODO check the database after the init
 """
