@@ -40,7 +40,7 @@ def apihost(apiHost):
         url = url._replace(netloc = f"{url.hostname}:{cfg.get('nuvolaris.apiport')}")
     return url.geturl()
 
-def create():
+def create(owner=None):
     config = kus.image(WHISK_IMG, newTag=WHISK_TAG)
     data = {
         "admin_user": cfg.get("couchdb.admin.user"),
@@ -48,18 +48,18 @@ def create():
     }
     #config += kus.configMapTemplate("standalone-kcf", "openwhisk-standalone",  "standalone-kcf.conf", data)
     spec = kus.kustom_list("openwhisk-standalone", config, templates=["standalone-kcf.yaml"], data=data)
-    cfg.put(WHISK_SPEC, spec)
+    if owner:
+        kopf.append_owner_reference(spec['items'], owner)
+    else:
+        cfg.put(WHISK_SPEC, spec)
     return kube.apply(spec)
 
 def delete():
+    res = ""
     if cfg.exists(WHISK_SPEC):
         res = kube.delete(cfg.get(WHISK_SPEC))
         cfg.delete(WHISK_SPEC)
-        return res
-    return "not found"
-
-def cleanup():
-    return kube.kubectl("delete", "pod", "--all")
+    res += kube.kubectl("delete", "pod", "-l", "user-action-pod=true")
 
 def annotate(keyval):
     kube.kubectl("annotate", "cm/config",  keyval, "--overwrite")

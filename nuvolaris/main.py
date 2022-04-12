@@ -54,7 +54,7 @@ def whisk_create(spec, name, **kwargs):
     }
 
     if cfg.get('components.couchdb'):
-        state['couchdb']= "starting"
+        state['couchdb']= "on"
         msg = couchdb.create()
         logging.info(msg)
         #couchdb.init()
@@ -98,6 +98,12 @@ def whisk_create(spec, name, **kwargs):
     else:
         state['s3bucket'] = "off"
 
+    # attach myself to be deleted when the crd is deleted
+    #me = kube.get("deploy/nuvolaris-operator")
+    #if me:
+    #    kopf.append_owner_reference(me, spec)
+    #    kopf.apply(me)
+
     return state
 
 # tested by an integration test
@@ -112,17 +118,14 @@ def whisk_delete(spec, **kwargs):
     if cfg.get("components.openwhisk"):
         msg = openwhisk.delete()
         logging.info(msg)
-        openwhisk.cleanup()
 
-    return {"couchdb_delete": cfg.get('components.couchdb'), "openwhisk_delete": cfg.get('components.couchdb')}
 
 # tested by integration test
 @kopf.on.field("service", field='status.loadBalancer')
-def service_update(old, new, name, **kwargs):
-    
+def service_update(old, new, name, **kwargs):    
     if not name == "apihost":
         return
-    
+
     logging.debug(f"service_update: name={name}")
     ingress = []
     if "ingress" in new and len(new['ingress']) >0:
@@ -135,6 +138,7 @@ def service_update(old, new, name, **kwargs):
 def deploy_update(old, new, name, **kwargs):
     if not name == "couchdb":
         return 
+
     logging.debug("deploy_update: old={old} new={new}")
     if new == 1:
         logging.info(f'couchdb.host={cfg.get("couchdb.host")}')

@@ -139,6 +139,12 @@ def apply(obj, namespace="nuvolaris"):
         obj = json.dumps(obj)
     return kubectl("apply", "-f", "-", namespace=namespace, input=obj)
 
+def get(name):
+    try:
+        return json.loads(kubectl("get", name, "-ojson"))
+    except:
+        return None
+
 def wait(name, condition):
     return kubectl("wait", name, f"--for={condition}")
 

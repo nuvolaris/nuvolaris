@@ -24,4 +24,5 @@ True
 >>> tu.json2flatdict(mck.dump())['kind']
 'List'
 >>> ow.delete()
-'not found'
+'nothing to do'
+>>> mck.reset()

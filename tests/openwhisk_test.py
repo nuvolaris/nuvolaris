@@ -39,5 +39,23 @@ assert(cfg.configure(tu.load_sample_config(), clean=True))
 assert( ow.apihost(a) == 'https://elb.amazonaws.com')
 
 import doctest
-
 doctest.testfile("tests/openwhisk_test.txt", module_relative=False)
+
+!kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
+!kubectl apply -f deploy/nuvolaris-operator/whisk-crd.yaml
+!kubectl apply -f deploy/nuvolaris-operator/whisk-dev.yaml
+
+wsk = kube.get("wsk/controller")
+ow.create(wsk)
+
+assert(kube.get("deploy/controller"))
+
+!kubectl delete wsk/controller
+!kubectl wait wsk/controller --for=delete
+
+assert(not kube.get("deploy/controller"))
+
+ow.delete()
+
+
+

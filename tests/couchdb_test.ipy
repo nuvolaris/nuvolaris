@@ -18,15 +18,21 @@
 
 !rm -f deploy/couchdb/kustomization.yaml deploy/couchdb/__*
 !kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
-!kubectl apply -f deploy/couchdb
+!kubectl apply -f deploy/nuvolaris-operator/whisk-crd.yaml
+!kubectl apply -f deploy/nuvolaris-operator/whisk-dev.yaml
+
 
 import nuvolaris.couchdb as cdb
 import nuvolaris.testutil as tu
 import nuvolaris.config as cfg
+import nuvolaris.kube as kube
 import requests as req
 
 assert(cfg.configure(tu.load_sample_config(), clean=True))
 assert(cfg.put("couchdb.host", "localhost"))
+
+wsk = kube.get("wsk/controller")
+cdb.create(wsk)
 
 import nuvolaris.couchdb_util
 db = nuvolaris.couchdb_util.CouchDB()
@@ -50,8 +56,8 @@ assert(cdb.init_activations(db))
 assert(cdb.init_actions(db))
 assert(cdb.add_initial_subjects(db))
 
-!kubectl delete -f deploy/couchdb
-!kubectl wait deploy/couchdb --for=delete
+!kubectl delete wsk/controller
+!kubectl wait wsk/controller --for=delete
 
 #!kubectl apply -f deploy/couchdb
 #cdb.create()

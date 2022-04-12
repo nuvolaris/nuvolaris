@@ -18,7 +18,7 @@
 apiVersion: nuvolaris.org/v1
 kind: Whisk
 metadata:
-  name: standalone
+  name: controller
   namespace: nuvolaris
 spec: 
   components:
@@ -39,7 +39,8 @@ spec:
   openwhisk:
     namespaces:
       whisk-system: 789c46b1-71f6-4ed5-8c54-816aa4f8c502:abczO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP
-      nuvolaris: 23bc46b1-71f6-4ed5-8c54-816aa4f8c502:123zO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP
+      nuvolaris: cbd68075-dac2-475e-8c07-d62a30c7e683:123zO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP
+      #nuvolaris: cbd68075-dac2-475e-8c07-d62a30c7e683:mRCgwIi9YsZ1rg4NkBa7jdlC1A6MvKoH
   couchdb:
     host: localhost
     volume-size: 10

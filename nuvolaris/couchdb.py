@@ -23,11 +23,12 @@ import nuvolaris.couchdb_util as cu
 import nuvolaris.config as cfg
 import nuvolaris.couchdb_util
 
-def create():
+def create(owner=None):
     logging.info("create couchdb")
     user = f"db_password={cfg.get('couchdb.admin.password')}"
     pasw = f"db_username={cfg.get('couchdb.admin.user')}"
     config =  kus.secretLiteral("couchdb-auth", user, pasw)
+
     #if cfg.exists("nuvolaris.kube"):
     #    if cfg.get("nuvolaris.kube") == "kind":
     #        logging.info("TODO: add hostpath")
@@ -38,9 +39,15 @@ def create():
     #    })
 
     spec = kus.kustom_list("couchdb", config)
-    cfg.put("state.couchdb.spec", spec)
+
+    if owner:
+        kopf.append_owner_reference(spec['items'], owner)
+    else:
+        cfg.put("state.couchdb.spec", spec)
+
     res = kube.apply(spec)
     logging.info(f"create couchdb: {res}")
+
     return res
 
 def delete():
@@ -48,7 +55,7 @@ def delete():
     res = False
     if spec:
         res = kube.delete(spec)
-    logging.info(f"delete couchdb: {res}")
+        logging.info(f"delete couchdb: {res}")
     return res
 
 def check(f, what, res):
