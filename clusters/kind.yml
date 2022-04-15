@@ -15,18 +15,14 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-__pycache__/
-__pypackages__
-.pdm.toml
-.*-version
-kubeconfig
-openwhisk-deploy-kube/
-kustomization.yaml
-playground
-examples/
-aliases
-deploy/extract/
-node_modules/
-.env
-__*
-clusters/id_rsa*
+version: '3'
+
+tasks:
+
+  create: kind create cluster --wait=1m --name=nuvolaris --config=kind-config.yaml
+
+  destroy: kind delete cluster --name nuvolaris
+
+  list: kind get clusters
+
+  use:  kind get kubeconfig --name=nuvolaris >~/.kube/config

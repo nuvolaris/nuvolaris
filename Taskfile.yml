@@ -23,27 +23,46 @@ vars:
   REPO: ghcr.io
   TAG:
     sh: git describe --tags --abbrev=0 2>/dev/null || echo latest
-  T: ""
-  S: "dev"
 
 dotenv:
   - .env
 
 tasks:
-
   setup:
+    deps:
+      - update-files-from-openwhisk
+      - ssh-key
+      - configure-env
     cmds:
       - poetry install
     status:
       - test -e $GOBIN/kopf
 
+  # configure env
+  configure-env:
+    cmds:
+      - echo "please copy .env.dist in .env and add the keys"
+    status:
+      - test -f .env
+
   # update configuration files from openwhisk source
   update-files-from-openwhisk: 
-    - | 
+    cmds:
+      - | 
         if test -d ../nuvolaris-controller
         then cp -v ../nuvolaris-controller/openwhisk/ansible/files/*.json nuvolaris/files
         else echo "not found ../nuvolaris-controller/openwhisk"
         fi
+    status:
+      - test -f nuvolaris/files/runtimes.json
+
+  # generate ssh keys
+  ssh-key:
+    cmds:
+      - ssh-keygen -b 2048 -t rsa -f clusters/id_rsa -q -N ""
+      - ssh-keygen  -y -f clusters/id_rsa >clusters/id_rsa.pub
+    status:
+      - test -f clusters/id_rsa.pub
 
   image-tag: git tag -d $(git tag) ; git tag -f {{.BASETAG}}.$(date +%y%m%d%H)
 
@@ -51,40 +70,15 @@ tasks:
     cmds:
       - docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} . --push
 
-  build: docker build . -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} {{.CLI_ARGS}}
-
-  buildx: docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} .
-
-  dev:
-    cmds: 
-    - ./run.sh
-
-  dev-apply: kubectl -n nuvolaris apply -f deploy/nuvolaris-operator/whisk-{{.S}}.yaml
-
-  dev-delete: kubectl -n nuvolaris delete -f deploy/nuvolaris-operator/whisk-{{.S}}.yaml
-
-  dev-clean:
-  - kubectl -n nuvolaris delete deploy --all
-  - kubectl -n nuvolaris delete pod --all
-  - kubectl -n nuvolaris delete svc --all
-  - kubectl -n nuvolaris delete cm --all
-  - kubectl -n nuvolaris delete secret --all
-  - kubectl -n nuvolaris delete wsk --all
-
-  dev-fin: >
-    kubectl -n nuvolaris patch wsk/controller --type=merge --patch '{"metadata": {"finalizers":[] } }'
-
-  dev-kill-py:
-    ps auwwx | grep python  | awk '{print $2}' | xargs kill -9
-
-  env: env
-
-  cli: poetry run ipython -i profile.ipy
+  build-and-load:
+    cmds:
+      - task build
+      - kind load docker-image {{.REPO}}/{{.IMAGE}}:{{.TAG}} --name=nuvolaris
 
   unit: |
     for test in nuvolaris/{{.T}}*.py
-    do echo "*** $test"
-       poetry run python3 -m doctest $test {{.CLI_ARGS}}
+    do  echo "*** $test"
+        poetry run python3 -m doctest $test {{.CLI_ARGS}}
     done
 
   integ: |
@@ -96,82 +90,17 @@ tasks:
   test:
     - task: unit
     - task: integ
-  
-  build-and-load:
-    cmds:
-      - task build
-      - kind load docker-image {{.REPO}}/{{.IMAGE}}:{{.TAG}} --name=nuvolaris
 
-  kustomization:
-    cmds:
-    - |
-      cat <<__EOF__ >deploy/nuvolaris-operator/kustomization.yaml
-      apiVersion: kustomize.config.k8s.io/v1beta1
-      kind: Kustomization
-      images:
-      - name: {{.REPO}}/{{.IMAGE}}
-        newTag: {{.TAG}}
-      resources:
-      - nuvolaris-common.yaml
-      - operator-roles.yaml
-      - operator-pod.yaml
-      __EOF__
-
-  deploy-operator:
-  - task: kustomization
-  - kubectl apply -k deploy/nuvolaris-operator
-  - | 
-    while ! kubectl -n nuvolaris wait --for=condition=ready pod/nuvolaris-operator
-    do echo still waiting...
-    done
-
-  destroy-operator:
-  - task: kustomization
-  - kubectl delete -k deploy
-
-  deploy-instance:
-  - kubectl config set-context --current --namespace nuvolaris
-  - >
-    cat deploy/nuvolaris-operator/whisk-{{.S}}.yaml 
-    | sed -e 's/host: localhost/host: couchdb/'
-    | kubectl apply -f -
-
-  destroy:
-  - kubectl -n nuvolaris delete wsk/controller
-  - kubectl -n nuvolaris delete pod/nuvolaris-operator
-  - kubectl delete ns/namespace
-  
-
-  config-wsk: |-
-    APIHOST=$(kubectl -n nuvolaris get cm/config -o yaml | awk '/apihost:/ {print $2}' | sed -e 's/https:/http:/')
-    echo $APIHOST
-    AUTH=$(kubectl -n nuvolaris get wsk/controller -o yaml | awk '/nuvolaris:/{print $2}')
-    echo $AUTH
-    wsk property set --apihost $APIHOST --auth $AUTH
-  
-  test-wsk:
-    - wsk action update hello tests/hello.js
-    - wsk action invoke hello -r
-
-  enter: kubectl exec -ti nuvolaris-operator -- bash
-
-  kubeconfig: task config -d nuvolaris-test
-
-  kubeuse: 
-    cmds:
-      - |
-        if test -z "{{.CLI_ARGS}}"
-        then kubectl config view -o json | jq '.contexts | .[].name' -r  |  awk '{print NR, $0}'
-            echo current: "$(kubectl config current-context)"
-        else CTX=$(kubectl config view -o json | jq '.contexts | .[].name' -r | awk 'NR=={{.CLI_ARGS}} { print}')
-            kubectl config use-context "$CTX"
-            kubectl get nodes
-        fi
-    silent: true
-
-  1: task kubeuse -- 1
-  2: task kubeuse -- 2
-  3: task kubeuse -- 3
-  4: task kubeuse -- 4
-  5: task kubeuse -- 5
+includes:
+  dev: TaskfileDev.yml
+  test: TaskfileTest.yml
+  kind:  
+    taskfile: clusters/kind.yml
+    dir: clusters
+  eks:
+    taskfile: clusters/eks.yml
+    dir: clusters
+  lks:  
+    taskfile: clusters/lks.yml
+    dir: clusters
 

@@ -15,18 +15,15 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-__pycache__/
-__pypackages__
-.pdm.toml
-.*-version
-kubeconfig
-openwhisk-deploy-kube/
-kustomization.yaml
-playground
-examples/
-aliases
-deploy/extract/
-node_modules/
-.env
-__*
-clusters/id_rsa*
+description: Charmed Kubernetes overlay to add native AWS support.
+applications:
+  aws-integrator:
+    annotations:
+      gui-x: "600"
+      gui-y: "300"
+    charm: cs:~containers/aws-integrator
+    num_units: 1
+    trust: true
+relations:
+  - ['aws-integrator', 'kubernetes-master']
+  - ['aws-integrator', 'kubernetes-worker']

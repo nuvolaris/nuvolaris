@@ -1,0 +1,39 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  kubeadmConfigPatches:
+  - |
+    kind: InitConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: "ingress-ready=true,nuvolaris-apihost=localhost,nuvolaris-apiport=3233,nuvolaris-protocol=http,nuvolaris-kube=kind"
+- role: worker        
+  extraPortMappings:
+  - containerPort: 30232
+    hostPort: 3232
+    protocol: TCP
+  - containerPort: 30233
+    hostPort: 3233
+    protocol: TCP
+  - containerPort: 30896
+    hostPort: 7896
+    protocol: TCP  
+  - containerPort: 30984
+    hostPort: 5984
+    protocol: TCP  
+  - containerPort: 30017
+    hostPort: 27017
+    protocol: TCP
+  - containerPort: 30444
+    hostPort: 9444
+    protocol: TCP    
+  - containerPort: 6379
+    hostPort: 30379
+    protocol: TCP
+  - containerPort: 80
+    hostPort: 80
+    protocol: TCP
+  - containerPort: 443
+    hostPort: 443
+    protocol: TCP

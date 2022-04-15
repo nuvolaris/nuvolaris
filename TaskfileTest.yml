@@ -1,0 +1,79 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+version: '3'
+
+vars:
+  T: ""
+  S: "dev"
+
+tasks:
+  
+  kustomization:
+    cmds:
+    - |
+      cat <<__EOF__ >deploy/nuvolaris-operator/kustomization.yaml
+      apiVersion: kustomize.config.k8s.io/v1beta1
+      kind: Kustomization
+      images:
+      - name: {{.REPO}}/{{.IMAGE}}
+        newTag: {{.TAG}}
+      resources:
+      - nuvolaris-common.yaml
+      - operator-roles.yaml
+      - operator-pod.yaml
+      __EOF__
+
+  deploy-operator:
+  - task: kustomization
+  - kubectl apply -k deploy/nuvolaris-operator
+  - | 
+    while ! kubectl -n nuvolaris wait --for=condition=ready pod/nuvolaris-operator
+    do echo still waiting...
+    done
+
+  destroy-operator:
+  - task: kustomization
+  - kubectl delete -k deploy
+
+  deploy-instance:
+  - kubectl config set-context --current --namespace nuvolaris
+  - >
+    cat deploy/nuvolaris-operator/whisk-{{.S}}.yaml 
+    | sed -e 's/host: localhost/host: couchdb/'
+    | kubectl apply -f -
+
+  deploy:
+   - task: deploy-operator
+   - task: deploy-instance
+  
+  destroy:
+  - kubectl -n nuvolaris delete wsk/controller
+  - kubectl -n nuvolaris delete pod/nuvolaris-operator
+  - kubectl delete ns/namespace
+  
+  config-wsk: |-
+    APIHOST=$(kubectl -n nuvolaris get cm/config -o yaml | awk '/apihost:/ {print $2}' | sed -e 's/https:/http:/')
+    echo $APIHOST
+    AUTH=$(kubectl -n nuvolaris get wsk/controller -o yaml | awk '/nuvolaris:/{print $2}')
+    echo $AUTH
+    wsk property set --apihost $APIHOST --auth $AUTH
+  
+  test-wsk:
+    - wsk action update hello tests/hello.js
+    - wsk action invoke hello -r
+

@@ -15,18 +15,32 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-__pycache__/
-__pypackages__
-.pdm.toml
-.*-version
-kubeconfig
-openwhisk-deploy-kube/
-kustomization.yaml
-playground
-examples/
-aliases
-deploy/extract/
-node_modules/
-.env
-__*
-clusters/id_rsa*
+version: '3'
+
+tasks:
+
+  cli: poetry run ipython -i profile.ipy
+  env: env
+
+  run: ./run.sh
+
+  apply: kubectl -n nuvolaris apply -f deploy/nuvolaris-operator/whisk-{{.S}}.yaml
+
+  delete: kubectl -n nuvolaris delete -f deploy/nuvolaris-operator/whisk-{{.S}}.yaml
+
+  clean:
+  - kubectl -n nuvolaris delete deploy --all
+  - kubectl -n nuvolaris delete pod --all
+  - kubectl -n nuvolaris delete svc --all
+  - kubectl -n nuvolaris delete cm --all
+  - kubectl -n nuvolaris delete secret --all
+  - kubectl -n nuvolaris delete wsk --all
+
+  finalize: >
+    kubectl -n nuvolaris patch wsk/controller --type=merge --patch '{"metadata": {"finalizers":[] } }'
+
+  killpy: ps auwwx | grep python  | awk '{print $2}' | xargs kill -9
+
+  enter: kubectl exec -ti nuvolaris-operator -- bash
+
+
