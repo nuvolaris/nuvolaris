@@ -19,10 +19,12 @@ version: '3'
 
 tasks:
 
+   cli: linode-cli lke {{.CLI_ARGS}}
+
    create: >
       linode-cli lke cluster-create \
          --label=nuvolaris-cluster --region=eu-west \
-         --k8s_version=1.21 --node_pools.type=g6-standard-4 --node_pools.count=1
+         --k8s_version=1.23 --node_pools.type=g6-standard-4 --node_pools.count=1
 
    destroy: | 
       ID=$(linode-cli lke clusters-list --json | jq '.[0].id')
@@ -32,8 +34,10 @@ tasks:
       ID=$(linode-cli lke clusters-list --json | jq '.[0].id')
       if linode-cli lke kubeconfig-view $ID --json 2>&1 | grep "Request failed"
       then echo "cluster not yet ready"
-      else linode-cli lke kubeconfig-view $ID --json | jq -r '.[].kubeconfig | @base64d' >.~/.kube/config
+      else linode-cli lke kubeconfig-view $ID --json | jq -r '.[].kubeconfig | @base64d' >~/.kube/config
       fi
+      kubectl get nodes
 
    list: linode-cli lke clusters-list
    
+   env: env

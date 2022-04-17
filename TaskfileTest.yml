@@ -22,6 +22,7 @@ vars:
   S: "dev"
 
 tasks:
+
   
   kustomization:
     cmds:
@@ -58,13 +59,13 @@ tasks:
     | kubectl apply -f -
 
   deploy:
-   - task: deploy-operator
-   - task: deploy-instance
+    - task: deploy-operator
+    - task: deploy-instance
   
   destroy:
   - kubectl -n nuvolaris delete wsk/controller
   - kubectl -n nuvolaris delete pod/nuvolaris-operator
-  - kubectl delete ns/namespace
+  - kubectl delete ns/nuvolaris
   
   config-wsk: |-
     APIHOST=$(kubectl -n nuvolaris get cm/config -o yaml | awk '/apihost:/ {print $2}' | sed -e 's/https:/http:/')

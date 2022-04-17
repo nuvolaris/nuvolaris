@@ -38,6 +38,8 @@ tasks:
     status:
       - test -e $GOBIN/kopf
 
+  env: env
+  
   # configure env
   configure-env:
     cmds:
@@ -64,16 +66,18 @@ tasks:
     status:
       - test -f clusters/id_rsa.pub
 
-  image-tag: git tag -d $(git tag) ; git tag -f {{.BASETAG}}.$(date +%y%m%d%H)
+  image-tag: git tag -d $(git tag) ; git tag -f {{.BASETAG}}.$(date +%y%m%d%H) ; git tag
 
-  buildx-and-push:
-    cmds:
-      - docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} . --push
-
+  build: docker build . -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} {{.CLI_ARGS}}
+  
   build-and-load:
     cmds:
       - task build
       - kind load docker-image {{.REPO}}/{{.IMAGE}}:{{.TAG}} --name=nuvolaris
+
+  buildx-and-push:
+    cmds:
+      - docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} . --push
 
   unit: |
     for test in nuvolaris/{{.T}}*.py
@@ -103,4 +107,3 @@ includes:
   lks:  
     taskfile: clusters/lks.yml
     dir: clusters
-

@@ -25,4 +25,6 @@ tasks:
 
   list: kind get clusters
 
-  use:  kind get kubeconfig --name=nuvolaris >~/.kube/config
+  config: |-
+    kind get kubeconfig --name=nuvolaris >~/.kube/config
+    kubectl get nodes

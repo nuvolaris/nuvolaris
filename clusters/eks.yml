@@ -27,3 +27,4 @@ tasks:
 
   config: |-
     aws eks update-kubeconfig --kubeconfig ~/.kube/config --name=nuvolaris-cluster
+    kubectl get nodes

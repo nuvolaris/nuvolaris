@@ -15,9 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-task config
-kubectl config set-context --current --namespace nuvolaris
-export $(xargs <./nuvolaris-test/.env)
+export $(xargs <.env)
 export O=deploy/nuvolaris-operator
 alias ka="kubectl apply -f"
 alias kg="kubectl get"
@@ -27,3 +25,4 @@ alias kdes="kubectl describe"
 function kfin { 
     kubectl patch "$@"  -p '{"metadata":{"finalizers":[]}}' --type=merge 
 }
+kubectl config set-context --current --namespace nuvolaris

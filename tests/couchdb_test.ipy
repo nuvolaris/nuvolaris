@@ -23,6 +23,7 @@
 
 
 import nuvolaris.couchdb as cdb
+import nuvolaris.couchdb_util as cdbu
 import nuvolaris.testutil as tu
 import nuvolaris.config as cfg
 import nuvolaris.kube as kube
@@ -59,12 +60,6 @@ assert(cdb.add_initial_subjects(db))
 !kubectl delete wsk/controller
 !kubectl wait wsk/controller --for=delete
 
-#!kubectl apply -f deploy/couchdb
-#cdb.create()
-#cdb.init()
-#assert(cdb.init())
-#!kubectl delete -f deploy/couchdb
-#!kubectl wait deploy/couchdb --for=delete
 
 """
 import nuvolaris.couchdb_util as cu
