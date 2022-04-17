@@ -59,6 +59,7 @@ header:
     - '**/.env*'
     - '**/aliases'
     - '**/playground'
+    - '.github/ngrok'
 
 dependency:
   files:

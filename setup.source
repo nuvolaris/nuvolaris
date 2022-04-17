@@ -190,10 +190,15 @@ fi
 alias k="kubectl -n nuvolaris"
 alias ka="kubectl -n nuvolaris apply"
 alias kg="kubectl -n nuvolaris get"
-alias kd="kubectl -n nuvolaris delete"
+alias kdl="kubectl -n nuvolaris delete"
+alias kds="kubectl -n nuvolaris describe"
 alias kns="kubectl config  set-context --current --namespace"
+alias gst="git status"
+alias gl="git log --pretty=oneline"
+alias gcm="git commit -m"
+alias gpum="git push upstream main"
+alias ga="git add"
 
-# local setup
 if test -e Taskfile.yml
 then task setup
 fi

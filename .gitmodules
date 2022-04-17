@@ -33,3 +33,6 @@
 [submodule "config"]
 	path = nuvolaris-config
 	url = https://github.com/nuvolaris/nuvolaris-config
+[submodule "nuvolaris-documentation"]
+	path = nuvolaris-documentation
+	url = https://github.com/nuvolaris/nuvolaris-documentation/
