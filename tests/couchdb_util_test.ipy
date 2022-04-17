@@ -21,7 +21,7 @@ import nuvolaris.testutil as tu
 
 #!kubectl delete -f deploy/couchdb
 !rm -f deploy/couchdb/kustomization.yaml
-!kubectl apply -f deploy/nuvolaris-operator/nuvolaris-ns.yaml
+!kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
 !kubectl apply -f deploy/couchdb
 !kubectl -n nuvolaris wait --for=condition=ready pod -l name=couchdb
 
@@ -30,6 +30,7 @@ assert(cfg.configure(tu.load_sample_config(), clean=True))
 assert(cfg.put("couchdb.host", "localhost"))
 import nuvolaris.couchdb_util 
 db = nuvolaris.couchdb_util.CouchDB()
+assert(db.wait_db_ready(60))
 
 # database init
 assert( not db.check_db("subjects"))
