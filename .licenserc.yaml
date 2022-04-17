@@ -43,6 +43,7 @@ header:
     - '**/.gitkeep'
     - 'poetry.lock'
     - '**/__*'
+    - '.github/ngrok'
  
 dependency:
   files:
