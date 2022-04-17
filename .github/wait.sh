@@ -1,3 +1,4 @@
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -15,18 +16,12 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-kind: Cluster
-apiVersion: kind.x-k8s.io/v1alpha4
-nodes:
-- role: control-plane
-- role: worker
-  extraPortMappings:
-  - containerPort: 30232
-    hostPort: 3232
-    protocol: TCP
-  - containerPort: 30233
-    hostPort: 3233
-    protocol: TCP
-  - containerPort: 30896
-    hostPort: 7896
-    protocol: TCP  
+echo "You have an hour to debug this build"
+echo 'do "touch /tmp/continue" to stop the wait'
+for i in $(seq 1 60) 
+do echo $i
+    sleep 60
+    if test -e /tmp/continue
+    then break
+    fi
+done

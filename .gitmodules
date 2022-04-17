@@ -15,6 +15,3 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-[submodule "nuvolaris-test"]
-	path = nuvolaris-test
-	url = https://github.com/nuvolaris/nuvolaris-test
