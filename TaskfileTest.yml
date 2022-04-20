@@ -93,7 +93,6 @@ tasks:
       curl -sL $URL | grep hello
 
   all:
-    - task: preload
     - task: build-and-load
     - task: deploy-operator
     - task: deploy-instance

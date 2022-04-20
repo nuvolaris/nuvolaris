@@ -60,6 +60,7 @@ jobs:
       - name: Kind
         uses: helm/kind-action@v1.2.0
         with:
+            cluster_name: nuvolaris
             config: .github/kind.yaml
       - name: Test
         run: task test
