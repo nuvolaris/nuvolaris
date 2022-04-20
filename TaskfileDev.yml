@@ -30,6 +30,7 @@ tasks:
 
   clean:
   - kubectl -n nuvolaris delete deploy --all
+  - kubectl -n nuvolaris delete sts --all
   - kubectl -n nuvolaris delete pod --all
   - kubectl -n nuvolaris delete svc --all
   - kubectl -n nuvolaris delete cm --all

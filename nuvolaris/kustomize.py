@@ -120,10 +120,10 @@ def patchTemplate(where, template, data):
     >>> import nuvolaris.testutil as tu
     >>> import os.path
     >>> data = {"name":"test-pod", "dir":"/usr/share/nginx/html"}
-    >>> print(patchTemplate("test",  "pod-attach.yaml", data), end='')
+    >>> print(patchTemplate("test",  "set-attach.yaml", data), end='')
     patches:
-    - path: __pod-attach.yaml
-    >>> os.path.exists("deploy/test/__pod-attach.yaml")
+    - path: __set-attach.yaml
+    >>> os.path.exists("deploy/test/__set-attach.yaml")
     True
     """
     out = f"deploy/{where}/__{template}"

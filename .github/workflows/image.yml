@@ -61,9 +61,8 @@ jobs:
         uses: helm/kind-action@v1.2.0
         with:
             config: .github/kind.yaml
-      #- name: Test
-      #  run: task test
-      # TODO: build and test the operator
+      - name: Test
+        run: task test
       - name: Buildx
         uses: crazy-max/ghaction-docker-buildx@v1
         with:

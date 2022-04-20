@@ -22,8 +22,15 @@ vars:
   S: "dev"
 
 tasks:
-
   
+  build-and-load:
+    - docker build . -t {{.OPERATOR}}
+    - kind load docker-image {{.OPERATOR}} --name=nuvolaris
+
+  preload:
+    - docker pull {{.CONTROLLER}}
+    - kind load docker-image {{.CONTROLLER}} --name=nuvolaris
+
   kustomization:
     cmds:
     - |
@@ -55,12 +62,16 @@ tasks:
   - kubectl config set-context --current --namespace nuvolaris
   - >
     cat deploy/nuvolaris-operator/whisk-{{.S}}.yaml 
-    | sed -e 's/host: localhost/host: couchdb/'
+    | yq '.spec.couchdb.host = "localhost"'
     | kubectl apply -f -
-
-  deploy:
-    - task: deploy-operator
-    - task: deploy-instance
+  - |    
+    while ! kubectl -n nuvolaris wait pod --for=condition=ready -l app=controller
+    do sleep 1 ; echo still waiting...
+    done
+  - |    
+    while ! kubectl -n nuvolaris wait pod --for=condition=ready -l user-action-pod=true
+    do sleep 1 ; echo still waiting... 
+    done
   
   destroy:
   - kubectl -n nuvolaris delete wsk/controller
@@ -75,6 +86,16 @@ tasks:
     wsk property set --apihost $APIHOST --auth $AUTH
   
   test-wsk:
-    - wsk action update hello tests/hello.js
-    - wsk action invoke hello -r
+    - wsk action update hello tests/hello.js --web=true
+    - wsk action invoke hello -r | grep "hello"
+    - |
+      URL=$(wsk action get hello --url | tail +2)
+      curl -sL $URL | grep hello
 
+  all:
+    - task: preload
+    - task: build-and-load
+    - task: deploy-operator
+    - task: deploy-instance
+    - task: config-wsk
+    - tast: test-wsk

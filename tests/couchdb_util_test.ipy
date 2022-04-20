@@ -15,12 +15,11 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+!rm -f deploy/*/kustomization.yaml deploy/*/__*
 
 import nuvolaris.config as cfg
 import nuvolaris.testutil as tu
 
-#!kubectl delete -f deploy/couchdb
-!rm -f deploy/couchdb/kustomization.yaml
 !kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
 !kubectl apply -f deploy/couchdb
 !kubectl -n nuvolaris wait --for=condition=ready pod -l name=couchdb

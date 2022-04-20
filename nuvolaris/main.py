@@ -134,7 +134,7 @@ def service_update(old, new, name, **kwargs):
     apihost = openwhisk.apihost(ingress)
     openwhisk.annotate(f"apihost={apihost}")
 
-@kopf.on.field("deploy", field='status.availableReplicas')
+@kopf.on.field("sts", field='status.availableReplicas')
 def deploy_update(old, new, name, **kwargs):
     if not name == "couchdb":
         return 

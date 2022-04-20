@@ -38,7 +38,6 @@ You can develop the operator without having to deploy it. Start it with `task de
 You can also interact with a python interpreter with the same libraries and some useful imports and configuration ready (most notably the autoreload) with `task dev:cli`. Check `TaskfileDev.yml` for other useful targets for cleanup and debug.
 
 Finally, you can run unit tests with `task unit`, integration tests with `task integ`, both with `task test`, and select tests passing the variable  `T=<test-prefix>` on the task command line.
-
 ## Kubernetes Clusters
 
 In order to test the operator against different clusters,  there are task scripts to also manage some clusters. Currently the following clusters  are: 
@@ -77,6 +76,7 @@ First, [switch to the cluster](#kubernetes-cluster) you want to test with and [r
 
 Once you have the right cluster and the image properly published, you can test the operator with the following targets:
 
+- `test:build-and-load`: build and load the operator in the cluster
 - `test:deploy-operator`: deploys the operator in the current cluster.
 - `test:deploy-instance`: deploy an instance of the configuration to build an actual cluster.
 - `test:config-wsk`: once it is deployed, extracts the current configuration to use `wsk`

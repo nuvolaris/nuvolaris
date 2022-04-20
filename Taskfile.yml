@@ -23,6 +23,9 @@ vars:
   REPO: ghcr.io
   TAG:
     sh: git describe --tags --abbrev=0 2>/dev/null || echo latest
+  CONTROLLER:
+    sh: cat deploy/openwhisk-standalone/standalone-deploy.yaml | awk '/image:/ { print $2 }'
+  OPERATOR: "{{.REPO}}/{{.IMAGE}}:{{.TAG}}"
 
 dotenv:
   - .env
@@ -39,6 +42,7 @@ tasks:
       - test -e $GOBIN/kopf
 
   env: env
+  watchpo: watch kubectl -n nuvolaris get po
   
   # configure env
   configure-env:
@@ -70,11 +74,6 @@ tasks:
 
   build: docker build . -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} {{.CLI_ARGS}}
   
-  build-and-load:
-    cmds:
-      - task build
-      - kind load docker-image {{.REPO}}/{{.IMAGE}}:{{.TAG}} --name=nuvolaris
-
   buildx-and-push:
     cmds:
       - docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} . --push
@@ -90,20 +89,28 @@ tasks:
     do  echo "*** $test"
         poetry run ipython $test {{.CLI_ARGS}}
     done
-  
+
   test:
     - task: unit
     - task: integ
+    - task: test:all
 
 includes:
   dev: TaskfileDev.yml
-  test: TaskfileTest.yml
+  test: 
+    taskfile: TaskfileTest.yml
+    vars:
+      CONTROLLER: "{{.CONTROLLER}}"
+      OPERATOR: "{{.OPERATOR}}"
   kind:  
-    taskfile: clusters/kind.yml
-    dir: clusters
+    taskfile: "../nuvolaris-testing/public/clusters/kind.yml"
+    dir: "../nuvolaris-testing/public/clusters"
+    optional: yes
   eks:
-    taskfile: clusters/eks.yml
-    dir: clusters
+    taskfile: ../nuvolaris-testing/public/clusters/eks.yml
+    dir: "../nuvolaris-testing/public/clusters"
+    optional: yes
   lks:  
-    taskfile: clusters/lks.yml
-    dir: clusters
+    taskfile: ../nuvolaris-testing/public/clusters/lks.yml
+    dir: ../nuvolaris-testing/public/clusters/
+    optional: yes

@@ -16,16 +16,20 @@
 # under the License.
 #
 apiVersion: apps/v1
-kind: Pod
+kind: StatefulSet
 metadata:
   name: {{name}}
   namespace: nuvolaris
 spec:
-  volumes:
-    - name: {{name}}-storage
-      persistentVolumeClaim:
-        claimName: {{name}}-pvc
   containers:
     volumeMounts:
       - name: {{name}}-storage
         mountPath: {{dir}}
+volumesClaimTemplates:
+ metadata:
+  - name: {{name}}-storage
+ spec:
+    accessModes: [ 'ReadWriteOnce']
+    resources:
+      requests:
+        storage: {{size}}Gi

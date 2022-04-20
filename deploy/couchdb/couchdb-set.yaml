@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: couchdb
   namespace: nuvolaris
@@ -26,8 +26,7 @@ spec:
   selector:
     matchLabels:
       name: couchdb
-  strategy:
-    type: "Recreate"
+  serviceName: "couchdb"
   template:
     metadata:
       labels:
