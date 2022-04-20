@@ -1,3 +1,4 @@
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -17,4 +18,4 @@
 #
 export BASH_SILENCE_DEPRECATION_WARNING=1
 BASE="$(dirname $0)"
-bash --init-file $BASE/setup.source
+bash --init-file <(cat $BASE/setup.source $BASE/aliases)

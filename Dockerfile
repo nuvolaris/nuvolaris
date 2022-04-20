@@ -122,9 +122,11 @@ RUN useradd -m nuvolaris -s /bin/bash &&\
 USER nuvolaris
 WORKDIR /home/nuvolaris
 # add standard configuations
-ADD setup.source /home/nuvolaris/.bashrc
+ADD setup.source /home/nuvolaris/.setup.source
+ADD aliases /home/nuvolaris/.aliases
 ADD gitconfig /home/nuvolaris/.gitconfig
 ADD init.sh /usr/sbin/init.sh
-RUN /bin/bash -c 'source /home/nuvolaris/.bashrc'
+RUN cat .setup.source .aliases >.bashrc ;\
+    /bin/bash -c 'source /home/nuvolaris/.bashrc'
 # proxy to docker and keep alive
 ENTRYPOINT ["/bin/bash", "/usr/sbin/init.sh"]

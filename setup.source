@@ -131,6 +131,12 @@ then go install github.com/go-task/task/v3/cmd/task@latest
 else ok task
 fi
 
+# install yq
+if ! which yq >/dev/null
+then go install github.com/mikefarah/yq/v4@latest
+else ok yq
+fi
+
 # install ansible
 if ! which ansible >/dev/null
 then pip install ansible
@@ -186,18 +192,6 @@ fi
 if test -e ~/.localrc
 then source ~/.localrc
 fi
-
-alias k="kubectl -n nuvolaris"
-alias ka="kubectl -n nuvolaris apply"
-alias kg="kubectl -n nuvolaris get"
-alias kdl="kubectl -n nuvolaris delete"
-alias kds="kubectl -n nuvolaris describe"
-alias kns="kubectl config  set-context --current --namespace"
-alias gst="git status"
-alias gl="git log --pretty=oneline"
-alias gcm="git commit -m"
-alias gpum="git push upstream main"
-alias ga="git add"
 
 if test -e Taskfile.yml
 then task setup
