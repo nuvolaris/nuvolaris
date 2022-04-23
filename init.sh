@@ -38,6 +38,14 @@ then echo "use either no arguments to create a cluster, destroy to destroy it, r
      exit 1
 fi
 
+
+# set datadir
+if test -f /.dockerenv
+then DATADIR=$REAL_HOME/.nuvolaris_data
+else DATADIR=$HOME/.nuvolaris_data
+fi
+
+
 # if the nuvolaris cluster already running export its configuration
 if kind get clusters | grep nuvolaris >/dev/null 2>/dev/null
 then kind export kubeconfig --name nuvolaris
@@ -54,8 +62,11 @@ nodes:
     kind: InitConfiguration
     nodeRegistration:
       kubeletExtraArgs:
-        node-labels: "ingress-ready=true,nuvolaris-apihost=localhost,nuvolaris-apiport=3233,nuvolaris-protocol=http,nuvolaris-kube=kind"
-- role: worker        
+        node-labels: "ingress-ready=true,nuvolaris-apihost=localhost,nuvolaris-apiport=3233,nuvolaris-protocol=http,nuvolaris-kube=kind,nuvolaris-hostpath=data"
+- role: worker
+  extraMounts:
+  - hostPath: $DATADIR
+    containerPath: /data
   extraPortMappings:
   - containerPort: 30232
     hostPort: 3232
@@ -93,6 +104,8 @@ then
   mkdir -p /home/nuvolaris/.kube 
   sudo cp /root/.kube/config /home/nuvolaris/.kube/config
   sudo chown nuvolaris:nuvolaris /home/nuvolaris/.kube/config
+  # deploy nginx ingress
+  kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
   # proxy to sockerhost and loop forever
   test -S /var/run/docker.sock || exec sudo /usr/bin/socat \
   UNIX-LISTEN:/var/run/docker.sock,fork,mode=660,user=nuvolaris \

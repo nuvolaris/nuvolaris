@@ -50,7 +50,7 @@ tasks:
       - > 
         docker run -d
         --mount source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind
-        --network=host
+        --network=host --env=REAL_HOME=$HOME
         -v {{.PWD}}:/workspace
         {{.REPO}}/{{.IMAGE}}:{{.TAG}} | tee .docker-pid
     status:
