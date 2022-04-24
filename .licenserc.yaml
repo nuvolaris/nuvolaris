@@ -60,6 +60,7 @@ header:
     - '**/aliases'
     - '**/playground'
     - '.github/ngrok'
+    - 'poetry.lock'
 
 dependency:
   files:
