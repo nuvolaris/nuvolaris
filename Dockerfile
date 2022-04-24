@@ -38,7 +38,7 @@ RUN apt-get update &&\
    lsb-release \
    ca-certificates \
    apt-transport-https \
-   build-essential \
+   build-essential gettext-base \
    git gnupg curl wget jq \
    zlib1g-dev libbz2-dev libncurses5-dev \
    libgdbm-dev libnss3-dev libssl-dev \

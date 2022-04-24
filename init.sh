@@ -62,7 +62,7 @@ nodes:
     kind: InitConfiguration
     nodeRegistration:
       kubeletExtraArgs:
-        node-labels: "ingress-ready=true,nuvolaris-apihost=localhost,nuvolaris-apiport=3233,nuvolaris-protocol=http,nuvolaris-kube=kind,nuvolaris-hostpath=data"
+        node-labels: "ingress-ready=true,nuvolaris.io/apihost=localhost,nuvolaris.io/apiport=3233,nuvolaris.io/protocol=http,nuvolaris.io/kube=kind,nuvolaris.io/hostpath=data"
 - role: worker
   extraMounts:
   - hostPath: $DATADIR
