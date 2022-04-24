@@ -28,3 +28,7 @@ tasks:
   config: |-
     aws eks update-kubeconfig --kubeconfig ~/.kube/config --name=nuvolaris-cluster
     kubectl get nodes
+
+  avail-addons: eksctl utils describe-addon-versions --cluster=nuvolaris-cluster
+
+  list-addon: eksctl get addons --cluster=nuvolaris-cluster

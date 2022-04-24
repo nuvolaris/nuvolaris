@@ -21,7 +21,7 @@ kind: PersistentVolume
 metadata:
   name: {{name}}-pv
 spec:
-  storageClassName: standard
+  storageClassName: ""
   accessModes:
     - ReadWriteOnce
   capacity:

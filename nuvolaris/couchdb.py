@@ -36,8 +36,7 @@ def create(owner=None):
     }
 
     spec = kus.kustom_list("couchdb", config)
-
-    config += kus.patchTemplate("couchdb", "volume.yaml", 
+    #config += kus.patchTemplate("couchdb", "volume.yaml", 
 
     if owner:
         kopf.append_owner_reference(spec['items'], owner)

@@ -22,10 +22,19 @@ metadata:
   name: nuvolaris-cluster
   region: eu-central-1
 
+iam:
+  withOIDC: true
+
 nodeGroups:
   - name: ng-1
     instanceType: m5.large
     desiredCapacity: 1
     volumeSize: 80
     ssh:
-      publicKeyPath: ../../config/id_rsa.pub
+      publicKeyPath: id_rsa.pub
+    iam:
+      withAddonPolicies:
+        ebs: true
+addons:
+  - name: aws-ebs-csi-driver
+

@@ -16,7 +16,7 @@
 // under the License.
 {
 	"name": "nuvolaris",
-	"image": "ghcr.io/nuvolaris/nuvolaris-devkit:0.2.0-trinity.22042400",
+	"image": "ghcr.io/nuvolaris/nuvolaris-devkit:0.2.0-trinity.22042421",
 	//"build": { "dockerfile": "Dockerfile" },
 	"mounts": [
 		"source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"
@@ -25,15 +25,12 @@
 	"overrideCommand": false,
 	"runArgs": [
 		"--network=host",
-		"--env=REAL_HOME=${localEnv:HOME}"
+		"--env=REAL_HOME=${localEnv:HOMEDRIVE}${localEnv:HOMEPATH}${localEnv:HOME}"
 	],
 	"extensions": [
 		"stuart.unique-window-colors",
 		"oderwat.indent-rainbow",
 		"eamodio.gitlens",
-		"mhutchie.git-graph",
-		"ms-python.python",
-		"ms-python.vscode-pylance",
-		"ms-toolsai.jupyter"
+		"mhutchie.git-graph"
 	]
 }

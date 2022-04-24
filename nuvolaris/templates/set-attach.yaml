@@ -38,3 +38,4 @@ spec:
       resources:
         requests:
           storage: {{size}}Gi
+      storageClassName: "gp2"
