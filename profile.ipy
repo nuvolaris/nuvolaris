@@ -26,5 +26,16 @@ import nuvolaris.config as cfg
 import nuvolaris.testutil as tu
 import nuvolaris.couchdb as cdb
 import requests as req
+import os, yaml
 
 import sys, os, os.path, yaml, json
+
+k='kubectl -n nuvolaris'
+ka='kubectl -n nuvolaris apply'
+kdl='kubectl -n nuvolaris delete'
+kds='kubectl -n nuvolaris describe'
+kg='kubectl -n nuvolaris get'
+kns='kubectl config  set-context --current --namespace'
+
+def yd(r):
+    print(yaml.dump(r))

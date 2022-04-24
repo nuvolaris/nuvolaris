@@ -29,16 +29,15 @@ def create(owner=None):
     pasw = f"db_username={cfg.get('couchdb.admin.user')}"
     config =  kus.secretLiteral("couchdb-auth", user, pasw)
 
-    #if cfg.exists("nuvolaris.kube"):
-    #    if cfg.get("nuvolaris.kube") == "kind":
-    #        logging.info("TODO: add hostpath")
-    #else:
-    #    config += kus.patchTemplate("couchdb", "volume.yaml", {
-    #        "name": "couchdb",
-    #        "path": "/opt/couchdb/data"
-    #    })
+    volume = {
+        "name": "couchdb",
+        "dir": "/opt/couchdb/data",
+        "size": cfg.get("couchdb.volume-size")
+    }
 
     spec = kus.kustom_list("couchdb", config)
+
+    config += kus.patchTemplate("couchdb", "volume.yaml", 
 
     if owner:
         kopf.append_owner_reference(spec['items'], owner)

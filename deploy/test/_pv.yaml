@@ -15,21 +15,17 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-apiVersion: apps/v1
-kind: Deployment
+---
+apiVersion: v1
+kind: PersistentVolume
 metadata:
-  name: test-nginx
-  namespace: nuvolaris
+  name: test-pv
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      name: test-nginx
-  template:
-    metadata:
-      labels:
-        name: test-nginx
-    spec:
-      containers:
-        - name: nginx
-          image: nginx
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: /data/test
+

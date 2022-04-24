@@ -15,15 +15,16 @@
 # specific language governing permissions and limitations
 # under the License.
 #
----
 apiVersion: v1
-kind: PersistentVolumeClaim
+kind: Service
 metadata:
-  name: {{name}}-pvc
+  name: test-nginx
+  namespace: nuvolaris
 spec:
-  volumeName: {{name}}-pvc
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: {{size}}Gi
+  type: NodePort
+  selector:
+    name: test-nginx
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30080

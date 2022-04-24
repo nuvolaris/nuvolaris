@@ -173,3 +173,22 @@ def get_by_key_sub(dic, key):
         except:
             pass
     return "\n".join(res)
+
+def read_dotenv():
+    import os
+    try:
+        f = open(".env")
+        lines = f.readlines()
+        #print(lines)
+        for line in lines:
+            #print(line)
+            #line = lines[1]
+            a = line.split("=", 1)
+            if len(a) == 2:
+                print(a[0])
+                os.environ[a[0]] = a[1].strip()
+        f.close()
+    except Exception as e:
+        print(e)
+        print(".env not found")
+        pass

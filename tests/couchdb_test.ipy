@@ -59,7 +59,6 @@ assert(cdb.add_initial_subjects(db))
 !kubectl delete wsk/controller
 !kubectl wait wsk/controller --for=delete
 
-
 """
 import nuvolaris.couchdb_util as cu
 import nuvolaris.couchdb as cdb

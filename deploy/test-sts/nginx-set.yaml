@@ -15,23 +15,25 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-version: '3'
-
-#dotenv: ['../.env']
-tasks:
-
-  create: |-
-    cat kind-config.yaml | sed -e "s!\%REAL_HOME\%!$REAL_HOME!" >/tmp/kind-config.yaml
-    sudo mkdir -p $REAL_HOME/.nuvolaris/data
-    sudo chown -R nuvolaris $REAL_HOME/.nuvolaris
-    kind create cluster --wait=1m --name=nuvolaris --config=/tmp/kind-config.yaml
-
-  destroy: kind delete cluster --name nuvolaris
-
-  list: kind get clusters
-
-  config: |-
-    kind get kubeconfig --name=nuvolaris >~/.kube/config
-    kubectl get nodes
-
-  labels: kubectl get nodes -ojsonpath='{.items[].metadata.labels}' | jq .
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: test-nginx
+  namespace: nuvolaris
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: test-nginx
+  serviceName: test-nginx
+  template:
+    metadata:
+      labels:
+        name: test-nginx
+    spec:
+      containers:
+        - name: test-nginx
+          image: nginx
+          ports:
+            - name: web
+              containerPort: 80

@@ -16,25 +16,48 @@
 # under the License.
 #
 
+!rm -f deploy/*/kustomization.yaml deploy/*/__*
+!kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
+
 import nuvolaris.testutil as tu
 import nuvolaris.kustomize as kus
 import nuvolaris.kube as kube
 import requests as req
 import yaml, sys
 
-# config map
-#cm = kus.configMapTemplate("index", "test-cm", "index.html", {"item":"Hello"})
-#res = kus.kustom_list("test-cm", cm)
-#kube.apply(res)
-#kube.wait("pod/test-pod", "condition=Ready")
-#assert( req.get("http://localhost:3233").text.find("Hello") >0 )
-#kube.delete(res)
+labels = kube.kubectl("get", "nodes", jsonpath='{.items[].metadata.labels}')
+cfg.configure(tu.load_sample_config(), labels)
+hostpath = cfg.get("nuvolaris.hostpath") 
+assert(hostpath == "data")
 
-# persistent volume
-#data = {"name": "test-nginx", "size": "1", "dir": "/usr/share/nginx/html"}
-#patch = kus.patchTemplate("test-nginx", "pvc-attach.yaml", data) 
-#d = kus.kustom_list("test-nginx", patch, templates=["pvc-create.yaml"], data=data)
-#yaml.dump(d, sys.stdout)
-#kube.apply(d)
-#TODO CHECK the custmization
+# config map test
+cm = kus.configMapTemplate("index", "test-cm", "index.html", {"item":"Hello"})
+res = kus.kustom_list("test-cm", cm)
+kube.apply(res)
+kube.wait("pod/test-pod", "condition=Ready")
+assert( req.get("http://localhost:3233").text.find("Hello") >0 )
+kube.delete(res)
+
+
+assert(not kube.get("pv/test-nginx-pv"))
+assert(not kube.get("po/test-nginx-0"))
+
+data = {"name": "test-nginx", "size": "1", "dir": "/usr/share/nginx/html", "hostpath": hostpath}
+patch = kus.patchTemplate("test-sts", "set-attach.yaml", data) 
+d = kus.kustom_list("test-sts", patch, templates=["pv-create.yaml"], data=data)
+kube.apply(d)
+kube.wait("pod/test-nginx-0", "condition=Ready")
+
+assert(kube.get("po/test-nginx-0"))
+assert(kube.get("pv/test-nginx-pv"))
+
+d = kus.kustom_list("test-sts", patch, data=data)
+kube.delete(d)
+assert(not kube.get("po/test-nginx-0"))
+assert(kube.get("pv/test-nginx-pv"))
+
+kube.patch("pv/test-nginx-pv", '{"spec":{"persistentVolumeReclaimPolicy":"Delete"}}')
+kube.kubectl("delete", "pv/test-nginx-pv", "--wait=false")
+kube.patch("pv/test-nginx-pv", '{"metadata":{"finalizers":[]}}')
+
 

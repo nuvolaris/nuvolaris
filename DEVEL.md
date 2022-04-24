@@ -32,10 +32,10 @@ Testing:
 
 Multiple level of testings
 
-- you first test algorithm with unit tests - I use a lot doctest
-- you then test with integration tests without starting the operator - tests uses ipython and assertions
-- you can run the operator locally without deploying it with task dev:run and run commands agains it, with task
-- you can then deploy in local kind and execute tests - I use task to simulate the cli interations
+- you first test algorithm with unit tests (`task unit` - I use a lot doctest
+- you then test with integration tests without starting the operator (`task integ`) - tests uses ipython and assertions
+- you can run the operator locally without deploying it (with `task dev:run`) and run task `test:*` commands against it
+- you can then deploy in local kind and execute tests (`task test:all`) 
 - finally you test built the image and publish it with `task image-tag ; git push --tags`, wait it builds and test against real kubernetes
 
 Debugging:

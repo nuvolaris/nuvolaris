@@ -21,15 +21,20 @@ metadata:
   name: {{name}}
   namespace: nuvolaris
 spec:
-  containers:
-    volumeMounts:
-      - name: {{name}}-storage
-        mountPath: {{dir}}
-volumesClaimTemplates:
- metadata:
-  - name: {{name}}-storage
- spec:
-    accessModes: [ 'ReadWriteOnce']
-    resources:
-      requests:
-        storage: {{size}}Gi
+  template:
+    spec:
+      containers:
+        - name: {{name}}
+          volumeMounts:
+            - name: {{name}}-pvc
+              mountPath: {{dir}}
+  volumeClaimTemplates:
+  - metadata:
+      name: {{name}}-pvc
+    spec:
+      volumeName: {{name}}-pv
+      accessModes:
+        - 'ReadWriteOnce'
+      resources:
+        requests:
+          storage: {{size}}Gi
