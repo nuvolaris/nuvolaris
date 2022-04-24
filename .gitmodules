@@ -18,21 +18,12 @@
 [submodule "controller"]
 	path = nuvolaris-controller
 	url = https://github.com/nuvolaris/nuvolaris-controller
-[submodule "runtimes"]
-	path = nuvolaris-runtimes
-	url = https://github.com/nuvolaris/nuvolaris-runtimes
 [submodule "operator"]
 	path = nuvolaris-operator
 	url = https://github.com/nuvolaris/nuvolaris-operator
-[submodule "testing"]
-	path = nuvolaris-testing
-	url = https://github.com/nuvolaris/nuvolaris-testing
 [submodule "cli"]
 	path = nuvolaris-cli
 	url = https://github.com/nuvolaris/nuvolaris-cli
-[submodule "config"]
-	path = nuvolaris-config
-	url = https://github.com/nuvolaris/nuvolaris-config
 [submodule "nuvolaris-documentation"]
 	path = nuvolaris-documentation
 	url = https://github.com/nuvolaris/nuvolaris-documentation/
