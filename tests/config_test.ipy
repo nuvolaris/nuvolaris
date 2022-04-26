@@ -36,7 +36,7 @@ assert(len(cfg.keys("a.c")) == 2)
 assert(cfg.configure({"a":1}))
 assert(cfg.get("a") == 1 )
 labels = [{"nuvolaris.io/hello": "world", "something": "else" }, {}, {"nothing":"here"}]
-cfg.detect(labels)
+cfg.detect_labels(labels)
 assert(cfg.get("nuvolaris.hello") == "world")
 assert(cfg.get("nuvolaris.kube") == "generic")
 
@@ -45,7 +45,7 @@ assert(len(cfg.getall("")) == 3)
 assert(cfg.put("a", 2))
 assert(cfg.get("a") == 2)
 assert(cfg.put("b", 3))
-assert(len(cfg.getall("")) == 3)
+assert(len(cfg.getall("")) == 4)
  
 #kubectl("get", "nodes", jsonpath='{.items[].metadata.labels}')
 

@@ -16,8 +16,8 @@
 # under the License.
 #
 import nuvolaris.config as cfg
+import nuvolaris.kube as kube
 
-#cfg.clean()
-#cfg.detect_label()
-#cfg.detect_storage()
-print("eks")
+cfg.clean()
+assert(cfg.detect_labels()['nuvolaris.kube']=="eks")
+assert(cfg.detect_storage()=="gp2")

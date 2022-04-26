@@ -70,10 +70,13 @@ def keys(prefix=""):
                 res.append(key)
     return res
 
-def detect(labels=None):
+def detect_labels(labels=None):
     # read labels if not avaibale
     if not labels:
+        import nuvolaris.kube as kube
         labels = kube.kubectl("get", "nodes", jsonpath='{.items[].metadata.labels}')
+    
+    res = {}
     kube = None
     for i in labels:
         for j in list(i.keys()):
@@ -86,11 +89,33 @@ def detect(labels=None):
                 kube = "lks"
             # assign all the 'nuvolaris.io' labels
             if j.startswith("nuvolaris.io/"):
-                _config[ f"nuvolaris.{j[13:]}" ] = i[j]
+                key = f"nuvolaris.{j[13:]}"
+                res[key] = i[j]
+                _config[key] = i[j]
     if kube:
+        res["nuvolaris.kube"] = kube 
         _config["nuvolaris.kube"] = kube
 
     if not "nuvolaris.kube" in _config:
         _config["nuvolaris.kube"] = "generic"
+        res["nuvolaris.kube"] = "generic"
 
-    # autodetect
+    return res
+
+def detect_storage(storages=None):
+    res = ""
+    if not storages:
+        import nuvolaris.kube as kube
+        storages = kube.kubectl("get", "storageclass", jsonpath='{.items}')
+    IDC = 'metadata.annotations.storageclass.kubernetes.io/is-default-class'
+    for st1 in storages:
+        for st2 in st1:
+            st = dict(flatdict.FlatDict(st2, delimiter="."))
+            if st['kind'] == "StorageClass" and IDC in st and st[IDC] == 'true':
+                res = st['metadata.name']
+    
+    _config['nuvolaris.storageClass'] = res
+    return res
+
+
+

@@ -28,7 +28,7 @@ import nuvolaris.config as cfg
 import nuvolaris.kube as kube
 import requests as req
 
-assert(cfg.configure(tu.load_sample_config(), clean=True))
+assert(cfg.configure(tu.load_sample_config()))
 assert(cfg.put("couchdb.host", "localhost"))
 
 wsk = kube.get("wsk/controller")

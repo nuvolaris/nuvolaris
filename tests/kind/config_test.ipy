@@ -16,8 +16,9 @@
 # under the License.
 #
 import nuvolaris.config as cfg
+import nuvolaris.kube as kube
 
-#cfg.clean()
-#cfg.detect_label()
-#cfg.detect_storage()
-print("kind")
+#print("kind")
+cfg.clean()
+assert(cfg.detect_labels()['nuvolaris.kube'] == "kind")
+assert(cfg.detect_storage() == "standard")

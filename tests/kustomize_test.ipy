@@ -20,13 +20,15 @@
 !kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
 
 import nuvolaris.testutil as tu
+import nuvolaris.config as cfg
 import nuvolaris.kustomize as kus
 import nuvolaris.kube as kube
 import requests as req
 import yaml, sys
 
 labels = kube.kubectl("get", "nodes", jsonpath='{.items[].metadata.labels}')
-cfg.configure(tu.load_sample_config(), labels)
+cfg.configure(tu.load_sample_config())
+cfg.detect_labels(labels)
 hostpath = cfg.get("nuvolaris.hostpath") 
 assert(hostpath == "data")
 

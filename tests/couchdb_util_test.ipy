@@ -25,7 +25,7 @@ import nuvolaris.testutil as tu
 !kubectl -n nuvolaris wait --for=condition=ready pod -l name=couchdb
 
 # init
-assert(cfg.configure(tu.load_sample_config(), clean=True))
+assert(cfg.configure(tu.load_sample_config()))
 assert(cfg.put("couchdb.host", "localhost"))
 import nuvolaris.couchdb_util 
 db = nuvolaris.couchdb_util.CouchDB()

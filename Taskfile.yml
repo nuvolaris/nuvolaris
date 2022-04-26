@@ -99,11 +99,17 @@ tasks:
   kube:
     cmds:
      - |-
-       for test in tests/{{.KUBE}}/{{.T}}*.ipy
-       do echo "*** [{{.KUBE}}] $test"
+        for test in tests/{{.KUBE}}/{{.T}}*.ipy
+        do echo "*** [{{.KUBE}}] $test"
           poetry run ipython $test {{.CLI_ARGS}}
-       done
+        done
     silent: true
+
+  kubes: |-
+    for cfg in clusters/*.kubeconfig
+    do cp $cfg ~/.kube/config
+       task kube
+    done
 
   test:
     - task: unit

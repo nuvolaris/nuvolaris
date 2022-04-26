@@ -15,7 +15,6 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-import nuvolaris.config as cfg
 import yaml
 import re
 import flatdict

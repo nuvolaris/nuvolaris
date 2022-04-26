@@ -16,8 +16,9 @@
 # under the License.
 #
 import nuvolaris.config as cfg
+import nuvolaris.kube as kube
 
-#cfg.clean()
-#cfg.detect_label()
-#cfg.detect_storage()
-print("lks")
+cfg.clean()
+assert(cfg.detect_labels()['nuvolaris.kube'] == "lks")
+assert(cfg.detect_storage() == "linode-block-storage-retain")
+

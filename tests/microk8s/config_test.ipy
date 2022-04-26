@@ -16,8 +16,8 @@
 # under the License.
 #
 import nuvolaris.config as cfg
+import nuvolaris.kube as kube
 
-#cfg.clean()
-#cfg.detect_label()
-#cfg.detect_storage()
-print("microk8s")
+cfg.clean()
+assert(cfg.detect_labels()['nuvolaris.kube'] == "microk8s")
+assert(cfg.detect_storage() == "microk8s-hostpath")
