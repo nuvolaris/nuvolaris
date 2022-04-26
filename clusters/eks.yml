@@ -26,7 +26,8 @@ tasks:
   list: eksctl get cluster
 
   config: |-
-    aws eks update-kubeconfig --kubeconfig ~/.kube/config --name=nuvolaris-cluster
+    aws eks update-kubeconfig --kubeconfig eks.kubeconfig --name=nuvolaris-cluster
+    cp eks.kubeconfig ~/.kube/config
     kubectl get nodes
 
   avail-addons: eksctl utils describe-addon-versions --cluster=nuvolaris-cluster

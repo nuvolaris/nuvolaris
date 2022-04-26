@@ -30,3 +30,4 @@ node_modules/
 .env
 __*
 clusters/id_rsa*
+*.kubeconfig

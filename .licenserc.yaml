@@ -45,6 +45,7 @@ header:
     - '**/__*'
     - '.github/ngrok'
     - 'ngrok.log'
+    - 'poetry.lock'
  
 dependency:
   files:

@@ -34,9 +34,10 @@ tasks:
       ID=$(linode-cli lke clusters-list --json | jq '.[0].id')
       if linode-cli lke kubeconfig-view $ID --json 2>&1 | grep "Request failed"
       then echo "cluster not yet ready"
-      else linode-cli lke kubeconfig-view $ID --json | jq -r '.[].kubeconfig | @base64d' >~/.kube/config
+      else linode-cli lke kubeconfig-view $ID --json | jq -r '.[].kubeconfig | @base64d' >lks.kubeconfig
+            cp lks.kubeconfig ~/.kube/config
+            kubectl get nodes
       fi
-      kubectl get nodes
 
    list: linode-cli lke clusters-list
    

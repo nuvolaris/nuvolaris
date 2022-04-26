@@ -26,6 +26,7 @@ vars:
   CONTROLLER:
     sh: cat deploy/openwhisk-standalone/standalone-deploy.yaml | awk '/image:/ { print $2 }'
   OPERATOR: "{{.REPO}}/{{.IMAGE}}:{{.TAG}}"
+  N: ""
 
 dotenv:
   - .env
@@ -97,6 +98,19 @@ tasks:
     - task: unit
     - task: integ
     - task: test:all
+
+  use: 
+    cmds:
+    - |-
+        if test -z "{{.N}}"
+        then echo "select with 'task use N=<n>' where '<n>' is one of:"
+             ls clusters/*.kubeconfig | sort | awk '{ print NR, $0 }'
+        else CFG="$(ls -1 clusters/*.kubeconfig | tail +{{.N}} | head -1)" 
+             cp $CFG ~/.kube/config
+             echo "selected $CFG"
+             kubectl get nodes
+        fi
+    silent: true
 
 includes:
   dev: TaskfileDev.yml

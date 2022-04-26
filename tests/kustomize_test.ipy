@@ -38,7 +38,6 @@ kube.wait("pod/test-pod", "condition=Ready")
 assert( req.get("http://localhost:3233").text.find("Hello") >0 )
 kube.delete(res)
 
-
 assert(not kube.get("pv/test-nginx-pv"))
 assert(not kube.get("po/test-nginx-0"))
 
@@ -59,5 +58,3 @@ assert(kube.get("pv/test-nginx-pv"))
 kube.patch("pv/test-nginx-pv", '{"spec":{"persistentVolumeReclaimPolicy":"Delete"}}')
 kube.kubectl("delete", "pv/test-nginx-pv", "--wait=false")
 kube.patch("pv/test-nginx-pv", '{"metadata":{"finalizers":[]}}')
-
-

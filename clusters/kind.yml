@@ -20,18 +20,14 @@ version: '3'
 #dotenv: ['../.env']
 tasks:
 
-  create: |-
-    cat kind-config.yaml | sed -e "s!\%REAL_HOME\%!$REAL_HOME!" >/tmp/kind-config.yaml
-    sudo mkdir -p $REAL_HOME/.nuvolaris/data
-    sudo chown -R nuvolaris $REAL_HOME/.nuvolaris
-    kind create cluster --wait=1m --name=nuvolaris --config=/tmp/kind-config.yaml
-
-  destroy: kind delete cluster --name nuvolaris
+  create: echo "please use init.sh"
+  destroy: echo "please use init.sh destroy"
 
   list: kind get clusters
 
   config: |-
-    kind get kubeconfig --name=nuvolaris >~/.kube/config
+    kind get kubeconfig --name=nuvolaris >kind.kubeconfig
+    cp kind.kubeconfig ~/.kube/config
     kubectl get nodes
 
   labels: kubectl get nodes -ojsonpath='{.items[].metadata.labels}' | jq .

@@ -26,17 +26,13 @@ _config = None
 # and are accepted and are stored as "nuvolaris.xxx"
 # you can have only a configuration active at a time
 # if you want to set a new configuration you have to clean it
-def configure(spec: dict, labels: list = [], clean: bool = False):
+def configure(spec: dict, clean: bool = False):
     global _config
     if clean:
         _config = None
     if _config:
         return False
     _config = dict(flatdict.FlatDict(spec, delimiter="."))
-    for i in labels:
-        for j in list(i.keys()):
-            if j.startswith("nuvolaris-"):
-                _config[ f"nuvolaris.{j[10:]}" ] = i[j]
     return True
 
 def clean():
@@ -79,3 +75,10 @@ def keys(prefix=""):
             if key.startswith(prefix):
                 res.append(key)
     return res
+
+
+def detect():
+        for i in labels:
+        for j in list(i.keys()):
+            if j.startswith("nuvolaris-"):
+                _config[ f"nuvolaris.{j[10:]}" ] = i[j]
