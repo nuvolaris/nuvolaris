@@ -39,8 +39,9 @@ def login(**kwargs):
 @kopf.on.create('nuvolaris.org', 'v1', 'whisks')
 def whisk_create(spec, name, **kwargs):
 
-    nodeLabels = kube.kubectl("get", "nodes", jsonpath='{.items[].metadata.labels}')
-    cfg.configure(spec, nodeLabels)
+    cfg.clean()
+    cfg.detect()
+    cfg.configure(specs)
     for k in cfg.getall(): logging.info(f"{k} = {cfg.get(k)}")
 
     state = {

@@ -17,27 +17,21 @@
 #
 import flatdict, json
 
-_config = None
+_config = {}
 
 # define a configuration 
 # the configuratoin is a map, followed by a list of labels 
 # the map can be a serialized json and will be flattened to a map of values.
-# only labels with a name starting with "nuvolaris-xxx" are included
-# and are accepted and are stored as "nuvolaris.xxx"
 # you can have only a configuration active at a time
 # if you want to set a new configuration you have to clean it
-def configure(spec: dict, clean: bool = False):
+def configure(spec: dict):
     global _config
-    if clean:
-        _config = None
-    if _config:
-        return False
     _config = dict(flatdict.FlatDict(spec, delimiter="."))
     return True
 
 def clean():
     global _config
-    _config = None
+    _config = {}
 
 def exists(key):
     return key in _config
@@ -76,9 +70,27 @@ def keys(prefix=""):
                 res.append(key)
     return res
 
-
-def detect():
-        for i in labels:
+def detect(labels=None):
+    # read labels if not avaibale
+    if not labels:
+        labels = kube.kubectl("get", "nodes", jsonpath='{.items[].metadata.labels}')
+    kube = None
+    for i in labels:
         for j in list(i.keys()):
-            if j.startswith("nuvolaris-"):
-                _config[ f"nuvolaris.{j[10:]}" ] = i[j]
+            # detect the kube type
+            if j.find("eksctl.io") >= 0:
+                kube ="eks"
+            elif j.find("microk8s.io") >= 0:
+                kube = "microk8s"
+            elif j.find("lke.linode.com") >=0:
+                kube = "lks"
+            # assign all the 'nuvolaris.io' labels
+            if j.startswith("nuvolaris.io/"):
+                _config[ f"nuvolaris.{j[13:]}" ] = i[j]
+    if kube:
+        _config["nuvolaris.kube"] = kube
+
+    if not "nuvolaris.kube" in _config:
+        _config["nuvolaris.kube"] = "generic"
+
+    # autodetect

@@ -8,5 +8,5 @@ elif echo "$LABELS" | jq . | grep lke.linode.com >/dev/null
 then echo "lks"
 elif echo "$LABELS" | jq . | awk '/nuvolaris.io\/kube/ {print $2}' | grep kind >/dev/null
 then echo "kind"
-else echo "unknown"
+else echo "generic"
 fi

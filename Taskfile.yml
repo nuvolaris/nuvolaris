@@ -21,6 +21,8 @@ vars:
   BASETAG: 0.2.0-trinity
   IMAGE: nuvolaris/nuvolaris-operator
   REPO: ghcr.io
+  KUBE:
+    sh: ./detect.sh
   TAG:
     sh: git describe --tags --abbrev=0 2>/dev/null || echo latest
   CONTROLLER:
@@ -46,7 +48,7 @@ tasks:
   watchpo: watch kubectl -n nuvolaris get po
   
   cli: 
-   - task: dev:cli
+    - task: dev:cli
 
   # configure env
   configure-env:
@@ -94,6 +96,15 @@ tasks:
         poetry run ipython $test {{.CLI_ARGS}}
     done
 
+  kube:
+    cmds:
+     - |-
+       for test in tests/{{.KUBE}}/{{.T}}*.ipy
+       do echo "*** [{{.KUBE}}] $test"
+          poetry run ipython $test {{.CLI_ARGS}}
+       done
+    silent: true
+
   test:
     - task: unit
     - task: integ
@@ -111,6 +122,17 @@ tasks:
              kubectl get nodes
         fi
     silent: true
+
+  1: task use N=1
+  2: task use N=2
+  3: task use N=3
+  4: task use N=4
+  5: task use N=5
+  6: task use N=6
+  7: task use N=7
+  8: task use N=8
+  9: task use N=9
+
 
 includes:
   dev: TaskfileDev.yml
