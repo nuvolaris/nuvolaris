@@ -45,7 +45,6 @@ then DATADIR=$REAL_HOME/.nuvolaris_data
 else DATADIR=$HOME/.nuvolaris_data
 fi
 
-
 # if the nuvolaris cluster already running export its configuration
 if kind get clusters | grep nuvolaris >/dev/null 2>/dev/null
 then kind export kubeconfig --name nuvolaris
@@ -62,7 +61,7 @@ nodes:
     kind: InitConfiguration
     nodeRegistration:
       kubeletExtraArgs:
-        node-labels: "ingress-ready=true,nuvolaris.io/apihost=localhost,nuvolaris.io/apiport=3233,nuvolaris.io/protocol=http,nuvolaris.io/kube=kind,nuvolaris.io/hostpath=data"
+        node-labels: "ingress-ready=true,nuvolaris.io/apihost=localhost,nuvolaris.io/apiport=3233,nuvolaris.io/protocol=http,nuvolaris.io/kube=kind"
 - role: worker
   extraMounts:
   - hostPath: $DATADIR

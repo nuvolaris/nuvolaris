@@ -1,8 +1,8 @@
 alias k="kubectl -n nuvolaris"
 alias ka="kubectl -n nuvolaris apply"
 alias kg="kubectl -n nuvolaris get"
-alias kdl="kubectl -n nuvolaris delete"
-alias kds="kubectl -n nuvolaris describe"
+alias kd="kubectl -n nuvolaris delete"
+alias kde="kubectl -n nuvolaris describe"
 alias kns="kubectl config  set-context --current --namespace"
 alias kfin='kubectl -n nuvolaris patch -p {"metadata":{"finalizers":[]}} --type=merge' 
 alias gst="git status"
