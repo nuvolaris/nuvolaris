@@ -36,27 +36,6 @@ mocker = tu.MockKube()
 # if you specify jsonpath it will filter and parse the json output
 # returns exceptions if errors
 def kubectl(*args, namespace="nuvolaris", input=None, jsonpath=None):
-    """Test kube
-    >>> import nuvolaris.kube as kube, nuvolaris.testutil as tu
-    >>> tu.grep(kube.kubectl("get", "ns"), "kube-system", field=0)
-    kube-system
-    >>> kube.returncode
-    0
-    >>> "default" in kube.kubectl("get", "ns", jsonpath="{.items[*].metadata.name}")
-    True
-    >>> tu.catch(lambda: kube.kubectl("error"))
-    <class 'Exception'> Error: flags cannot be placed before plugin name: -n
-    >>> print(kube.returncode, kube.error.strip())
-    1 Error: flags cannot be placed before plugin name: -n
-    >>> tu.grep(kube.kubectl("apply", "-f", "-", input=kube.configMap("test", file='Hello')), "configmap")
-    configmap/test created
-    >>> tu.grep(kube.kubectl("get", "cm/test", "-o", "yaml"), r"name: t|file: H", sort=True)
-    file: Hello
-    name: test
-    >>> tu.grep(kube.kubectl("delete", "cm/test"), "configmap")
-    configmap "test" deleted
-    """
-
     # support for mocked requests
     mres = mocker.invoke(*args)
     if mres:
@@ -119,22 +98,16 @@ def delete(obj, namespace="nuvolaris"):
         obj = json.dumps(obj)
     return kubectl("delete", "-f", "-", namespace=namespace, input=obj)
 
+# shortcut
+def ctl(arg, jsonpath='{@}', flatten=False):
+    import flatdict, json
+    data = kubectl(*arg.split(), jsonpath=jsonpath)
+    if flatten:
+        return dict(flatdict.FlatterDict(data, delimiter="."))
+    return data
+
 # apply an object
 def apply(obj, namespace="nuvolaris"):
-    """
-    >>> import nuvolaris.kube as kube, nuvolaris.testutil as tu, nuvolaris.kustomize as nku
-    >>> obj = {"apiVersion": "v1", "kind": "Namespace", "metadata":{"name":"nuvolaris"}}
-    >>> _ = kube.apply(obj)
-    >>> print(kube.apply(obj).strip())
-    namespace/nuvolaris unchanged
-    >>> obj = nku.kustom_list("test")
-    >>> print(kube.apply(obj).strip())
-    service/test-svc created
-    pod/test-pod created
-    >>> print(kube.delete(obj).strip())
-    service "test-svc" deleted
-    pod "test-pod" deleted
-    """
     if not isinstance(obj, str):
         obj = json.dumps(obj)
     return kubectl("apply", "-f", "-", namespace=namespace, input=obj)
@@ -145,30 +118,11 @@ def get(name):
     except:
         return None
 
-def wait(name, condition):
-    return kubectl("wait", name, f"--for={condition}")
+def wait(name, condition, timeout="600s"):
+    return kubectl("wait", name, f"--for={condition}", f"--timeout={timeout}")
 
 # patch an object
 def patch(name, data, namespace="nuvolaris", tpe="merge"):
-    """
-    >>> from nuvolaris.testutil import nprint
-    >>> nprint(kubectl("apply", "-f", "deploy/test/_crd.yaml"))
-    customresourcedefinition.apiextensions.k8s.io/samples.nuvolaris.org created
-    >>> nprint(kubectl("apply", "-f", "deploy/test/_obj.yaml"))
-    sample.nuvolaris.org/obj created
-    >>> nprint(kubectl("get", "sample/obj"))
-    NAME   MESSAGE
-    obj    
-    >>> nprint(patch("sample/obj", {"spec": {"message": "hello"}}))
-    sample.nuvolaris.org/obj patched
-    >>> nprint(kubectl("get", "sample/obj"))
-    NAME   MESSAGE
-    obj    hello
-    >>> nprint(kubectl("delete", "-f", "deploy/test/_obj.yaml"))
-    sample.nuvolaris.org "obj" deleted
-    >>> nprint(kubectl("delete", "-f", "deploy/test/_crd.yaml"))
-    customresourcedefinition.apiextensions.k8s.io "samples.nuvolaris.org" deleted
-    """
     if not type(data) == str:
         data = json.dumps(data)
     res = kubectl("patch", name, "--type", tpe, "-p", data)

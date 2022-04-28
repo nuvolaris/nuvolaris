@@ -16,13 +16,17 @@
 # under the License.
 #
 !rm -f deploy/*/kustomization.yaml deploy/*/__*
+!kubectl -n nuvolaris delete sts/couchdb
+!kubectl -n nuvolaris delete all --all
+!kubectl -n nuvolaris delete pvc --all
 
 import nuvolaris.config as cfg
 import nuvolaris.testutil as tu
+import nuvolaris.kube as kube
 
 !kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
 !kubectl apply -f deploy/couchdb
-!kubectl -n nuvolaris wait --for=condition=ready pod -l name=couchdb
+!kubectl -n nuvolaris wait --for=condition=ready pod couchdb-0
 
 # init
 assert(cfg.configure(tu.load_sample_config()))

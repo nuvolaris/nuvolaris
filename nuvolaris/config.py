@@ -103,7 +103,7 @@ def detect_labels(labels=None):
     return res
 
 def detect_storage(storages=None):
-    res = ""
+    res = {}
     if not storages:
         import nuvolaris.kube as kube
         storages = kube.kubectl("get", "storageclass", jsonpath='{.items}')
@@ -112,9 +112,10 @@ def detect_storage(storages=None):
         for st2 in st1:
             st = dict(flatdict.FlatDict(st2, delimiter="."))
             if st['kind'] == "StorageClass" and IDC in st and st[IDC] == 'true':
-                res = st['metadata.name']
-    
-    _config['nuvolaris.storageClass'] = res
+                res['nuvolaris.storageClass'] = st['metadata.name']
+                _config['nuvolaris.storageClass'] = st['metadata.name']
+                res['nuvolaris.provisioner'] = st['provisioner']
+                _config['nuvolaris.provisioner'] = st['provisioner']
     return res
 
 

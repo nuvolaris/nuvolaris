@@ -20,5 +20,5 @@ import nuvolaris.kube as kube
 
 cfg.clean()
 assert(cfg.detect_labels()['nuvolaris.kube'] == "lks")
-assert(cfg.detect_storage() == "linode-block-storage-retain")
+assert(cfg.detect_storage()['nuvolaris.storageClass'] == "linode-block-storage-retain")
 

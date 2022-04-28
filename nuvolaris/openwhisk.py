@@ -41,13 +41,17 @@ def apihost(apiHost):
     return url.geturl()
 
 def create(owner=None):
-    config = kus.image(WHISK_IMG, newTag=WHISK_TAG)
     data = {
         "admin_user": cfg.get("couchdb.admin.user"),
-        "admin_password": cfg.get("couchdb.admin.password")
+        "admin_password": cfg.get("couchdb.admin.password"),
+        "triggers.fires-perMinute": cfg.get("openwhisk.limits.triggers.fires-perMinute"),
+        "actions.sequence-maxLength": cfg.get("openwhisk.limits.actions.sequence-maxLength"),
+        "actions.invokes-perMinute": cfg.get("openwhisk.limits.actions.invokes-perMinute"),
+        "actions.invokes-concurrent": cfg.get("openwhisk.limits.actions.invokes-concurrent")
     }
-    #config += kus.configMapTemplate("standalone-kcf", "openwhisk-standalone",  "standalone-kcf.conf", data)
+    config = kus.image(WHISK_IMG, newTag=WHISK_TAG)
     spec = kus.kustom_list("openwhisk-standalone", config, templates=["standalone-kcf.yaml"], data=data)
+
     if owner:
         kopf.append_owner_reference(spec['items'], owner)
     else:

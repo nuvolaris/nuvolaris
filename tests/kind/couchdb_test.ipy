@@ -19,7 +19,10 @@
 !rm -f deploy/*/kustomization.yaml deploy/*/__*
 !kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
 !kubectl apply -f deploy/nuvolaris-operator/whisk-crd.yaml
-!kubectl apply -f deploy/nuvolaris-operator/whisk-dev.yaml
+!kubectl apply -f tests/whisk-dev.yaml
+!kubectl -n nuvolaris delete all --all
+!kubectl -n nuvolaris delete pvc --all
+
 
 import nuvolaris.couchdb as cdb
 import nuvolaris.couchdb_util as cdbu
@@ -29,6 +32,8 @@ import nuvolaris.kube as kube
 import requests as req
 
 assert(cfg.configure(tu.load_sample_config()))
+cfg.detect_labels()
+assert(cfg.detect_storage()["nuvolaris.storageClass"] == "standard")
 assert(cfg.put("couchdb.host", "localhost"))
 
 wsk = kube.get("wsk/controller")
@@ -56,8 +61,9 @@ assert(cdb.init_activations(db))
 assert(cdb.init_actions(db))
 assert(cdb.add_initial_subjects(db))
 
-!kubectl delete wsk/controller
-!kubectl wait wsk/controller --for=delete
+!kubectl -n nuvolaris delete wsk/controller
+!kubectl -n nuvolaris wait wsk/controller --for=delete
+!kubectl -n nuvolaris delete pvc --all
 
 """
 import nuvolaris.couchdb_util as cu

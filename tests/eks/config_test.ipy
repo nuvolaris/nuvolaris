@@ -20,4 +20,4 @@ import nuvolaris.kube as kube
 
 cfg.clean()
 assert(cfg.detect_labels()['nuvolaris.kube']=="eks")
-assert(cfg.detect_storage()=="gp2")
+assert(cfg.detect_storage()["nuvolaris.storageClass"]=="gp2")

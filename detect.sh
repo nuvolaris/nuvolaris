@@ -1,4 +1,5 @@
 #!/bin/bash
+export $(xargs <.env)
 LABELS="$(kubectl get nodes -ojsonpath='{.items[].metadata.labels}' 2>/dev/null)"
 if echo "$LABELS" | jq . | grep eksctl.io >/dev/null
 then echo "eks"

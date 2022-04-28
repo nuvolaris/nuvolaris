@@ -17,17 +17,17 @@
 #
 import nuvolaris.config as cfg
 import nuvolaris.kube as kube
+import nuvolaris.kustomize as kus
+import nuvolaris.testutil as tu
+import requests as req
 
 #print("kind")
 cfg.clean()
 assert(cfg.detect_labels()['nuvolaris.kube'] == "kind")
-assert(cfg.detect_storage() == "standard")
+assert(cfg.detect_storage()['nuvolaris.storageClass'] == "standard")
 
 # check hostpath
 cfg.configure(tu.load_sample_config())
-cfg.detect_labels()
-hostpath = cfg.get("nuvolaris.hostpath") 
-assert(hostpath == "data")
 
 # config map test
 cm = kus.configMapTemplate("index", "test-cm", "index.html", {"item":"Hello"})

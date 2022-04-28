@@ -156,7 +156,7 @@ class MockKube:
         return None
 
 def load_sample_config(suffix="dev"):
-    with open(f"deploy/nuvolaris-operator/whisk-{suffix}.yaml") as f: 
+    with open(f"tests/whisk-{suffix}.yaml") as f: 
         c = yaml.safe_load(f)
         return c['spec']
 

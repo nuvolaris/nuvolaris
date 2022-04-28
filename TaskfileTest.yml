@@ -73,10 +73,12 @@ tasks:
     do sleep 1 ; echo still waiting... 
     done
   
+  destroy-instance:
+    - kubectl -n nuvolaris delete wsk/controller
+  
   destroy:
-  - kubectl -n nuvolaris delete wsk/controller
-  - kubectl -n nuvolaris delete pod/nuvolaris-operator
-  - kubectl delete ns/nuvolaris
+    - task: destroy-instance 
+    - task: destroy-operator
   
   config-wsk: |-
     APIHOST=$(kubectl -n nuvolaris get cm/config -o yaml | awk '/apihost:/ {print $2}' | sed -e 's/https:/http:/')

@@ -45,3 +45,25 @@ tasks:
   enter: kubectl exec -ti nuvolaris-operator -- bash
 
 
+  mount: 
+  - |-
+    kubectl apply -f - <<EOF
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: busybox
+      namespace: nuvolaris
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command: ["sleep", "inf"]
+        volumeMounts:  
+          - name: mount
+            mountPath: "/mnt"
+      volumes:
+      - name: mount
+        persistentVolumeClaim:
+          claimName: nuvolaris/couchdb-pvc-couchdb-0
+    EOF
+

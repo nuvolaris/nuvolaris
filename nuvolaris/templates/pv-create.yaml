@@ -15,6 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+{% if hostpath %}
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -26,8 +27,6 @@ spec:
     - ReadWriteOnce
   capacity:
     storage: {{size}}Gi
-{% if hostpath %}
   hostPath:
     path: /{{hostpath}}/{{name}}
 {% endif %}
-

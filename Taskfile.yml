@@ -29,11 +29,17 @@ vars:
     sh: cat deploy/openwhisk-standalone/standalone-deploy.yaml | awk '/image:/ { print $2 }'
   OPERATOR: "{{.REPO}}/{{.IMAGE}}:{{.TAG}}"
   N: ""
+  G: ""
+  T: ""
 
 dotenv:
   - .env
 
 tasks:
+
+  default: 
+    - task: use
+
   setup:
     deps:
       - update-files-from-openwhisk
@@ -45,7 +51,8 @@ tasks:
       - test -e $GOBIN/kopf
 
   env: env
-  watchpo: watch kubectl -n nuvolaris get po
+  
+  watch: watch kubectl -n nuvolaris get all
   
   cli: 
     - task: dev:cli
@@ -84,48 +91,61 @@ tasks:
     cmds:
       - docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} . --push
 
-  unit: |
-    for test in nuvolaris/{{.T}}*.py
-    do  echo "*** $test"
-        poetry run python3 -m doctest $test {{.CLI_ARGS}}
-    done
-
-  integ: |
-    for test in tests/{{.T}}*.ipy
-    do  echo "*** $test"
-        poetry run ipython $test {{.CLI_ARGS}}
-    done
-
-  kube:
+  utest:
     cmds:
-     - |-
-        for test in tests/{{.KUBE}}/{{.T}}*.ipy
-        do echo "*** [{{.KUBE}}] $test"
-          poetry run ipython $test {{.CLI_ARGS}}
+      - |
+        for test in nuvolaris/{{.T}}*.py
+        do  echo "*** [{{.KUBE}}] $test"
+            poetry run python3 -m doctest $test {{.CLI_ARGS}}
         done
     silent: true
 
-  kubes: |-
-    for cfg in clusters/*.kubeconfig
-    do cp $cfg ~/.kube/config
-       task kube
-    done
+  itest: 
+    cmds: 
+      - |
+        for test in tests/{{.T}}*.ipy tests/{{.KUBE}}/{{.T}}*.ipy
+        do  
+            if test -e "$test"
+            then  echo "*** [{{.KUBE}}] $test"
+                  poetry run ipython $test {{.CLI_ARGS}}
+            fi
+        done
+    silent: true
 
-  test:
-    - task: unit
-    - task: integ
+  dtest:
     - task: test:all
+
+  uitest:
+    - tast: utest
+    - task: itest
+
+  uidtest:
+    - task: utest
+    - task: itest
+    - task: dtest
+
+  all-kube-test: 
+    cmds: 
+      - |-
+        if test -z "{{.G}}"
+        then echo 'use "task all-kube-tests G=<x>" with <x> ::= u|i|d|ui|uid'
+        else  for cfg in clusters/*.kubeconfig
+              do  cp -v $cfg ~/.kube/config
+                  task {{.G}}test T={{.T}}
+              done
+        fi
+    silent: true
 
   use: 
     cmds:
     - |-
         if test -z "{{.N}}"
-        then echo "select with 'task use N=<n>' where '<n>' is one of:"
-             ls clusters/*.kubeconfig | sort | awk '{ print NR, $0 }'
-        else CFG="$(ls -1 clusters/*.kubeconfig | tail +{{.N}} | head -1)" 
-             cp $CFG ~/.kube/config
-             echo "selected $CFG"
-             kubectl get nodes
+        then  ls clusters/*.kubeconfig | sort | awk '{ print NR, $0 }'
+              echo "*** select with 'task #'"
+        else  CFG="$(ls -1 clusters/*.kubeconfig | tail +{{.N}} | head -1)" 
+              cp $CFG ~/.kube/config
+              echo "selected $CFG"
+              kubectl get nodes
         fi
     silent: true
 
@@ -138,7 +158,6 @@ tasks:
   7: task use N=7
   8: task use N=8
   9: task use N=9
-
 
 includes:
   dev: TaskfileDev.yml
