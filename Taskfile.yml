@@ -124,14 +124,14 @@ tasks:
     - task: itest
     - task: dtest
 
-  all-kube-tests: 
+  all-kubes: 
     cmds: 
       - |-
-        if test -z "{{.G}}"
-        then echo 'use "task all-kube-tests G=<x>" with <x> ::= u|i|d|ui|uid'
+        if test -z "{{.CLI_ARGS}}"
+        then echo 'use "task all-kubes  -- <target> runs the target against all the available kubes'
         else  for cfg in clusters/*.kubeconfig
               do  cp -v $cfg ~/.kube/config
-                  task {{.G}}test T={{.T}}
+                  task {{.CLI_ARGS}}
               done
         fi
     silent: true
@@ -140,7 +140,8 @@ tasks:
     cmds:
     - |-
         if test -z "{{.N}}"
-        then  ls clusters/*.kubeconfig | sort | awk '{ print NR, $0 }'
+        then  echo "*** current: {{.KUBE}}"
+              ls clusters/*.kubeconfig | sort | awk '{ print NR, $0 }'
               echo "*** select with 'task #'"
         else  CFG="$(ls -1 clusters/*.kubeconfig | tail +{{.N}} | head -1)" 
               cp $CFG ~/.kube/config

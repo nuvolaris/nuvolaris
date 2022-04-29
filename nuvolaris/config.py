@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-import flatdict, json
+import flatdict, json, os
 
 _config = {}
 
@@ -36,30 +36,30 @@ def clean():
 def exists(key):
     return key in _config
 
-def get(key):
-    if _config:
-        return _config.get(key)
-    return None
+def get(key, envvar=None, defval=None):
+    val = _config.get(key)
+    if val: 
+        return val
+    if envvar and envvar in os.environ:
+        val = os.environ[envvar]
+    if val: 
+        return val
+    return defval
 
 def put(key, value):
-    if _config:
-        _config[key] = value
-        return True
-    return False
+    _config[key] = value
+    return True
 
 def delete(key):
-    if _config:
-        if key in _config:
-            del _config[key]
-            return True
-    return False
+    if key in _config:
+        del _config[key]
+        return True
 
 def getall(prefix=""):
     res = {}
-    if _config:
-        for key in _config.keys():
-            if key.startswith(prefix):
-                res[key] = _config[key]
+    for key in _config.keys():
+        if key.startswith(prefix):
+            res[key] = _config[key]
     return res
 
 def keys(prefix=""):
@@ -117,6 +117,3 @@ def detect_storage(storages=None):
                 res['nuvolaris.provisioner'] = st['provisioner']
                 _config['nuvolaris.provisioner'] = st['provisioner']
     return res
-
-
-

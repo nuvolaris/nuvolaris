@@ -1,0 +1,21 @@
+!rm -f deploy/*/kustomization.yaml deploy/*/__*
+!kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
+!kubectl config set-context --current --namespace nuvolaris
+import nuvolaris.kustomize as kus
+import nuvolaris.kube as kube
+import requests as req, os
+import nuvolaris.testutil as tu
+
+tu.read_dotenv()
+host = os.environ["MICROK8S_HOST"]
+
+obj = kus.kustom_list("test")
+print(kube.apply(obj).strip())
+assert( req.get(f"http://{host}").text.find("Thank you for using nginx.") == -1)
+
+!kubectl apply -f deploy/test/_ing.yaml
+!sleep 3
+assert( req.get(f"http://{host}").text.find("Thank you for using nginx.") >= 0)
+
+!kubectl delete -f deploy/test/_ing.yaml
+print(kube.delete(obj))

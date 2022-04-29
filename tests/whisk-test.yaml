@@ -20,9 +20,7 @@ kind: Whisk
 metadata:
   name: controller
   namespace: nuvolaris
-spec:
-  nuvolaris:
-    host: $MICROK8S_HOST
+spec: 
   components:
     # start openwhisk controller
     openwhisk: true
@@ -50,6 +48,7 @@ spec:
       triggers: 
         fires-perMinute: 999
   couchdb:
+    host: localhost
     volume-size: 10
     admin:
       user: whisk_admin

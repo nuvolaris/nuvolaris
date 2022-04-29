@@ -15,20 +15,19 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-version: '3'
-
-#dotenv: ['../.env']
-tasks:
-
-  create: init.sh
-
-  destroy: init.sh destroy
-
-  list: kind get clusters
-
-  config: |-
-    kind get kubeconfig --name=nuvolaris >kind.kubeconfig
-    cp kind.kubeconfig ~/.kube/config
-    kubectl get nodes
-
-  labels: kubectl get nodes -ojsonpath='{.items[].metadata.labels}' | jq .
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: standalone
+  namespace: nuvolaris
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: controller
+                port: 
+                  number: 3233

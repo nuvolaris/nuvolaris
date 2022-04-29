@@ -15,8 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-import kopf
-import logging
+import kopf, os, logging
 import nuvolaris.kustomize as kus
 import nuvolaris.kube as kube
 import nuvolaris.couchdb_util as cu
@@ -25,8 +24,10 @@ import nuvolaris.couchdb_util
 
 def create(owner=None):
     logging.info("create couchdb")
-    user = f"db_password={cfg.get('couchdb.admin.password')}"
-    pasw = f"db_username={cfg.get('couchdb.admin.user')}"
+    u = cfg.get('couchdb.admin.user', "COUCHDB_ADMIN_USER", "whisk_admin")
+    p = cfg.get('couchdb.admin.password', "COUCHDB_ADMIN_PASSWORD", "some_passw0rd")
+    user = f"db_username={u}"
+    pasw = f"db_password={p}"
     config =  kus.secretLiteral("couchdb-auth", user, pasw)
 
     data = {
@@ -69,8 +70,12 @@ def init_system(db):
     res = check(db.wait_db_ready(60), "wait_db_ready", True)
     res = check(db.configure_single_node(), "configure_single_node", res)
     res = check(db.configure_no_reduce_limit(), "configure_no_reduce_limit", res)
-    res = check(db.add_user(cfg.get('couchdb.controller.user'), cfg.get('couchdb.controller.password')), "add_user: controller", res)
-    return check(db.add_user(cfg.get('couchdb.invoker.user'), cfg.get('couchdb.invoker.password')), "add_user: invoker", res)
+    cuser = cfg.get('couchdb.controller.user', "COUCHDB_CONTROLLER_USER", "controller_admin")
+    cpasw = cfg.get('couchdb.controller.password', "COUCHDB_CONTROLLER_PASSWORD", "s0meP@ass1")
+    iuser = cfg.get('couchdb.invoker.user', "COUCHDB_INVOKER_USER", "invoker_admin")
+    ipasw = cfg.get('couchdb.incvoker.password', "COUCHDB_INVOKER_PASSWORD", "s0meP@ass2")
+    res = check(db.add_user(cuser, cpasw), "add_user: controller", res)
+    return check(db.add_user(iuser, ipasw), "add_user: invoker", res)
 
 def init_subjects(db):
     subjects_design_docs = [
@@ -133,3 +138,4 @@ def init():
     res = check(init_activations(db), "init_activations", res)
     res = check(init_actions(db), "init_actions", res)
     return check(add_initial_subjects(db), "add_subjects", res)
+

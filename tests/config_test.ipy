@@ -49,3 +49,13 @@ assert(len(cfg.getall("")) == 4)
  
 #kubectl("get", "nodes", jsonpath='{.items[].metadata.labels}')
 
+import os
+os.environ["Y"] = "2"
+
+assert(not cfg.get("x"))
+assert(cfg.get("x", "Y") == "2")
+assert(not cfg.get("x", "X"))
+assert(cfg.get("x", "X", "3") == "3")
+
+
+

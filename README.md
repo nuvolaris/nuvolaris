@@ -38,13 +38,14 @@ In order to test the operator against different clusters, you can list all the c
 
 ## Developing the operator
 
-You can develop the operator without having to deploy it. Start it with `task dev:run`.  Then open another terminal and Use `task dev:deploy` to apply the `tests/local/whisk.yml` file and `task dev:destroy` to remove it. 
+You can develop the operator without having to deploy it. Start it with `task dev:run`.  Then open another terminal and Use `task dev:deploy` to apply a configuration depending on the current clusters, file and `task dev:destroy` to remove it. 
 
 You can also interact with a python interpreter with the same libraries and some useful imports and configuration ready (most notably the autoreload) with `task dev:cli`. Check `TaskfileDev.yml` for other useful targets for cleanup and debug.
 
-Finally, you can run unit tests with `task unit`, integration tests with `task integ`, both with `task test`, and select tests passing the variable  `T=<test-prefix>` on the task command line.
+Finally, you can run unit tests with `task utest`, integration tests with `task itest` and deployiment tests with `task dtest`. Also there are the targets `task uitest` to run the first two,  and `uidtest` to run all of them.
 
-You can switch using one of the using some commands, with prefix the cluster name. 
+The target `task all-kubes -- <target>` runs a group of tests against all the available clusters, so you can run all the tests with `task all-kubes -- utest`
+
 ## Releasing the operator
 
 Once the operator is ready, you can build and test it a against a kubernetes cluster.

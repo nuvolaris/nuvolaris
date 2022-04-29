@@ -121,7 +121,6 @@ def whisk_delete(spec, **kwargs):
         msg = openwhisk.delete()
         logging.info(msg)
 
-
 # tested by integration test
 @kopf.on.field("service", field='status.loadBalancer')
 def service_update(old, new, name, **kwargs):    

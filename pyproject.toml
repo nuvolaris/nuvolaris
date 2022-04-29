@@ -33,6 +33,9 @@ flatdict = "^4.0.1"
 [tool.poetry.dev-dependencies]
 ipython = "^7.31.0"
 
+[tool.poetry.scripts]
+dbinit = "nuvolaris.couchdb:init"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"

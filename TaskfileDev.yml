@@ -22,16 +22,24 @@ vars:
     sh: ./detect.sh
 tasks:
 
+  env: env
 
   cli: poetry run ipython -i profile.ipy
-  env: env
 
   run: ./run.sh
 
   deploy:
-    - kubectl -n nuvolaris apply -f tests/whisk-{{.KUBE}}.yaml
+    -  envsubst <tests/whisk-{{.KUBE}}.yaml | kubectl -n nuvolaris apply -f -
+
+  show: envsubst <tests/whisk-{{.KUBE}}.yaml
 
   destroy: kubectl -n nuvolaris delete wsk/controller
+
+  couchdb:
+    - rm -f deploy/*/kustomization.yaml deploy/*/__*
+    - kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
+    - kubectl apply -f deploy/couchdb
+
 
   fwdb:
     - kubectl -n nuvolaris port-forward svc/couchdb 5984:5984

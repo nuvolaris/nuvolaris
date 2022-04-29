@@ -27,10 +27,10 @@ class CouchDB:
   def __init__(self):
     self.db_protocol   = "http"
     self.db_prefix     = "nuvolaris_"
-    self.db_host       = cfg.get("couchdb.host")
-    self.db_username   = cfg.get("couchdb.admin.user")
-    self.db_password   = cfg.get("couchdb.admin.password")
-    self.db_port       = "5984"
+    self.db_host       = cfg.get("couchdb.host", "COUCHDB_HOST", "localhost")
+    self.db_username   = cfg.get("couchdb.admin.user", "COUCHDB_ADMIN_USER", "whisk_admin")
+    self.db_password   = cfg.get("couchdb.admin.password", "COUCHDB_ADMIN_PASSWORD", "some_passw0rd")
+    self.db_port       = cfg.get("couchdb.port", "COUCHDB_PORT", "5984")
 
     self.db_auth = req.auth.HTTPBasicAuth(self.db_username,self.db_password)
     self.db_url = f"{self.db_protocol}://{self.db_host}:{self.db_port}"
@@ -38,15 +38,18 @@ class CouchDB:
 
   def wait_db_ready(self, max_seconds):
       start = time.time()
-      while time.time() - start < max_seconds*60:
+      delta = 0
+      while delta < max_seconds:
         try:
           r = req.get(f"{self.db_url}/_utils", timeout=1)
+          print(r)
           if r.status_code == 200:
             return True
-          print(r.status_code)
-        except:
-          print(".", end='', file=sys.stderr)
-          pass
+        except Exception as e:
+          #print(e)
+          print(f"waiting since: {delta} seconds")
+        delta = int(time.time() - start)
+        time.sleep(1)
       return False
 
   # check if database exists, return boolean
