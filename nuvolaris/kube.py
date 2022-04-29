@@ -17,10 +17,12 @@
 #
 # this module wraps kubectl
 import nuvolaris.testutil as tu
+import nuvolaris.template as tpl
 import subprocess
 import json
 import logging
 import yaml
+
 
 output = ""
 error = ""
@@ -111,6 +113,17 @@ def apply(obj, namespace="nuvolaris"):
     if not isinstance(obj, str):
         obj = json.dumps(obj)
     return kubectl("apply", "-f", "-", namespace=namespace, input=obj)
+
+# apply an object
+def applyTemplate(name, data, namespace="nuvolaris"):
+    obj = tpl.expand_template(name, data)
+    return kubectl("apply", "-f", "-", namespace=namespace, input=obj)
+
+# delete an object
+def deleteTemplate(name, data, namespace="nuvolaris"):
+    obj = tpl.expand_template(name, data)
+    return kubectl("delete", "-f", "-", namespace=namespace, input=obj)
+
 
 def get(name):
     try:

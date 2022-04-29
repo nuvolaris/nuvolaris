@@ -44,11 +44,23 @@ def create(owner=None):
         kopf.append_owner_reference(spec['items'], owner)
     else:
         cfg.put("state.couchdb.spec", spec)
-
     res = kube.apply(spec)
     logging.info(f"create couchdb: {res}")
 
-    return res
+
+def create_init_job():
+    data = {
+        "host": cfg.get("couchdb.host") or "couchdb",
+        "port": cfg.get("couchdb.port") or "5984",
+        "admin_user": cfg.get("couchdb.admin.user"),
+        "admin_password": cfg.get("couchdb.admin.password"),
+        "controller_user": cfg.get("couchdb.controller.user"),
+        "controller_password": cfg.get("couchdb.controller.password"),
+        "invoker_user": cfg.get("couchdb.invoker.user"),
+        "invoker_password": cfg.get("couchdb.invoker.password")
+    }
+    logging.debug(data)
+    return kube.applyTemplate("couchdb-init.yaml", data)
 
 def delete():
     spec = cfg.get("state.couchdb.spec")
@@ -138,4 +150,3 @@ def init():
     res = check(init_activations(db), "init_activations", res)
     res = check(init_actions(db), "init_actions", res)
     return check(add_initial_subjects(db), "add_subjects", res)
-

@@ -1,15 +1,15 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: test-ing
+  name: {{service}}-ingress
 spec:
   rules:
     - http:
         paths:
-          - path: /
+          - path: {{path}}
             pathType: Prefix
             backend:
               service:
-                name: test-svc
+                name: {{service}}
                 port: 
                   number: 80

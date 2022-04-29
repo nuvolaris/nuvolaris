@@ -48,7 +48,6 @@ spec:
       triggers: 
         fires-perMinute: 999
   couchdb:
-    host: localhost
     volume-size: 10
     admin:
       user: whisk_admin

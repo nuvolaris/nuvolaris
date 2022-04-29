@@ -59,7 +59,8 @@ def whisk_create(spec, name, **kwargs):
         state['couchdb']= "on"
         msg = couchdb.create()
         logging.info(msg)
-        #couchdb.init()
+        msg = couchdb.create_init_job()
+        logging.info(msg)
     else:
         state['couchdb'] = "off"
 
@@ -135,12 +136,24 @@ def service_update(old, new, name, **kwargs):
     apihost = openwhisk.apihost(ingress)
     openwhisk.annotate(f"apihost={apihost}")
 
-@kopf.on.field("sts", field='status.availableReplicas')
+#@kopf.on.field("sts", field='status.availableReplicas')
 def deploy_update(old, new, name, **kwargs):
     if not name == "couchdb":
         return 
 
     logging.debug("deploy_update: old={old} new={new}")
     if new == 1:
-        logging.info(f'couchdb.host={cfg.get("couchdb.host")}')
-        logging.info(couchdb.init())
+        data = {
+            "host": cfg.get("couchdb.host") or "couchdb",
+            "port": cfg.get("couchdb.port") or "5984",
+            "admin_user": cfg.get("couchdb.admin.user"),
+            "admin_password": cfg.get("couchdb.admin.password"),
+            "controller_user": cfg.get("couchdb.controller.user"),
+            "controller_password": cfg.get("couchdb.controller.password"),
+            "invoker_user": cfg.get("couchdb.invoker.user"),
+            "invoker_password": cfg.get("couchdb.invoker.password")
+        }
+        logging.debug(data)
+        logging.info(kube.applyTemplate("couchdb-init.yaml", data))
+        #logging.info(f'couchdb.host={cfg.get("couchdb.host")}')
+        #logging.info(couchdb.init())

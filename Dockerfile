@@ -47,7 +47,7 @@ ADD nuvolaris/templates /home/nuvolaris/nuvolaris/templates
 ADD deploy/nuvolaris-operator /home/nuvolaris/deploy/nuvolaris-operator
 ADD deploy/openwhisk-standalone /home/nuvolaris/deploy/openwhisk-standalone
 ADD deploy/couchdb /home/nuvolaris/deploy/couchdb
-ADD run.sh pyproject.toml poetry.lock /home/nuvolaris/
+ADD run.sh dbinit.sh pyproject.toml poetry.lock /home/nuvolaris/
 RUN chown -R nuvolaris:nuvolaris /home/nuvolaris
 USER nuvolaris
 ENV PATH=/home/nuvolaris/.local/bin:/usr/local/bin:/usr/bin:/sbin:/bin

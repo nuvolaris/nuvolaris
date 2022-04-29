@@ -35,23 +35,20 @@ tasks:
 
   destroy: kubectl -n nuvolaris delete wsk/controller
 
+  destroy2: kubectl -n nuvolaris get wsk/controller -o yaml | grep -v Final | kubectl apply -f -
+
   couchdb:
     - rm -f deploy/*/kustomization.yaml deploy/*/__*
     - kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
     - kubectl apply -f deploy/couchdb
 
-
-  fwdb:
-    - kubectl -n nuvolaris port-forward svc/couchdb 5984:5984
+  couchdb-forward:
+    - kubectl -n nuvolaris port-forward svc/couchdb 5985:5984
 
   clean:
-  - kubectl -n nuvolaris delete deploy --all
-  - kubectl -n nuvolaris delete sts --all
-  - kubectl -n nuvolaris delete pod --all
-  - kubectl -n nuvolaris delete svc --all
-  - kubectl -n nuvolaris delete cm --all
-  - kubectl -n nuvolaris delete secret --all
+  - kubectl -n nuvolaris delete all --all
   - kubectl -n nuvolaris delete wsk --all
+  - kubectl -n nuvolaris delete pvc --all
 
   finalize: >
     kubectl -n nuvolaris patch wsk/controller --type=merge --patch '{"metadata": {"finalizers":[] } }'

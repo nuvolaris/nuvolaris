@@ -13,9 +13,10 @@ obj = kus.kustom_list("test")
 print(kube.apply(obj).strip())
 assert( req.get(f"http://{host}").text.find("Thank you for using nginx.") == -1)
 
-!kubectl apply -f deploy/test/_ing.yaml
+data = { "service": "test-svc", "path": "/"}
+print(kube.applyTemplate("ingress.yaml", data))
 !sleep 3
 assert( req.get(f"http://{host}").text.find("Thank you for using nginx.") >= 0)
 
-!kubectl delete -f deploy/test/_ing.yaml
+print(kube.deleteTemplate("ingress.yaml", data))
 print(kube.delete(obj))
