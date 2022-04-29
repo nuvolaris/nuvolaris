@@ -17,16 +17,24 @@
 #
 version: '3'
 
+vars:
+  KUBE:
+    sh: ./detect.sh
 tasks:
+
 
   cli: poetry run ipython -i profile.ipy
   env: env
 
   run: ./run.sh
 
-  apply: kubectl -n nuvolaris apply -f deploy/nuvolaris-operator/whisk-{{.S}}.yaml
+  deploy:
+    - kubectl -n nuvolaris apply -f tests/whisk-{{.KUBE}}.yaml
 
-  delete: kubectl -n nuvolaris delete -f deploy/nuvolaris-operator/whisk-{{.S}}.yaml
+  destroy: kubectl -n nuvolaris delete wsk/controller
+
+  fwdb:
+    - kubectl -n nuvolaris port-forward svc/couchdb 5984:5984
 
   clean:
   - kubectl -n nuvolaris delete deploy --all
@@ -43,7 +51,6 @@ tasks:
   killpy: ps auwwx | grep python  | awk '{print $2}' | xargs kill -9
 
   enter: kubectl exec -ti nuvolaris-operator -- bash
-
 
   mount: 
   - |-

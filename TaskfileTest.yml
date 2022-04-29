@@ -20,6 +20,8 @@ version: '3'
 vars:
   T: ""
   S: "dev"
+  KUBE:
+    sh: ./detect.sh
 
 tasks:
   
@@ -61,8 +63,7 @@ tasks:
   deploy-instance:
   - kubectl config set-context --current --namespace nuvolaris
   - >
-    cat deploy/nuvolaris-operator/whisk-{{.S}}.yaml 
-    | yq '.spec.couchdb.host = "localhost"'
+    cat test/{{.KUBE}}/whisk.yaml 
     | kubectl apply -f -
   - |    
     while ! kubectl -n nuvolaris wait pod --for=condition=ready -l app=controller

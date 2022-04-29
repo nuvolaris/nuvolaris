@@ -19,4 +19,5 @@
 kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
 kubectl apply -f deploy/nuvolaris-operator/operator-roles.yaml
 kubectl apply -f deploy/nuvolaris-operator/whisk-crd.yaml
+kubectl apply -f deploy/couchdb/couchdb-svc.yaml
 poetry run kopf run -n nuvolaris -m nuvolaris nuvolaris/main.py

@@ -31,3 +31,4 @@ node_modules/
 __*
 clusters/id_rsa*
 *.kubeconfig
+run.pid

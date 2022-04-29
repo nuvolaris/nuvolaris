@@ -124,7 +124,7 @@ tasks:
     - task: itest
     - task: dtest
 
-  all-kube-test: 
+  all-kube-tests: 
     cmds: 
       - |-
         if test -z "{{.G}}"
