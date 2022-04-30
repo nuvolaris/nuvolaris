@@ -27,10 +27,10 @@ class CouchDB:
   def __init__(self):
     self.db_protocol   = "http"
     self.db_prefix     = "nuvolaris_"
-    self.db_host       = cfg.get("couchdb.host", "COUCHDB_HOST", "localhost")
+    self.db_host       = cfg.get("couchdb.host", "COUCHDB_SERVICE_HOST", "localhost")
     self.db_username   = cfg.get("couchdb.admin.user", "COUCHDB_ADMIN_USER", "whisk_admin")
     self.db_password   = cfg.get("couchdb.admin.password", "COUCHDB_ADMIN_PASSWORD", "some_passw0rd")
-    self.db_port       = cfg.get("couchdb.port", "COUCHDB_PORT", "5984")
+    self.db_port       = cfg.get("couchdb.port", "COUCHDB_SERVICE_PORT", "5984")
 
     self.db_auth = req.auth.HTTPBasicAuth(self.db_username,self.db_password)
     self.db_url = f"{self.db_protocol}://{self.db_host}:{self.db_port}"
@@ -114,7 +114,6 @@ class CouchDB:
         r = req.delete(url, auth=self.db_auth)
         return r.status_code == 200
     return False
-
 
   def update_templated_doc(self, database, template, data):
       tpl = env.get_template(template)

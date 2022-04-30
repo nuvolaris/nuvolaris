@@ -31,26 +31,11 @@ spec:
       restartPolicy: Never      
       containers:
       - name: init-couchdb
-        image: "ghcr.io/nuvolaris/nuvolaris-operator:0.2.0-trinity.22042916"
+        image: "ghcr.io/nuvolaris/nuvolaris-operator:0.2.0-trinity.22043022"
         imagePullPolicy: "IfNotPresent"
         command: ["./dbinit.sh"]
-        #command: 
-        #  - sleep 
-        #  - inf
+        #command: ["sleep", "inf"]
         env:
-        - name: "COUCHDB_HOST"
-          value: "{{host}}"
-        - name: "COUCHDB_PORT"
-          value: "{{port}}"
-        - name: "COUCHDB_ADMIN_USER"
-          value: "{{admin_user}}"
-        - name: "COUCHDB_ADMIN_PASSWORD"
-          value: "{{admin_password}}"
-        - name: "COUCHDB_CONTROLLER_USER"
-          value: "{{controller_user}}"
-        - name: "COUCHDB_CONTROLLER_PASSWORD"
-          value: "{{controller_password}}"
-        - name: "COUCHDB_INVOKER_USER"
-          value: "{{invoker_user}}"
-        - name: "COUCHDB_INVOKER_PASSWORD"
-          value: "{{invoker_password}}"
+        - name: "NUVOLARIS_CONFIG"
+          value: >
+            {{config}}

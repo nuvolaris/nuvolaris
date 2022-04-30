@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-import kopf, os, logging
+import kopf, os, logging, json
 import nuvolaris.kustomize as kus
 import nuvolaris.kube as kube
 import nuvolaris.couchdb_util as cu
@@ -28,39 +28,25 @@ def create(owner=None):
     p = cfg.get('couchdb.admin.password', "COUCHDB_ADMIN_PASSWORD", "some_passw0rd")
     user = f"db_username={u}"
     pasw = f"db_password={p}"
-    config =  kus.secretLiteral("couchdb-auth", user, pasw)
 
+    config = json.dumps(cfg.getall())
     data = {
+        "config": config,
         "name": "couchdb", 
         "size": cfg.get("couchdb.volume-size"), 
         "dir": "/opt/couchdb/data",
         "storageClass": cfg.get("nuvolaris.storageClass")
     }
-    
-    config += kus.patchTemplate("couchdb", "set-attach.yaml", data) 
-    spec = kus.kustom_list("couchdb", config)
 
+    kust =  kus.secretLiteral("couchdb-auth", user, pasw)
+    kust += kus.patchTemplate("couchdb", "set-attach.yaml", data) 
+    spec = kus.kustom_list("couchdb", kust, templates=["couchdb-init.yaml"], data=data)
     if owner:
         kopf.append_owner_reference(spec['items'], owner)
     else:
         cfg.put("state.couchdb.spec", spec)
     res = kube.apply(spec)
     logging.info(f"create couchdb: {res}")
-
-
-def create_init_job():
-    data = {
-        "host": cfg.get("couchdb.host") or "couchdb",
-        "port": cfg.get("couchdb.port") or "5984",
-        "admin_user": cfg.get("couchdb.admin.user"),
-        "admin_password": cfg.get("couchdb.admin.password"),
-        "controller_user": cfg.get("couchdb.controller.user"),
-        "controller_password": cfg.get("couchdb.controller.password"),
-        "invoker_user": cfg.get("couchdb.invoker.user"),
-        "invoker_password": cfg.get("couchdb.invoker.password")
-    }
-    logging.debug(data)
-    return kube.applyTemplate("couchdb-init.yaml", data)
 
 def delete():
     spec = cfg.get("state.couchdb.spec")
@@ -144,9 +130,19 @@ def add_initial_subjects(db):
     return res
 
 def init():
+    # load nuvolaris config from the named crd
+    config = os.environ["NUVOLARIS_CONFIG"] 
+    if config:
+        import logging
+        logging.basicConfig(level=logging.INFO)
+        spec = json.loads(config)
+        cfg.configure(spec)
+        for k in cfg.getall(): logging.info(f"{k} = {cfg.get(k)}")
+
     db = nuvolaris.couchdb_util.CouchDB()
     res = check(init_system(db), "init_system", True)
     res = check(init_subjects(db), "init_subjects", res) 
     res = check(init_activations(db), "init_activations", res)
     res = check(init_actions(db), "init_actions", res)
     return check(add_initial_subjects(db), "add_subjects", res)
+

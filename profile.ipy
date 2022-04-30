@@ -20,20 +20,19 @@
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
+import sys, os, os.path, yaml, json
 import nuvolaris.kube as kube
 import nuvolaris.kustomize as kus
 import nuvolaris.config as cfg
-import nuvolaris.testutil as tu
 import nuvolaris.couchdb as cdb
+import nuvolaris.templates as tpl
 import requests as req
-import os, yaml
-
-import sys, os, os.path, yaml, json
+import nuvolaris.testutil as tu
 
 k='kubectl -n nuvolaris'
 ka='kubectl -n nuvolaris apply'
-kdl='kubectl -n nuvolaris delete'
-kds='kubectl -n nuvolaris describe'
+kd='kubectl -n nuvolaris delete'
+kde='kubectl -n nuvolaris describe'
 kg='kubectl -n nuvolaris get'
 kns='kubectl config  set-context --current --namespace'
 

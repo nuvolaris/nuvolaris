@@ -16,4 +16,4 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-poetry run dbinit
+poetry run dbinit -v

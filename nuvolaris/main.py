@@ -38,12 +38,14 @@ def login(**kwargs):
 # tested by an integration test
 @kopf.on.create('nuvolaris.org', 'v1', 'whisks')
 def whisk_create(spec, name, **kwargs):
+    print("***", name)
 
     cfg.clean()
     cfg.configure(spec)
     cfg.detect_labels()
-    cfg.detect_storage()
+    cfg.detect_storage()  
     for k in cfg.getall(): logging.info(f"{k} = {cfg.get(k)}")
+    owner = kube.get(f"wsk/{name}")
 
     state = {
         "openwhisk": "?",  # Openwhisk Controller or Standalone
@@ -57,9 +59,7 @@ def whisk_create(spec, name, **kwargs):
 
     if cfg.get('components.couchdb'):
         state['couchdb']= "on"
-        msg = couchdb.create()
-        logging.info(msg)
-        msg = couchdb.create_init_job()
+        msg = couchdb.create(owner)
         logging.info(msg)
     else:
         state['couchdb'] = "off"
@@ -72,7 +72,7 @@ def whisk_create(spec, name, **kwargs):
 
     if cfg.get('components.openwhisk'):
         state['openwhisk'] = "on"
-        msg = openwhisk.create()
+        msg = openwhisk.create(owner)
         logging.info(msg)    
     else:
         state['openwhisk'] = "off"
@@ -100,12 +100,6 @@ def whisk_create(spec, name, **kwargs):
         state['s3bucket'] = "n/a"
     else:
         state['s3bucket'] = "off"
-
-    # attach myself to be deleted when the crd is deleted
-    #me = kube.get("deploy/nuvolaris-operator")
-    #if me:
-    #    kopf.append_owner_reference(me, spec)
-    #    kopf.apply(me)
 
     return state
 

@@ -18,11 +18,12 @@
 version: '3'
 
 vars:
-  T: ""
-  S: "dev"
   KUBE:
     sh: ./detect.sh
-
+  WHISK: '{{default "whisk" .WHISK}}'
+  CONFIG: "tests/{{.KUBE}}/{{.WHISK}}.yaml"
+  T: ""
+  
 tasks:
   
   build-and-load:

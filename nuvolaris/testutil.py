@@ -155,8 +155,8 @@ class MockKube:
                     return self.map[key]
         return None
 
-def load_sample_config(suffix="test"):
-    with open(f"tests/whisk-{suffix}.yaml") as f: 
+def load_sample_config(name="whisk"):
+    with open(f"tests/{name}.yaml") as f: 
         c = yaml.safe_load(f)
         return c['spec']
 

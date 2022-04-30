@@ -20,6 +20,9 @@ version: '3'
 vars:
   KUBE:
     sh: ./detect.sh
+  WHISK: '{{default "whisk" .WHISK}}'
+  CONFIG: "tests/{{.KUBE}}/{{.WHISK}}.yaml"
+
 tasks:
 
   env: env
@@ -29,13 +32,13 @@ tasks:
   run: ./run.sh
 
   deploy:
-    -  envsubst <tests/whisk-{{.KUBE}}.yaml | kubectl -n nuvolaris apply -f -
+    -  envsubst <{{.CONFIG}} | kubectl -n nuvolaris apply -f -
 
-  show: envsubst <tests/whisk-{{.KUBE}}.yaml
+  show:
+    - echo "*** {{.CONFIG}}" 
+    - envsubst <{{.CONFIG}}.yaml
 
   destroy: kubectl -n nuvolaris delete wsk/controller
-
-  destroy2: kubectl -n nuvolaris get wsk/controller -o yaml | grep -v Final | kubectl apply -f -
 
   couchdb:
     - rm -f deploy/*/kustomization.yaml deploy/*/__*
@@ -46,12 +49,14 @@ tasks:
     - kubectl -n nuvolaris port-forward svc/couchdb 5985:5984
 
   clean:
-  - kubectl -n nuvolaris delete all --all
-  - kubectl -n nuvolaris delete wsk --all
-  - kubectl -n nuvolaris delete pvc --all
+    - kubectl -n nuvolaris delete all --all
+    - kubectl -n nuvolaris delete wsk --all
+    - kubectl -n nuvolaris delete pvc --all
 
-  finalize: >
+  defin: > 
     kubectl -n nuvolaris patch wsk/controller --type=merge --patch '{"metadata": {"finalizers":[] } }'
+    
+  defin2: kubectl -n nuvolaris get wsk/controller -o yaml | grep -v Final | kubectl apply -f -
 
   killpy: ps auwwx | grep python  | awk '{print $2}' | xargs kill -9
 
@@ -78,4 +83,3 @@ tasks:
         persistentVolumeClaim:
           claimName: nuvolaris/couchdb-pvc-couchdb-0
     EOF
-
