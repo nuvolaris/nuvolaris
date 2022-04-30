@@ -55,13 +55,13 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup
         run: bash .github/cisetup.sh
-      - name: Install
-        run: poetry install
       - name: Kind
         uses: helm/kind-action@v1.2.0
         with:
             cluster_name: nuvolaris
             config: .github/kind.yaml
+      - name: Install
+        run: poetry install
       - name: Test
         run: task test
       - name: Buildx
