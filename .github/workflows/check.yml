@@ -50,7 +50,7 @@ jobs:
       - name: Kind
         uses: helm/kind-action@v1.2.0
         with:
-            config: clusters/kind-config.yaml
+            config: .github/kind.yaml
       - name: Ngrok
         run: if test -f .github/ngrok ; then bash .github/debug-github-actions.sh ; fi
         env:

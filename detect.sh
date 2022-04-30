@@ -16,7 +16,10 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-export $(xargs <.env)
+if ! test -e .env
+then echo "kind" ; exit 0
+else export $(xargs <.env)
+fi
 LABELS="$(kubectl get nodes -ojsonpath='{.items[].metadata.labels}' 2>/dev/null)"
 if echo "$LABELS" | jq . | grep eksctl.io >/dev/null
 then echo "eks"
