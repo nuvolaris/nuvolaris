@@ -124,6 +124,9 @@ tasks:
     - task: itest
     - task: dtest
 
+  test: 
+    - task: uitest
+
   all-kubes: 
     cmds: 
       - |-

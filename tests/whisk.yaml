@@ -48,7 +48,7 @@ spec:
       triggers: 
         fires-perMinute: 999
   couchdb:
-    host: couchdb
+    host: localhost
     port: 5984
     volume-size: 10
     admin:

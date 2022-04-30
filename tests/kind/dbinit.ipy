@@ -18,6 +18,9 @@
 !rm -f deploy/*/kustomization.yaml deploy/*/__*
 !kubectl -n nuvolaris apply -f deploy/couchdb
 import nuvolaris.couchdb as cdb
+import nuvolaris.testutil as tu
+import os, json
+os.environ["NUVOLARIS_CONFIG"] = json.dumps(tu.load_sample_config())
 assert(cdb.init())
 !kubectl -n nuvolaris delete all --all
 !kubectl -n nuvolaris delete pvc --all

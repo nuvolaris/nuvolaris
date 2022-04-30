@@ -131,7 +131,7 @@ def add_initial_subjects(db):
 
 def init():
     # load nuvolaris config from the named crd
-    config = os.environ["NUVOLARIS_CONFIG"] 
+    config = os.environ.get("NUVOLARIS_CONFIG")
     if config:
         import logging
         logging.basicConfig(level=logging.INFO)
