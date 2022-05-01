@@ -25,7 +25,7 @@ import nuvolaris.config as cfg
 import nuvolaris.kustomize as kus
 import nuvolaris.kube as kube
 import requests as req
-import yaml, sys
+import yaml, sys, os
 
 cfg.clean()
 cfg.detect_labels()
@@ -48,7 +48,7 @@ try:
 except Exception as e:
     !ls deploy/test-sts/
     !cat deploy/test-sts/*
-    quit()
+    os._exit(0)
 
 #yd(d)
 #with open("sts.yaml", "w") as f: f.write(yaml.dump(d))
