@@ -19,6 +19,7 @@ import yaml
 import re
 import flatdict
 import json
+import time
 
 # takes a string, split in lines and search for the word (a re)
 # if field is a number, splits the line in fields separated by spaces and print the selected field
@@ -191,3 +192,19 @@ def read_dotenv():
         print(e)
         print(".env not found")
         pass
+
+def get_with_retry(url, max_seconds):
+    start = time.time()
+    delta = 0
+    while delta < max_seconds:
+        try:
+            r = req.get(url, timeout=1)
+            print(r)
+            if r.status_code == 200:
+                return r.text
+        except Exception as e:
+            #print(e)
+            print(f"waiting since: {delta} seconds")
+        delta = int(time.time() - start)
+        time.sleep(1)
+    return ""
