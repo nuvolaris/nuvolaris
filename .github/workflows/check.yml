@@ -27,13 +27,13 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: recursive
-      - name: Setup
-        run: bash .github/cisetup.sh
       - name: Kind
         uses: helm/kind-action@v1.2.0
         with:
             cluster_name: nuvolaris
             config: .github/kind.yaml
+      - name: Setup
+        run: bash .github/cisetup.sh
       - name: Install
         run: task setup
       - name: Test

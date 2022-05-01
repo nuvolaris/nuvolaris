@@ -24,3 +24,8 @@ ARCH=amd64
 WSK_URL="$WSK_BASE/$WSK_VERSION/OpenWhisk_CLI-$WSK_VERSION-linux-$ARCH.tgz"
 curl -sSL https://install.python-poetry.org | python3.9 -
 curl -sSL "$WSK_URL" | tar xzvf - -C ~/.local/bin/
+VER="v1.23.0" 
+ARCH="$(dpkg --print-architecture)"
+URL="https://dl.k8s.io/release/$VER/bin/linux/$ARCH/kubectl"
+curl -sSL "$URL" >/usr/bin/kubectl && chmod +x /usr/bin/kubectl
+kubectl version
