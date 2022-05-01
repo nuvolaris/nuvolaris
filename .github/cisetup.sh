@@ -27,7 +27,7 @@ curl -sSL "$WSK_URL" | tar xzvf - -C ~/.local/bin/
 VER="v4.5.4"
 ARCH="$(dpkg --print-architecture)"
 URL="https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F$VER/kustomize_${VER}_linux_${ARCH}.tar.gz"
-curl $URL | tar tzvf - -C ~/.local/bin
+curl -sL $URL | tar tzvf - -C ~/.local/bin
 #URL="https://dl.k8s.io/release/$VER/bin/linux/$ARCH/kubectl"
 #curl -sSL "$URL" | sudo tee /usr/local/bin/kubectl && sudo chmod +x /usr/bin/kubectl
 #kubectl version
