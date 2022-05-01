@@ -39,16 +39,11 @@ data = {"name": "test-nginx",
         "dir": "/usr/share/nginx/html",
         "storageClass": cfg.get("nuvolaris.storageClass")
 }
-print(data)
+#print(data)
 patch = kus.patchTemplate("test-sts", "set-attach.yaml", data) 
-print(patch)
+#print(patch)
 
-try:
-    d = kus.kustom_list("test-sts", patch, data=data)
-except Exception as e:
-    !ls deploy/test-sts/
-    !cat deploy/test-sts/*
-    os._exit(0)
+d = kus.kustom_list("test-sts", patch, data=data)
 
 #yd(d)
 #with open("sts.yaml", "w") as f: f.write(yaml.dump(d))
