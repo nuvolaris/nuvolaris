@@ -61,6 +61,7 @@ header:
     - '**/playground'
     - '.github/ngrok'
     - 'poetry.lock'
+    - 'ngrok'
 
 dependency:
   files:

@@ -55,6 +55,11 @@ RUN VER="v1.23.0" ;\
     ARCH="$(dpkg --print-architecture)" ;\
     URL="https://dl.k8s.io/release/$VER/bin/linux/$ARCH/kubectl" ;\
     wget $URL -O /usr/bin/kubectl && chmod +x /usr/bin/kubectl
+# Download Kustomize
+RUN VER="v4.5.4" ;\
+    ARCH="$(dpkg --print-architecture)" ;\
+    URL="https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F$VER/kustomize_${VER}_linux_${ARCH}.tar.gz" ;\
+    curl -sL "$URL" | tar xzvf - -C /usr/bin
 # Download kind and setup a wrapper
 RUN VER="v0.12.0" ;\
     ARCH="$(dpkg --print-architecture)" ;\

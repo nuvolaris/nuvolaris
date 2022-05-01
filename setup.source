@@ -187,12 +187,17 @@ if ! which linode-cli >/dev/null
 then pip install linode-cli
 else ok linode-cli
 fi
-
+# env
+if test -e .env
+then export $(xargs <.env)
+     ok .env
+fi
 # extra
 if test -e ~/.localrc
 then source ~/.localrc
 fi
 
+# setup
 if test -e Taskfile.yml
 then task setup
 fi
