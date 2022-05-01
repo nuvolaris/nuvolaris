@@ -30,6 +30,10 @@ RUN KVER="v1.23.0" ;\
     ARCH="$(dpkg --print-architecture)" ;\
     KURL="https://dl.k8s.io/release/$KVER/bin/linux/$ARCH/kubectl" ;\
     curl -sL $KURL -o /usr/bin/kubectl && chmod +x /usr/bin/kubectl
+RUN VER="v4.5.4" ;\
+    ARCH="$(dpkg --print-architecture)" ;\
+    URL="https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F$VER/kustomize_${VER}_linux_${ARCH}.tar.gz" ;\
+    curl -sL "$URL" | tar xzvf - -C /usr/bin
 # Download WSK
 RUN WSK_VERSION=1.2.0 ;\
     WSK_BASE=https://github.com/apache/openwhisk-cli/releases/download ;\

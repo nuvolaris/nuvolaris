@@ -17,7 +17,7 @@
 #
 # this module wraps generation of kustomizations
 
-import os, io, yaml
+import os, io, yaml, subprocess
 import nuvolaris.kube as kube
 import nuvolaris.kustomize as nku
 import nuvolaris.template as ntp
@@ -66,7 +66,8 @@ def kustomize(where, *what, templates=[], data={}):
             out = f"deploy/{where}/__{template}"
             file = ntp.spool_template(template, out, data)
             f.write(f"- __{template}\n")
-    return kube.kubectl("kustomize", dir)
+    res = subprocess.run(["kustomize", "build", dir], capture_output=True)
+    return res.stdout.decode("utf-8")
 
 # generate image kustomization
 def image(name, newName=None, newTag=None):
