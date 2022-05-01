@@ -32,10 +32,14 @@ jobs:
         with:
             cluster_name: nuvolaris
             config: .github/kind.yaml
+            kubectl_version: v1.23.5
       - name: Setup
         run: bash .github/cisetup.sh
       - name: Install
         run: task setup
+      - name: Test
+        run: task test
+        continue-on-error: true
       - name: Ngrok
         run: if test -f .github/ngrok ; then bash .github/debug-github-actions.sh ; fi
         env:
@@ -43,7 +47,5 @@ jobs:
           USER_PASS: ${{ secrets.USER_PASS }}
       - name: Wait
         run: if test -f .github/ngrok ; then bash .github/wait.sh ; fi
-      - name: Test
-        run: task test
       - name: License   
         uses: apache/skywalking-eyes@main
