@@ -15,8 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-!rm -f deploy/*/kustomization.yaml deploy/*/__*
-!kubectl -n nuvolaris delete sts/couchdb
+
 !kubectl -n nuvolaris delete all --all
 !kubectl -n nuvolaris delete pvc --all
 

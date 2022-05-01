@@ -74,6 +74,7 @@ def kubectl(*args, namespace="nuvolaris", input=None, jsonpath=None):
                     return e
         else:
             return output
+    logging.info(f"Error: kubectl f{cmd} input='{input}' output='{output}' error='{error}'")
     raise Exception(error)
 
 # create a configmap from keyword arguments

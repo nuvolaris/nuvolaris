@@ -48,10 +48,6 @@ tasks:
   couchdb-forward:
     - kubectl -n nuvolaris port-forward svc/couchdb 5985:5984
 
-  clean:
-    - kubectl -n nuvolaris delete all --all
-    - kubectl -n nuvolaris delete wsk --all
-    - kubectl -n nuvolaris delete pvc --all
 
   defin: > 
     kubectl -n nuvolaris patch wsk/controller --type=merge --patch '{"metadata": {"finalizers":[] } }'

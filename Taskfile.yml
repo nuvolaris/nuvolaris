@@ -91,6 +91,15 @@ tasks:
     cmds:
       - docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} . --push
 
+  clean:
+    cmds:  
+      - cmd: kubectl -n nuvolaris delete all --all
+        ignore_error: true
+      - cmd: kubectl -n nuvolaris delete wsk --all
+        ignore_error: true
+      - cmd: kubectl -n nuvolaris delete pvc --all
+        ignore_error: true
+
   utest:
     cmds:
       - |
@@ -101,8 +110,10 @@ tasks:
     silent: true
 
   itest: 
-    cmds: 
+    cmds:
       - |
+        rm -f deploy/*/kustomization.yaml deploy/*/__*
+        kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
         for test in tests/{{.T}}*.ipy tests/{{.KUBE}}/{{.T}}*.ipy
         do  
             if test -e "$test"
@@ -116,10 +127,12 @@ tasks:
     - task: test:all
 
   uitest:
+    - task: clean
     - tast: utest
     - task: itest
 
   uidtest:
+    - task: clean
     - task: utest
     - task: itest
     - task: dtest
