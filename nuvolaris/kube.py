@@ -64,9 +64,14 @@ def kubectl(*args, namespace="nuvolaris", input=None, jsonpath=None):
 
     if res.returncode == 0:
         if jsonpath:
-                parsed = json.loads(output)
-                logging.debug("result: %s", json.dumps(parsed, indent=2))
-                return parsed
+                try:
+                    parsed = json.loads(output)
+                    logging.debug("result: %s", json.dumps(parsed, indent=2))
+                    return parsed
+                except Exception as e:
+                    logging.info(output)
+                    logging.info(e)
+                    return e
         else:
             return output
     raise Exception(error)
