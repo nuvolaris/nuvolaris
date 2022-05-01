@@ -45,19 +45,19 @@ d = kus.kustom_list("test-sts", patch, data=data)
 #yd(d)
 #with open("sts.yaml", "w") as f: f.write(yaml.dump(d))
 
-kube.apply(d)
+print(kube.apply(d))
 while not kube.get("po/test-nginx-0"): pass
-kube.wait("pod/test-nginx-0", "condition=Ready")
+print(kube.wait("pod/test-nginx-0", "condition=Ready"))
 
 assert(kube.get("po/test-nginx-0"))
 assert(len(kube.get("pvc")["items"]) ==1)
 
-kube.delete(d)
+print(kube.delete(d))
 while kube.get("po/test-nginx-0"): pass
 assert(not kube.get("po/test-nginx-0"))
 assert(len(kube.get("pvc")["items"]) ==1)
 
-kube.kubectl("delete", "pvc", "--all")
+print(kube.kubectl("delete", "pvc", "--all"))
 assert(len(kube.get("pvc")["items"]) ==0)
 
 #cleanup code
@@ -65,4 +65,3 @@ assert(len(kube.get("pvc")["items"]) ==0)
 #kube.kubectl("delete", "pv/test-nginx-pv", "--wait=false")
 #kube.patch("pv/test-nginx-pv", '{"metadata":{"finalizers":[]}}')
 #kube.kubectl("delete", "pvc", "--all")
-
