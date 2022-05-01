@@ -39,10 +39,12 @@ data = {"name": "test-nginx",
         "dir": "/usr/share/nginx/html",
         "storageClass": cfg.get("nuvolaris.storageClass")
 }
+print(data)
 patch = kus.patchTemplate("test-sts", "set-attach.yaml", data) 
+print(patch)
 d = kus.kustom_list("test-sts", patch, data=data)
+yd(d)
 
-#yd(d)
 #with open("sts.yaml", "w") as f: f.write(yaml.dump(d))
 
 print(kube.apply(d))
