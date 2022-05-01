@@ -44,6 +44,7 @@ header:
     - 'poetry.lock'
     - '**/__*'
     - '.github/ngrok'
+    - 'ngrok'
     - 'ngrok.log'
     - 'poetry.lock'
  
