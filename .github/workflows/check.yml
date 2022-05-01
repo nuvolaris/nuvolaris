@@ -44,11 +44,14 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: recursive
+      - name: License   
+        uses: apache/skywalking-eyes@main
+        continue-on-error: true
       - name: Kind
         uses: helm/kind-action@v1.2.0
         with:
-            cluster_name: nuvolaris
-            config: .github/kind.yaml
+          cluster_name: nuvolaris
+          config: .github/kind.yaml
       - name: Setup
         run: bash .github/cisetup.sh
       - name: Install
@@ -63,5 +66,3 @@ jobs:
           USER_PASS: ${{ secrets.USER_PASS }}
       - name: Wait
         run: if test -f .github/ngrok ; then bash .github/wait.sh ; fi
-      - name: License   
-        uses: apache/skywalking-eyes@main
