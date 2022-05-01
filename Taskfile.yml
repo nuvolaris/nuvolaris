@@ -113,6 +113,7 @@ tasks:
     cmds:
       - |
         rm -f deploy/*/kustomization.yaml deploy/*/__*
+        kubectl apply -f deploy/nuvolaris-operator/whisk-crd.yaml
         kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
         for test in tests/{{.T}}*.ipy tests/{{.KUBE}}/{{.T}}*.ipy
         do  
@@ -138,6 +139,8 @@ tasks:
     - task: dtest
 
   test: 
+    - poetry run ipython profile create
+    - cp test_profile.ipy ~/.ipython/profile_default/startup/
     - task: uitest
 
   all-kubes: 
