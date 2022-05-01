@@ -42,6 +42,7 @@ data = {"name": "test-nginx",
 print(data)
 patch = kus.patchTemplate("test-sts", "set-attach.yaml", data) 
 print(patch)
+!ls deploy/test-sts ; cat deploy/test-sts/__set-attach.yaml
 d = kus.kustom_list("test-sts", patch, data=data)
 yd(d)
 
