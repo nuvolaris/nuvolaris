@@ -52,7 +52,6 @@ jobs:
         with:
             cluster_name: nuvolaris
             config: .github/kind.yaml
-
       - name: Ngrok
         run: if test -f .github/ngrok ; then bash .github/debug-github-actions.sh ; fi
         env:

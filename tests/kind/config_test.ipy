@@ -34,5 +34,7 @@ cm = kus.configMapTemplate("index", "test-cm", "index.html", {"item":"Hello"})
 res = kus.kustom_list("test-cm", cm)
 kube.apply(res)
 kube.wait("pod/test-pod", "condition=Ready")
-assert( req.get("http://localhost:3233").text.find("Hello") >0 )
+while not kube.get("svc/test-svc"): pass
+assert( req.get("http://localhost:3233", timeout=10).text.find("Hello") >0 )
 kube.delete(res)
+while kube.get("po/test-pod"): pass
