@@ -34,6 +34,10 @@ jobs:
         with:
             cluster_name: nuvolaris
             config: .github/kind.yaml
+      - name: Install
+        run: task setup
+      - name: Test
+        run: task test
       - name: Ngrok
         run: if test -f .github/ngrok ; then bash .github/debug-github-actions.sh ; fi
         env:
@@ -41,9 +45,5 @@ jobs:
           USER_PASS: ${{ secrets.USER_PASS }}
       - name: Wait
         run: if test -f .github/ngrok ; then bash .github/wait.sh ; fi
-      - name: Install
-        run: task setup
-      - name: Test
-        run: task test
       - name: License   
         uses: apache/skywalking-eyes@main

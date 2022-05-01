@@ -44,16 +44,13 @@ patch = kus.patchTemplate("test-sts", "set-attach.yaml", data)
 print(patch)
 
 try:
-        d = kus.kustom_list("test-sts", patch, data=data)
-except:
-        print("----------------------------")
-        !ls deploy/test-sts/
-        !cat deploy/test-sts/*
-        print("----------------------------")
-        sys.exit(0)
+    d = kus.kustom_list("test-sts", patch, data=data)
+except Exception as e:
+    !ls deploy/test-sts/
+    !cat deploy/test-sts/*
+    quit()
 
 #yd(d)
-
 #with open("sts.yaml", "w") as f: f.write(yaml.dump(d))
 
 print(kube.apply(d))
