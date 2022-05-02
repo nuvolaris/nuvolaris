@@ -31,7 +31,7 @@ spec:
       restartPolicy: Never      
       containers:
       - name: init-couchdb
-        image: "ghcr.io/nuvolaris/nuvolaris-operator:0.2.0-trinity.22050121"
+        image: "{{image}}"
         imagePullPolicy: "IfNotPresent"
         command: ["./dbinit.sh"]
         #command: ["sleep", "inf"]

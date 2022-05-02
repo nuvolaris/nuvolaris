@@ -23,9 +23,7 @@ import urllib.parse
 import logging
 import kopf
 
-WHISK_IMG = os.environ.get("STANDALONE_IMAGE", "ghcr.io/nuvolaris/openwhisk-standalone")
-WHISK_TAG = os.environ.get("STANDALONE_TAG", "latest")
-WHISK_SPEC = "state.openwhisk.spec"
+CONTROLLER_SPEC = "state.controller.spec"
 
 # this functtions returns
 def apihost(apiHost):
@@ -42,27 +40,31 @@ def apihost(apiHost):
 
 def create(owner=None):
     data = {
+        "couchdb_host": cfg.get("couchdb.host", "COUCHDB_SERVICE_HOST", "couchdb"),
+        "couchdb_port": cfg.get("couchdb.port", "COUCHDB_SERVICE_PORT", "5984"),
         "admin_user": cfg.get("couchdb.admin.user"),
         "admin_password": cfg.get("couchdb.admin.password"),
-        "triggers.fires-perMinute": cfg.get("openwhisk.limits.triggers.fires-perMinute"),
-        "actions.sequence-maxLength": cfg.get("openwhisk.limits.actions.sequence-maxLength"),
-        "actions.invokes-perMinute": cfg.get("openwhisk.limits.actions.invokes-perMinute"),
-        "actions.invokes-concurrent": cfg.get("openwhisk.limits.actions.invokes-concurrent")
+        "triggers_fires_perMinute": cfg.get("openwhisk.limits.triggers.fires-perMinute"),
+        "actions_sequence_maxLength": cfg.get("openwhisk.limits.actions.sequence-maxLength"),
+        "actions_invokes_perMinute": cfg.get("openwhisk.limits.actions.invokes-perMinute"),
+        "actions_invokes_concurrent": cfg.get("openwhisk.limits.actions.invokes-concurrent")
     }
-    config = kus.image(WHISK_IMG, newTag=WHISK_TAG)
+    whisk_image = cfg.get("controller.image") or  "missing-controller-image"
+    whisk_tag = cfg.get("controller.tag") or "missing-controller-tag"
+    config = kus.image(whisk_image, newTag=whisk_tag)
     spec = kus.kustom_list("openwhisk-standalone", config, templates=["standalone-kcf.yaml"], data=data)
 
     if owner:
         kopf.append_owner_reference(spec['items'], owner)
     else:
-        cfg.put(WHISK_SPEC, spec)
+        cfg.put(CONTROLLER_SPEC, spec)
     return kube.apply(spec)
 
 def delete():
     res = ""
-    if cfg.exists(WHISK_SPEC):
-        res = kube.delete(cfg.get(WHISK_SPEC))
-        cfg.delete(WHISK_SPEC)
+    if cfg.exists(CONTROLLER_SPEC):
+        res = kube.delete(cfg.get(CONTROLLER_SPEC))
+        cfg.delete(CONTROLLER_SPEC)
     res += kube.kubectl("delete", "pod", "-l", "user-action-pod=true")
 
 def annotate(keyval):

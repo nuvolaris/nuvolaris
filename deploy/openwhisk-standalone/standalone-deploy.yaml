@@ -33,6 +33,7 @@ spec:
       containers:
       - name: openwhisk-standalone
         image: ghcr.io/nuvolaris/openwhisk-standalone:0.2.0-trinity.22031709
+        #command: ["sleep", "inf"]
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3233

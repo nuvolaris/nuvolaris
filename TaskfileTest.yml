@@ -18,6 +18,10 @@
 version: '3'
 
 vars:
+  IMAGE: nuvolaris/nuvolaris-operator
+  REPO: ghcr.io
+  TAG:
+    sh: git describe --tags --abbrev=0 2>/dev/null || echo latest
   KUBE:
     sh: ./detect.sh
   WHISK: '{{default "whisk" .WHISK}}'
@@ -27,12 +31,12 @@ vars:
 tasks:
   
   build-and-load:
-    - docker build . -t {{.OPERATOR}}
-    - kind load docker-image {{.OPERATOR}} --name=nuvolaris
+    - docker build . -t {{.OPERATOR_IMAGE}}:{{.OPERATOR_TAG}}
+    - kind load docker-image {{.OPERATOR_IMAGE}}:{{.OPERATOR_TAG}} --name=nuvolaris
 
   preload:
-    - docker pull {{.CONTROLLER}}
-    - kind load docker-image {{.CONTROLLER}} --name=nuvolaris
+    - docker pull {{.CONTROLLER_IMAGE}}:{{.CONTROLLER_TAG}}
+    - kind load docker-image {{.CONTROLLER_IMAGE}}:{{.CONTROLLER_TAG}} --name=nuvolaris
 
   kustomization:
     cmds:
@@ -49,7 +53,7 @@ tasks:
       - operator-pod.yaml
       __EOF__
 
-  deploy-operator:
+  operator:
   - task: kustomization
   - kubectl apply -k deploy/nuvolaris-operator
   - | 
@@ -59,12 +63,12 @@ tasks:
 
   destroy-operator:
   - task: kustomization
-  - kubectl delete -k deploy
+  - kubectl delete -k deploy/nuvolaris-operator
 
-  deploy-instance:
+  instance:
   - kubectl config set-context --current --namespace nuvolaris
   - >
-    cat test/{{.KUBE}}/whisk.yaml 
+    cat tests/{{.KUBE}}/whisk.yaml 
     | kubectl apply -f -
   - |    
     while ! kubectl -n nuvolaris wait pod --for=condition=ready -l app=controller
@@ -82,14 +86,14 @@ tasks:
     - task: destroy-instance 
     - task: destroy-operator
   
-  config-wsk: |-
+  config: |-
     APIHOST=$(kubectl -n nuvolaris get cm/config -o yaml | awk '/apihost:/ {print $2}' | sed -e 's/https:/http:/')
     echo $APIHOST
     AUTH=$(kubectl -n nuvolaris get wsk/controller -o yaml | awk '/nuvolaris:/{print $2}')
     echo $AUTH
     wsk property set --apihost $APIHOST --auth $AUTH
   
-  test-wsk:
+  hello:
     - wsk action update hello tests/hello.js --web=true
     - wsk action invoke hello -r | grep "hello"
     - |
@@ -98,7 +102,7 @@ tasks:
 
   all:
     - task: build-and-load
-    - task: deploy-operator
-    - task: deploy-instance
-    - task: config-wsk
-    - tast: test-wsk
+    - task: operator
+    - task: instance
+    - task: config
+    - task: hellowsk

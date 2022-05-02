@@ -38,9 +38,9 @@ In order to test the operator against different clusters, you can list all the c
 
 ## Developing the operator
 
-You can develop the operator without having to deploy it. Start it with `task dev:run`.  Then open another terminal and Use `task dev:deploy` to apply a configuration depending on the current clusters, file and `task dev:destroy` to remove it. 
+You can develop the operator without having to deploy it. Start it with `task run`.  Then open another terminal and Use `task deploy` to apply a configuration depending on the current clusters, file and `task d:destroy` to remove it. 
 
-You can also interact with a python interpreter with the same libraries and some useful imports and configuration ready (most notably the autoreload) with `task dev:cli`. Check `TaskfileDev.yml` for other useful targets for cleanup and debug.
+You can also interact with a python interpreter with the same libraries and some useful imports and configuration ready (most notably the autoreload) with `task cli`. Check `TaskfileDev.yml` for other useful targets for cleanup and debug.
 
 Finally, you can run unit tests with `task utest`, integration tests with `task itest` and deployiment tests with `task dtest`. Also there are the targets `task uitest` to run the first two,  and `uidtest` to run all of them.
 
@@ -60,20 +60,19 @@ If you have push access to Nuvolaris repository just the tag to trigger the GitH
 
 If you have your own repository, you can run
 
-`task IMAGE=<userr>/nuvolaris-operator buildx-and-push`
+`task IMAGE=<user>/nuvolaris-operator buildx-and-push`
  ## Testing the operator
 
 First, [switch to the cluster](#kubernetes-cluster) you want to test with and [release the operator](#releasing-the-operator) accordingly.
 
 Once you have the right cluster and the image properly published, you can test the operator with the following targets:
 
-- `test:build-and-load`: build and load the operator in the cluster
-- `test:deploy-operator`: deploys the operator in the current cluster.
-- `test:deploy-instance`: deploy an instance of the configuration to build an actual cluster.
-- `test:config-wsk`: once it is deployed, extracts the current configuration to use `wsk`
-- `test:test-wsk`: runs a simple hello world test
-- `test:destroy`: destroy the current deployment
-
+- `t:build-and-load`: build and load the operator in the cluster
+- `t:operator`: deploys the operator in the current cluster.
+- `t:instance`: deploy an instance of the configuration to build an actual cluster.
+- `t:config`: once it is deployed, extracts the current configuration to use `wsk`
+- `t:hello`: runs a simple hello world test
+- `t:destroy`: destroy the current deployment
 
 # Creating a new cluster
 
@@ -81,7 +80,6 @@ Currently the following clusters are supported:
 
 - `kind` 
 - Amazon `eks` 
-- Linode `lks`
 - Ubuntu `microk8s`
 
 See below for creating clusters and configurations. All the configuration for the available clusters are expected to be in `clusters/*.kubeconfig`
@@ -96,5 +94,4 @@ Available commands are:
 Note that `kind` is available in the development environment by defaut. You may want to use `task kind:config` to extract the configuration to be able to switch back to the local clusters.
 
 Also note there is not a script to build a microk8s cluster, you are supposed to install it manually using instructions provided in the documentation.
-
 

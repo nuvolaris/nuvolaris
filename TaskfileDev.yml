@@ -23,13 +23,16 @@ vars:
   WHISK: '{{default "whisk" .WHISK}}'
   CONFIG: "tests/{{.KUBE}}/{{.WHISK}}.yaml"
 
+
 tasks:
 
   env: env
 
   cli: poetry run ipython -i profile.ipy
 
-  run: ./run.sh
+  run: 
+    cmds:
+      - ./run.sh
 
   deploy:
     -  envsubst <{{.CONFIG}} | kubectl -n nuvolaris apply -f -
@@ -47,7 +50,6 @@ tasks:
 
   couchdb-forward:
     - kubectl -n nuvolaris port-forward svc/couchdb 5985:5984
-
 
   defin: > 
     kubectl -n nuvolaris patch wsk/controller --type=merge --patch '{"metadata": {"finalizers":[] } }'

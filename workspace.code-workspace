@@ -20,9 +20,6 @@
 	"folders": [
 		{
 			"path": "."
-		},
-		{
-			"path": "../nuvolaris-controller"
 		}
 	],
 	"settings": {

@@ -117,3 +117,14 @@ def detect_storage(storages=None):
                 res['nuvolaris.provisioner'] = st['provisioner']
                 _config['nuvolaris.provisioner'] = st['provisioner']
     return res
+
+def detect_env():
+    _config['operator.image'] = os.environ.get("OPERATOR_IMAGE", "missing-OPERATOR_IMAGE")
+    _config['operator.tag'] = os.environ.get("OPERATOR_TAG", "missing-OPERATOR_TAG")
+    _config['controller.image'] = os.environ.get("CONTROLLER_IMAGE", "missing-CONTROLLER_IMAGE")
+    _config['controller.tag'] = os.environ.get("CONTROLLER_TAG", "missing-CONTROLLER_TAG")
+
+def detect():
+    detect_storage()
+    detect_labels()
+    detect_env()

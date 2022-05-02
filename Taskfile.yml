@@ -18,19 +18,26 @@
 version: '3'
 
 vars:
+  KUBE:
+    sh: ./detect.sh
   BASETAG: 0.2.0-trinity
   IMAGE: nuvolaris/nuvolaris-operator
   REPO: ghcr.io
-  KUBE:
-    sh: ./detect.sh
   TAG:
-    sh: git describe --tags --abbrev=0 2>/dev/null || echo latest
-  CONTROLLER:
-    sh: cat deploy/openwhisk-standalone/standalone-deploy.yaml | awk '/image:/ { print $2 }'
-  OPERATOR: "{{.REPO}}/{{.IMAGE}}:{{.TAG}}"
+    sh: git describe --tags --abbrev=0 2>/dev/null || echo nightly
   N: ""
   G: ""
   T: ""
+
+env:
+  OPERATOR_IMAGE:
+    sh: awk -F= '/OPERATOR_IMAGE/ { print $2}' <Dockerfile
+  OPERATOR_TAG:
+    sh: awk -F= '/OPERATOR_TAG/ { print $2}' <Dockerfile
+  CONTROLLER_IMAGE: 
+    sh: awk -F= '/CONTROLLER_IMAGE/ { print $2}' <Dockerfile
+  CONTROLLER_TAG: 
+    sh:  awk -F= '/CONTROLLER_TAG/ { print $2}' <Dockerfile
 
 dotenv:
   - .env
@@ -55,7 +62,23 @@ tasks:
   watch: watch kubectl -n nuvolaris get all
   
   cli: 
-    - task: dev:cli
+    - task: d:cli
+
+  run:
+    - task: d:run
+
+  deploy: 
+    - task: d:deploy
+
+  destroy: 
+    - task: d:destroy
+
+  image-tag: git tag -d $(git tag) ; git tag -f {{.BASETAG}}.$(date +%y%m%d%H) ; git tag
+
+  build: docker build . -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} {{.CLI_ARGS}}
+
+  buildx-and-push:
+    - docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} . --push
 
   # configure env
   configure-env:
@@ -83,21 +106,15 @@ tasks:
     status:
       - test -f clusters/id_rsa.pub
 
-  image-tag: git tag -d $(git tag) ; git tag -f {{.BASETAG}}.$(date +%y%m%d%H) ; git tag
-
-  build: docker build . -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} {{.CLI_ARGS}}
-  
-  buildx-and-push:
-    cmds:
-      - docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} . --push
-
   clean:
-    cmds:  
+    cmds:
       - cmd: kubectl -n nuvolaris delete all --all
         ignore_error: true
       - cmd: kubectl -n nuvolaris delete wsk --all
         ignore_error: true
       - cmd: kubectl -n nuvolaris delete pvc --all
+        ignore_error: true
+      - cmd: kubectl -n nuvolaris delete ing --all
         ignore_error: true
 
   utest:
@@ -164,7 +181,7 @@ tasks:
               echo "*** select with 'task #'"
         else  CFG="$(ls -1 clusters/*.kubeconfig | tail +{{.N}} | head -1)" 
               cp $CFG ~/.kube/config
-              echo "selected $CFG"
+              echo "cluster: $(./detect.sh)"
               kubectl get nodes
         fi
     silent: true
@@ -180,12 +197,10 @@ tasks:
   9: task use N=9
 
 includes:
-  dev: TaskfileDev.yml
-  test: 
+  d: 
+    taskfile: TaskfileDev.yml
+  t: 
     taskfile: TaskfileTest.yml
-    vars:
-      CONTROLLER: "{{.CONTROLLER}}"
-      OPERATOR: "{{.OPERATOR}}"
   kind:  
     taskfile: "clusters/kind.yml"
     dir: "clusters"
