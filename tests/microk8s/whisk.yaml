@@ -20,7 +20,11 @@ kind: Whisk
 metadata:
   name: controller
   namespace: nuvolaris
-spec: 
+spec:
+  nuvolaris:
+      apihost: api.nuvolaris.io
+      apiport: 80
+      protocol: http 
   components:
     # start openwhisk controller
     openwhisk: true
@@ -48,8 +52,6 @@ spec:
       triggers: 
         fires-perMinute: 999
   couchdb:
-    host: couchdb
-    port: 5984
     volume-size: 10
     admin:
       user: whisk_admin

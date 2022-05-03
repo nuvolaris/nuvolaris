@@ -72,7 +72,7 @@ def whisk_create(spec, name, **kwargs):
     if cfg.get('components.openwhisk'):
         state['openwhisk'] = "on"
         msg = openwhisk.create(owner)
-        logging.info(msg)    
+        logging.info(msg)
     else:
         state['openwhisk'] = "off"
 
@@ -148,5 +148,3 @@ def deploy_update(old, new, name, **kwargs):
         }
         logging.debug(data)
         logging.info(kube.applyTemplate("couchdb-init.yaml", data))
-        #logging.info(f'couchdb.host={cfg.get("couchdb.host")}')
-        #logging.info(couchdb.init())
