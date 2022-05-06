@@ -197,11 +197,11 @@ tasks:
   9: task use N=9
 
 includes:
-  d: 
+  d:
     taskfile: TaskfileDev.yml
   t: 
     taskfile: TaskfileTest.yml
-  kind:  
+  kind:
     taskfile: "clusters/kind.yml"
     dir: "clusters"
     optional: yes

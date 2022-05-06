@@ -17,18 +17,35 @@
   ~ under the License.
   ~
 -->
-# Developer Guide
+# Design Document
 
-Random notes that helps understanding the code.
+The operator is built with `kopf`. It is basically a server that will react to events coming from Kubernetes. The main evento to react to is the deployment of a Custom Resource Definition that configures OpenWhisk and all the related components.
 
-Principles:
+All the code is in the package `nuvolaris`.  Events are handled in `main.py`.
 
-- you start and test writing a YAML configuration 
-- you modifify the yaml using kustomize
-- there are python wrappers to generate all the kustomizations
-- the operator react to events and execute kustomizations
+Each event handlers uses utility functions you can find the various service specific files like `openwhisk` or `couchdb`.
 
-Testing:
+Each function is implemented
+
+
+## Developmnet Targets
+
+
+The operator will control Kubernetes either using locally configured `kubeconfig`, or within Kubernetes itself using the configuration files that Kubernetes makes available.
+
+You should start the operator with `test run` that will initialize the environment so the operator can connect to the current configured Kubernetes and control it. You can also interact on the CLI and execute the code using `task cli`.
+
+## Development Workflow 
+
+In generale the operator react to events and execute kustomizations.
+To develop, 
+- you start and test writing a base YAML configuration in code. 
+- you can then modify this base configuration in code using `kustomize` (wrapped in python)
+- finally you apply the configuration with `kubectl` (wapped in python)
+  
+
+
+# Testing:
 
 Multiple level of testings
 

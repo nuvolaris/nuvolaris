@@ -19,9 +19,13 @@ version: '3'
 
 tasks:
 
-  create: eksctl create cluster -f eks-cluster.yml 
+  create: 
+    - eksctl create cluster -f eks-cluster.yml 
 
-  destroy: eksctl delete cluster --name nuvolaris-cluster --region=eu-central-1
+  destroy: 
+    - eksctl delete cluster -f eks-cluster.yml
+  
+  #--name nuvolaris-cluster --region=eu-central-1
 
   list: eksctl get cluster
 

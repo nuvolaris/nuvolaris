@@ -91,6 +91,7 @@ tasks:
     echo $APIHOST
     AUTH=$(kubectl -n nuvolaris get wsk/controller -o yaml | awk '/nuvolaris:/{print $2}')
     echo $AUTH
+    echo wsk property set --apihost $APIHOST --auth $AUTH
     wsk property set --apihost $APIHOST --auth $AUTH
   
   hello:

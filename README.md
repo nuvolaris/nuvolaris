@@ -61,7 +61,8 @@ If you have push access to Nuvolaris repository just the tag to trigger the GitH
 If you have your own repository, you can run
 
 `task IMAGE=<user>/nuvolaris-operator buildx-and-push`
- ## Testing the operator
+
+## Testing the operator
 
 First, [switch to the cluster](#kubernetes-cluster) you want to test with and [release the operator](#releasing-the-operator) accordingly.
 
