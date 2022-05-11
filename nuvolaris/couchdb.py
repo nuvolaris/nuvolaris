@@ -130,7 +130,8 @@ def add_initial_subjects(db):
     dbn = "subjects"
     for _, (name, value) in enumerate(cfg.getall("openwhisk.namespaces").items()):
         [uuid, key] = value.split(":")
-        data = { "name": name, "key": key, "uuid": uuid}
+        basename = name.split(".")[-1]
+        data = { "name": basename, "key": key, "uuid": uuid}
         res = check(db.update_templated_doc(dbn, "subject.json", data), f"add {name}", res)
     return res
 

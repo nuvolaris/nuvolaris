@@ -23,6 +23,9 @@
 		},
 		{
 			"path": "../nuvolaris-documentation"
+		},
+		{
+			"path": "../nuvolaris-cli"
 		}
 	],
 	"settings": {

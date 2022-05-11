@@ -121,7 +121,7 @@ def service_update(old, new, name, **kwargs):
     if not name == "apihost":
         return
 
-    logging.debug(f"service_update: name={name}")
+    logging.debug(f"service_update: {json.dumps(new)}")
     ingress = []
     if "ingress" in new and len(new['ingress']) >0:
         ingress = new['ingress']

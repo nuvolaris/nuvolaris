@@ -28,8 +28,12 @@ CONTROLLER_SPEC = "state.controller.spec"
 # this functtions returns
 def apihost(apiHost):
     url = urllib.parse.urlparse("https://pending")
-    if len(apiHost) > 0 and "hostname" in apiHost[0]:
-        url = url._replace(netloc = apiHost[0]['hostname'])
+    if len(apiHost) > 0: 
+        if "hostname" in apiHost[0]:
+            url = url._replace(netloc = apiHost[0]['hostname'])
+        elif "ip" in apiHost[0]:
+            url = url._replace(netloc = apiHost[0]['ip'])
+
     if cfg.exists("nuvolaris.apihost"):
         url =  url._replace(netloc = cfg.get("nuvolaris.apihost"))
     if cfg.exists("nuvolaris.protocol"):

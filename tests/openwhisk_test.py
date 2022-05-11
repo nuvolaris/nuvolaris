@@ -38,6 +38,9 @@ assert( ow.apihost(a) == 'http://localhost:3232')
 assert(cfg.configure(tu.load_sample_config(), clean=True))
 assert( ow.apihost(a) == 'https://elb.amazonaws.com')
 
+a = [{"ip": "20.86.250.184"}]
+assert( ow.apihost(a) == "https://20.86.250.184")
+
 import doctest
 doctest.testfile("tests/openwhisk_test.txt", module_relative=False)
 

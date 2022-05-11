@@ -73,6 +73,15 @@ tasks:
   destroy: 
     - task: d:destroy
 
+  config: 
+    - task: t:config
+
+  hello: 
+    - task: t:hello
+
+  defin:
+    - task: d:defin
+
   image-tag: git tag -d $(git tag) ; git tag -f {{.BASETAG}}.$(date +%y%m%d%H) ; git tag
 
   build: docker build . -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} {{.CLI_ARGS}}
@@ -142,20 +151,20 @@ tasks:
     silent: true
 
   dtest:
-    - task: test:all
+    - task: t:all
 
   uitest:
     - task: clean
     - tast: utest
     - task: itest
 
-  uidtest:
+  test:
     - task: clean
     - task: utest
     - task: itest
     - task: dtest
 
-  test: 
+  debug: 
     - poetry run ipython profile create
     - cp test_profile.ipy ~/.ipython/profile_default/startup/
     - task: uitest

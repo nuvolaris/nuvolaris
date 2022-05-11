@@ -16,8 +16,6 @@
 # under the License.
 #
 !
-!rm -f deploy/*/kustomization.yaml deploy/*/__*
-!kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
 !kubectl config set-context --current --namespace nuvolaris
 import nuvolaris.kustomize as kus
 import nuvolaris.kube as kube

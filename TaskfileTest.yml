@@ -20,8 +20,8 @@ version: '3'
 vars:
   IMAGE: nuvolaris/nuvolaris-operator
   REPO: ghcr.io
-  TAG:
-    sh: git describe --tags --abbrev=0 2>/dev/null || echo latest
+  TAG: 0.2.0-trinity.22050318
+    #sh: git describe --tags --abbrev=0 2>/dev/null || echo latest
   KUBE:
     sh: ./detect.sh
   WHISK: '{{default "whisk" .WHISK}}'
@@ -85,6 +85,8 @@ tasks:
   destroy:
     - task: destroy-instance 
     - task: destroy-operator
+
+  cleanup: kubectl -n nuvolaris delete pvc --all
   
   config: |-
     APIHOST=$(kubectl -n nuvolaris get cm/config -o yaml | awk '/apihost:/ {print $2}' | sed -e 's/https:/http:/')
@@ -93,6 +95,9 @@ tasks:
     echo $AUTH
     echo wsk property set --apihost $APIHOST --auth $AUTH
     wsk property set --apihost $APIHOST --auth $AUTH
+    while ! wsk action list
+    do echo $(( N++)) "waiting for the load balancer to be ready..." ; sleep 10
+    done
   
   hello:
     - wsk action update hello tests/hello.js --web=true
@@ -102,8 +107,9 @@ tasks:
       curl -sL $URL | grep hello
 
   all:
-    - task: build-and-load
     - task: operator
     - task: instance
     - task: config
-    - task: hellowsk
+    - task: hello
+    - task: destroy
+    #- task: cleanup

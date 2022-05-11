@@ -23,7 +23,6 @@ vars:
   WHISK: '{{default "whisk" .WHISK}}'
   CONFIG: "tests/{{.KUBE}}/{{.WHISK}}.yaml"
 
-
 tasks:
 
   env: env
@@ -32,7 +31,7 @@ tasks:
 
   run: 
     cmds:
-      - ./run.sh
+      - ./run.sh {{.CLI_ARGS}}
 
   deploy:
     -  envsubst <{{.CONFIG}} | kubectl -n nuvolaris apply -f -
