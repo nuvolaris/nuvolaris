@@ -90,7 +90,7 @@ tasks:
   
   config: |-
     APIHOST=$(kubectl -n nuvolaris get cm/config -o yaml | awk '/apihost:/ {print $2}' | sed -e 's/https:/http:/')
-    echo $APIHOST
+    echo "*** $APIHOST ***"
     AUTH=$(kubectl -n nuvolaris get wsk/controller -o yaml | awk '/nuvolaris:/{print $2}')
     echo $AUTH
     echo wsk property set --apihost $APIHOST --auth $AUTH

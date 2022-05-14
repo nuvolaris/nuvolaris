@@ -38,7 +38,7 @@ tasks:
 
   show:
     - echo "*** {{.CONFIG}}" 
-    - envsubst <{{.CONFIG}}.yaml
+    - envsubst <{{.CONFIG}}
 
   destroy: kubectl -n nuvolaris delete wsk/controller
 
