@@ -79,8 +79,10 @@ Once you have the right cluster and the image properly published, you can test t
 
 Currently the following clusters are supported: 
 
-- `kind` 
-- Amazon `eks` 
+- Kubernetes `kind` 
+- Amazon `eks`
+- Azure `aks`
+- Google `gke`
 - Ubuntu `microk8s`
 
 See below for creating clusters and configurations. All the configuration for the available clusters are expected to be in `clusters/*.kubeconfig`

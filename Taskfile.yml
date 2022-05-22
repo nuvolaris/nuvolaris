@@ -222,3 +222,7 @@ includes:
     taskfile: clusters/lks.yml
     dir: clusters/
     optional: yes
+  gke:
+    taskfile: clusters/gke.yml
+    dir: clusters/
+    optional: yes

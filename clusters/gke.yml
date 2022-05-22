@@ -1,0 +1,21 @@
+version: '3'
+
+vars:
+  GC_PROJECT: qapla-dev
+  GC_REGION: europe-west1
+  GC_CLUSTER: qapla-dev-webapp
+
+tasks:
+
+  login: gcloud auth login
+  
+  list: |- 
+    gcloud container clusters list
+
+  config: |-
+    gcloud config set project {{.GC_PROJECT}}
+    gcloud config set compute/region {{.GC_REGION}} 
+    gcloud container clusters get-credentials {{.GC_CLUSTER}}
+    cp ~/.kube/config gke.kubeconfig
+  
+
