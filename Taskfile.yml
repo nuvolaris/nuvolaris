@@ -30,10 +30,9 @@ vars:
   T: ""
 
 env:
+  OPERATOR_TAG: "{{.TAG}}"
   OPERATOR_IMAGE:
     sh: awk -F= '/OPERATOR_IMAGE/ { print $2}' <Dockerfile
-  OPERATOR_TAG:
-    sh: awk -F= '/OPERATOR_TAG/ { print $2}' <Dockerfile
   CONTROLLER_IMAGE: 
     sh: awk -F= '/CONTROLLER_IMAGE/ { print $2}' <Dockerfile
   CONTROLLER_TAG: 
@@ -88,17 +87,18 @@ tasks:
     - task: d:defin
 
   image-tag: 
-    - git tag -d $(git tag) ; git tag -f {{.BASETAG}}.$(date +%y%m%d%H) 
-    - echo "*** you have to upate OPERATOR_TAG in Dockerfile ***"
+    - git tag -d $(git tag) 
+    - git tag -f {{.BASETAG}}.$(date +%y%m%d%H) 
     - git tag
 
-  build: docker build . -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} {{.CLI_ARGS}}
+  build: docker build  -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} --build-arg OPTAG={{.TAG}} {{.CLI_ARGS}} .
 
-  build-and-load: 
-    - task t:build-and-load
+  build-and-load:
+    - task: build
+    - kind load docker-image {{.REPO}}/{{.IMAGE}}:{{.TAG}} --name=nuvolaris
 
   buildx-and-push:
-    - docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} . --push
+    - docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} --build-arg OPTAG={{.TAG}} . --push
 
   # configure env
   configure-env:
@@ -222,18 +222,18 @@ includes:
   t: 
     taskfile: TaskfileTest.yml
   kind:
-    taskfile: "clusters/kind.yml"
-    dir: "clusters"
+    taskfile: clusters/kind.yml
+    dir: clusters
     optional: yes
   eks:
     taskfile: clusters/eks.yml
-    dir: "clusters"
+    dir: clusters
     optional: yes
   lks:  
     taskfile: clusters/lks.yml
-    dir: clusters/
+    dir: clusters
     optional: yes
   gke:
     taskfile: clusters/gke.yml
-    dir: clusters/
+    dir: clusters
     optional: yes

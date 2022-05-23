@@ -138,7 +138,10 @@ def get(name):
         return None
 
 def wait(name, condition, timeout="600s"):
-    return kubectl("wait", name, f"--for={condition}", f"--timeout={timeout}")
+    try:
+        return kubectl("wait", name, f"--for={condition}", f"--timeout={timeout}")
+    except:
+        return None
 
 # patch an object
 def patch(name, data, namespace="nuvolaris", tpe="merge"):

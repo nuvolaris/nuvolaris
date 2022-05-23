@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-import kopf, os, logging, json
+import kopf, os, logging, json, time
 import nuvolaris.kustomize as kus
 import nuvolaris.kube as kube
 import nuvolaris.couchdb_util as cu
@@ -144,6 +144,11 @@ def init():
         spec = json.loads(config)
         cfg.configure(spec)
         for k in cfg.getall(): logging.info(f"{k} = {cfg.get(k)}")
+
+    # wait for couchdb to be ready
+    while not kube.wait("po/couchdb-0", "condition=ready"):
+        print("waiting for couchdb-0 ready...")
+        time.sleep(1)
 
     db = nuvolaris.couchdb_util.CouchDB()
     res = check(init_system(db), "init_system", True)

@@ -20,8 +20,8 @@ version: '3'
 vars:
   IMAGE: nuvolaris/nuvolaris-operator
   REPO: ghcr.io
-  TAG: 0.2.0-trinity.22052221
-    #sh: git describe --tags --abbrev=0 2>/dev/null || echo latest
+  TAG:
+    sh: git describe --tags --abbrev=0 2>/dev/null || echo nightly
   KUBE:
     sh: ./detect.sh
   WHISK: '{{default "whisk" .WHISK}}'
@@ -30,14 +30,6 @@ vars:
   
 tasks:
   
-  build-and-load:
-    - docker build . -t {{.OPERATOR_IMAGE}}:{{.OPERATOR_TAG}}
-    - kind load docker-image {{.OPERATOR_IMAGE}}:{{.OPERATOR_TAG}} --name=nuvolaris
-
-  preload:
-    - docker pull {{.CONTROLLER_IMAGE}}:{{.CONTROLLER_TAG}}
-    - kind load docker-image {{.CONTROLLER_IMAGE}}:{{.CONTROLLER_TAG}} --name=nuvolaris
-
   kustomization:
     cmds:
     - |

@@ -62,6 +62,8 @@ jobs:
             config: .github/kind.yaml
       - name: Install
         run: poetry install
+      - name: BuildAndLoad
+        run: task build-and-load
       - name: Ngrok
         run: if test -f .github/ngrok ; then bash .github/debug-github-actions.sh ; fi
         env:
