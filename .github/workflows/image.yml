@@ -62,6 +62,13 @@ jobs:
             config: .github/kind.yaml
       - name: Install
         run: poetry install
+      - name: Ngrok
+        run: if test -f .github/ngrok ; then bash .github/debug-github-actions.sh ; fi
+        env:
+          NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
+          USER_PASS: ${{ secrets.USER_PASS }}
+      - name: Wait
+        run: if test -f .github/ngrok ; then bash .github/wait.sh ; fi
       - name: Test
         run: task test
       - name: Buildx
