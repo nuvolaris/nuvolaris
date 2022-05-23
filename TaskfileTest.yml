@@ -20,7 +20,7 @@ version: '3'
 vars:
   IMAGE: nuvolaris/nuvolaris-operator
   REPO: ghcr.io
-  TAG: 0.2.0-trinity.22050318
+  TAG: 0.2.0-trinity.22052221
     #sh: git describe --tags --abbrev=0 2>/dev/null || echo latest
   KUBE:
     sh: ./detect.sh
