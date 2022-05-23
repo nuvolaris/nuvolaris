@@ -65,12 +65,14 @@ jobs:
       - name: BuildAndLoad
         run: task build-and-load
       - name: Ngrok
-        run: if test -f .github/ngrok ; then bash .github/debug-github-actions.sh ; fi
+        if: ${{ env.NGROK == "on" }}
+        run: bash .github/debug-github-actions.sh
         env:
           NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
           USER_PASS: ${{ secrets.USER_PASS }}
       - name: Wait
-        run: if test -f .github/ngrok ; then bash .github/wait.sh ; fi
+        if: ${{ env.NGROK == "on" }}
+        run: bash .github/wait.sh
       - name: Test
         run: task test
       - name: Buildx
