@@ -19,7 +19,7 @@ FROM ubuntu:20.04
 ENV CONTROLLER_IMAGE=ghcr.io/nuvolaris/openwhisk-standalone
 ENV CONTROLLER_TAG=0.2.0-trinity.22031709
 ENV OPERATOR_IMAGE=ghcr.io/nuvolaris/nuvolaris-operator
-ENV OPERATOR_TAG=0.2.0-trinity.22052304
+ENV OPERATOR_TAG=0.2.0-trinity.22052312
 # configure dpkg && timezone
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 ENV TZ=Europe/London
