@@ -22,7 +22,7 @@ ENV TZ=Europe/London
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # add docker and java (amazon corretto) repos
 RUN apt-get update && apt-get -y upgrade &&\
-    apt-get -y install curl wget gpg software-properties-common apt-utils unzip vim
+    apt-get -y install curl wget gpg software-properties-common apt-utils unzip vim silversearcher-ag
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor > /usr/share/keyrings/docker-archive-keyring.gpg &&\
     wget -O- https://apt.corretto.aws/corretto.key | apt-key add -
 RUN ARCH=$(dpkg --print-architecture) ;\
@@ -115,8 +115,13 @@ RUN VER=1.2.0 ;\
     ARCH=$(dpkg --print-architecture) ;\
     URL="$BASE/$VER/OpenWhisk_CLI-$VER-linux-$ARCH.tgz" ;\
     curl -sL "$URL" | tar xzvf - -C /usr/bin/
-# Install nuv 
-RUN VER=v0.1.2 ;\
+# install kn
+RUN VER="v1.4.1" ;\
+    ARCH="$(dpkg --print-architecture)" ;\
+    URL="https://github.com/knative/client/releases/download/knative-$VER/kn-linux-$ARCH" ;\
+    curl -sL "$URL" | sudo tee /usr/bin/kn >/dev/null && sudo chmod +x /usr/bin/kn
+# Install nuv
+RUN VER=v0.2.0-trinity.22052419 ;\
     BASE=https://github.com/nuvolaris/nuvolaris-cli/releases/download ;\
     ARCH=$(dpkg --print-architecture) ;\
     URL="$BASE/$VER/nuv-$VER-linux-$ARCH.tar.gz" ;\

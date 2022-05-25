@@ -1,9 +1,12 @@
 alias k="kubectl -n nuvolaris"
 alias ka="kubectl -n nuvolaris apply"
 alias kg="kubectl -n nuvolaris get"
+alias kgy="kubectl -n nuvolaris -o yaml get"
 alias kd="kubectl -n nuvolaris delete"
 alias kde="kubectl -n nuvolaris describe"
-alias ke="kubectl -n nuvolaris exec -ti"
+function ke { 
+  kubectl -n nuvolaris exec -ti "$1" -- bash 
+}
 alias kns="kubectl config  set-context --current --namespace"
 alias kfin='kubectl -n nuvolaris patch -p {"metadata":{"finalizers":[]}} --type=merge' 
 alias gst="git status"
@@ -13,7 +16,6 @@ alias gcam="git commit -a -m"
 alias gpom="git push upstream main"
 alias gpum="git push upstream main"
 alias ga="git add"
-alias ie="export $(xargs <.env)"
 alias t=task
 alias td="task dev:deploy"
 alias tde="task dev:destroy"

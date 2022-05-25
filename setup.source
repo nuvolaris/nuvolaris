@@ -176,6 +176,19 @@ else ok coursier
 fi
 eval "$(cs setup --env 2>/dev/null)"
 
+# install func
+if ! which func >/dev/null
+then 
+    pushd /tmp 
+    git clone https://github.com/knative-sandbox/kn-plugin-func.git
+    cd kn-plugin-func
+    make
+    sudo mv func /usr/bin/func
+    popd
+    rm -Rvf /tmp/kn-plugin-func
+else ok func
+fi
+
 # install hcloud
 if ! which hcloud >/dev/null
 then go install github.com/hetznercloud/cli/cmd/hcloud@latest
