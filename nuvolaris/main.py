@@ -20,6 +20,7 @@ import logging
 import json, flatdict, os, os.path
 import nuvolaris.config as cfg
 import nuvolaris.kube as kube
+import nuvolaris.redis as redis
 import nuvolaris.couchdb as couchdb
 import nuvolaris.mongodb as mongodb
 import nuvolaris.bucket as bucket
@@ -57,24 +58,43 @@ def whisk_create(spec, name, **kwargs):
     }
 
     if cfg.get('components.couchdb'):
-        state['couchdb']= "on"
-        msg = couchdb.create(owner)
-        logging.info(msg)
+        try:
+            msg = couchdb.create(owner)
+            state['couchdb']= "on"
+            logging.info(msg)
+        except:
+            logging.exception("cannot create couchdb")
+            state['couchdb']= "error"
     else:
         state['couchdb'] = "off"
+
+    if cfg.get('components.redis'):
+        try:
+            msg = redis.create(owner)
+            state['redis'] = "on"
+            logging.info(msg)
+        except:
+            exception("cannot create redis")
+            state['redis']= "error"
+    else:
+        state['redis'] = "off"
+
+    if cfg.get('components.openwhisk'):
+        try:
+            msg = openwhisk.create(owner)
+            state['openwhisk'] = "on"
+            logging.info(msg)
+        except:
+            exception("cannot create openwhisk")
+            state['openwhisk']= "error"
+    else:
+        state['openwhisk'] = "off"
 
     if cfg.get('components.kafka'):
         logging.warn("invoker not yet implemented")
         state['kafka'] = "n/a"
     else:
         state['kafka'] = "off"
-
-    if cfg.get('components.openwhisk'):
-        state['openwhisk'] = "on"
-        msg = openwhisk.create(owner)
-        logging.info(msg)
-    else:
-        state['openwhisk'] = "off"
 
     if cfg.get('components.invoker'):
         logging.warn("invoker not yet implemented")
@@ -88,11 +108,6 @@ def whisk_create(spec, name, **kwargs):
     else:
         state['mongodb'] = "off"
 
-    if cfg.get('components.redis'):
-        logging.warn("invoker not yet implemented")
-        state['redis'] = "n/a"
-    else:
-        state['redis'] = "off"
 
     if cfg.get('components.s3bucket'):
         logging.warn("invoker not yet implemented")
@@ -107,6 +122,10 @@ def whisk_create(spec, name, **kwargs):
 def whisk_delete(spec, **kwargs):
     logging.info("whisk_delete")
 
+    if cfg.get("components.redis"):
+        msg = redis.delete()
+        logging.info(msg)
+
     if cfg.get('components.couchdb'):
         msg = couchdb.delete()
         logging.info(msg)
@@ -114,6 +133,7 @@ def whisk_delete(spec, **kwargs):
     if cfg.get("components.openwhisk"):
         msg = openwhisk.delete()
         logging.info(msg)
+
 
 # tested by integration test
 @kopf.on.field("service", field='status.loadBalancer')

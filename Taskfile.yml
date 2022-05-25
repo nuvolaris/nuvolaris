@@ -52,6 +52,7 @@ tasks:
       - ssh-key
       - configure-env
     cmds:
+      - task: kind:config
       - poetry install
     status:
       - test -e $GOBIN/kopf
@@ -128,9 +129,9 @@ tasks:
 
   clean:
     cmds:
-      - cmd: kubectl -n nuvolaris delete all --all
+      - cmd: kubectl -n nuvolaris delete wsk/controller
         ignore_error: true
-      - cmd: kubectl -n nuvolaris delete wsk --all
+      - cmd: kubectl -n nuvolaris delete all --all
         ignore_error: true
       - cmd: kubectl -n nuvolaris delete pvc --all
         ignore_error: true
@@ -146,8 +147,12 @@ tasks:
         done
     silent: true
 
+
+  iclean: rm -f deploy/*/kustomization.yaml deploy/*/__*
+
   itest: 
     cmds:
+      - task: iclean
       - |
         kubectl apply -f deploy/nuvolaris-operator/whisk-crd.yaml
         kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
@@ -155,7 +160,6 @@ tasks:
         do  
             if test -e "$test"
             then  echo "*** [{{.KUBE}}] $test"
-                  rm -f deploy/*/kustomization.yaml deploy/*/__*
                   poetry run ipython $test {{.CLI_ARGS}}
             fi
         done

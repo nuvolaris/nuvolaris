@@ -26,6 +26,9 @@
 		},
 		{
 			"path": "../nuvolaris-cli"
+		},
+		{
+			"path": "../nuvolaris-training"
 		}
 	],
 	"settings": {

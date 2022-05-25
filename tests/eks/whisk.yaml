@@ -33,7 +33,7 @@ spec:
     # start mongodb
     mongodb: false
     # start redis
-    redis: false
+    redis: true
     # start s3ninja
     s3bucket: false
   openwhisk:
@@ -74,3 +74,5 @@ spec:
     id: AKIAIOSFODNN7EXAMPLE
     key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
     region: eu-central-1
+  redis:
+    volume-size: 10
