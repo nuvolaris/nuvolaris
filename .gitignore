@@ -32,3 +32,4 @@ __*
 clusters/id_rsa*
 *.kubeconfig
 run.pid
+_*.yaml
