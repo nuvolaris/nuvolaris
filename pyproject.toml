@@ -17,7 +17,7 @@
 #
 [tool.poetry]
 name = "nuvolaris"
-version = "0.1.0"
+version = "0.2.0"
 description = "Nuvolaris operator"
 authors = ["Michele Sciabarra <michele@sciabarra.com>"]
 

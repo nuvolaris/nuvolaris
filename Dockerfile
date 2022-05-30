@@ -27,7 +27,7 @@ ENV TZ=Europe/London
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # install Python
 RUN apt-get update && apt-get -y upgrade &&\
-    apt-get -y install python3.9 python3.9-venv curl sudo telnet inetutils-ping
+    apt-get -y install apt-utils python3.9 python3.9-venv curl sudo telnet inetutils-ping
 # Download Kubectl
 RUN KVER="v1.23.0" ;\
     ARCH="$(dpkg --print-architecture)" ;\
@@ -54,6 +54,7 @@ ADD nuvolaris/templates /home/nuvolaris/nuvolaris/templates
 ADD deploy/nuvolaris-operator /home/nuvolaris/deploy/nuvolaris-operator
 ADD deploy/openwhisk-standalone /home/nuvolaris/deploy/openwhisk-standalone
 ADD deploy/couchdb /home/nuvolaris/deploy/couchdb
+ADD deploy/redis /home/nuvolaris/deploy/redis
 ADD run.sh dbinit.sh pyproject.toml poetry.lock /home/nuvolaris/
 RUN chown -R nuvolaris:nuvolaris /home/nuvolaris
 USER nuvolaris

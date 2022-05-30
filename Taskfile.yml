@@ -78,6 +78,17 @@ tasks:
   destroy: 
     - task: d:destroy
 
+ 
+  nsetup:
+    - task: kind:config
+    - nuv setup --context=kind-nuvolaris --apihost=auto --image-tag={{.TAG}}
+
+  tsetup:
+    - task: operator
+    - task: deploy
+    - task: config
+    - task: hello
+
   config: 
     - task: t:config
 
