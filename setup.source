@@ -185,7 +185,7 @@ for REF in \
  honnef.co/go/tools/cmd/staticcheck \
  golang.org/x/tools/gopls 
 do CMD="$(basename $REF)"
-   if which $CMD
+   if which $CMD >dev/null
    then ok $CMD
    else go install $REF@latest
    fi
