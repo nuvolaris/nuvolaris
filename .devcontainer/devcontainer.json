@@ -16,7 +16,7 @@
 // under the License.
 {
 	"name": "nuvolaris",
-	"image": "ghcr.io/nuvolaris/nuvolaris-devkit:0.2.0-trinity.22052519",
+	"image": "ghcr.io/nuvolaris/nuvolaris-devkit:0.2.0-trinity.22053116",
 	//"build": { "dockerfile": "Dockerfile" },
 	"mounts": [
 		"source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"
@@ -30,7 +30,7 @@
 	"extensions": [
 		"stuart.unique-window-colors",
 		"oderwat.indent-rainbow",
-		"eamodio.gitlens",
-		"mhutchie.git-graph"
+		"mhutchie.git-graph", 
+		"golang.go"
 	]
 }

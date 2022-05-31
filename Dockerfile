@@ -83,8 +83,8 @@ RUN mkdir /tmp/awscli ;\
 # Install eksctl
 RUN curl -sL "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_$(dpkg --print-architecture).tar.gz" |\
     tar xzf - -C /usr/bin
-# Install azure cli
-RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+# Install azure cli - commented out: buggy on arm
+# RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 # Download openshift installer
 RUN VER=4.10.4 ;\
     BASE=https://mirror.openshift.com/pub/openshift-v4/clients/ocp ;\

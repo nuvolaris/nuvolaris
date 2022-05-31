@@ -162,19 +162,34 @@ else ok poetry
 fi
 
 # install jest
-if ! nodenv which jest >/dev/null
+if ! nodenv which jest 2>/dev/null
 then npm install -g jest
 else ok jest
 fi
 export PATH="$(nodenv prefix)/bin:$PATH"
 
-# install coursier
-if ! which cs >/dev/null
-then curl -sfLo $HOME/.local/bin/cs https://git.io/coursier-cli-"$(uname | tr LD ld)"
-     chmod +x $HOME/.local/bin/cs  
-else ok coursier
-fi
-eval "$(cs setup --env 2>/dev/null)"
+# install coursier - commented out as not required for now
+#if ! which cs >/dev/null
+#then curl -sfLo $HOME/.local/bin/cs https://git.io/coursier-cli-"$(uname | tr LD ld)"
+#     chmod +x $HOME/.local/bin/cs  
+#else ok coursier
+#fi
+#eval "$(cs setup --env 2>/dev/null)"
+
+# install go tools for VSCode
+for REF in \
+ github.com/cweill/gotests/gotests \
+ github.com/fatih/gomodifytags \
+ github.com/josharian/impl \
+ github.com/haya14busa/goplay/cmd/goplay \
+ honnef.co/go/tools/cmd/staticcheck \
+ golang.org/x/tools/gopls 
+do CMD="$(basename $REF)"
+   if which $CMD
+   then ok $CMD
+   else go install $REF@latest
+   fi
+done
 
 # install func
 if ! which func >/dev/null
