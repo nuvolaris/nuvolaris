@@ -64,14 +64,19 @@ tasks:
     | kubectl apply -f -
   - |    
     while ! kubectl -n nuvolaris wait pod --for=condition=ready -l app=controller
-    do sleep 1 ; echo still waiting...
+    do sleep 1 ; echo waiting controller...
+    done
+  - |    
+    while ! kubectl -n nuvolaris wait pod redis-0 --for=condition=ready 
+    do sleep 1 ; echo waiting redis...
     done
   - |    
     while ! kubectl -n nuvolaris wait pod --for=condition=ready -l user-action-pod=true
-    do sleep 1 ; echo still waiting... 
+    do sleep 1 ; echo waiting actions... 
     done
   
   destroy-instance:
+    - (sleep 5 ; task defin) &
     - kubectl -n nuvolaris delete wsk/controller
   
   destroy:
@@ -104,10 +109,7 @@ tasks:
       URL=$(wsk action get hello --url | tail +2)
       curl -sL $URL | grep hello
 
-  all:
-    - task: operator
-    - task: instance
-    - task: config
-    - task: hello
-    - task: destroy
-    #- task: cleanup
+  ping:
+    - wsk package update redis -p redis redis://redis
+    - wsk action update redis/ping tests/ping.js
+    - wsk action invoke redis/ping -r | grep "PONG"

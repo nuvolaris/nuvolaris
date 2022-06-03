@@ -31,6 +31,7 @@ cfg.detect_labels()
 cfg.detect_storage()
 
 assert(redis.create())
+while not kube.wait("po/redis-0", "condition=ready"): pass
 assert(kube.get("po/redis-0"))
 assert(kube.get("svc/redis"))
 assert(redis.delete())

@@ -36,7 +36,7 @@ env:
   CONTROLLER_IMAGE: 
     sh: awk -F= '/CONTROLLER_IMAGE/ { print $2}' <Dockerfile
   CONTROLLER_TAG: 
-    sh:  awk -F= '/CONTROLLER_TAG/ { print $2}' <Dockerfile
+    sh: awk -F= '/CONTROLLER_TAG/ { print $2}' <Dockerfile
 
 dotenv:
   - .env
@@ -59,7 +59,7 @@ tasks:
 
   env: env
   
-  watch: watch kubectl -n nuvolaris get all
+  watch: watch kubectl -n nuvolaris get no,po,svc 
 
   logs: kubectl -n nuvolaris logs nuvolaris-operator -f
   
@@ -78,22 +78,25 @@ tasks:
   destroy: 
     - task: d:destroy
 
- 
   nsetup:
     - task: kind:config
     - nuv setup --context=kind-nuvolaris --apihost=auto --image-tag={{.TAG}}
 
-  tsetup:
+  install:
     - task: operator
     - task: deploy
     - task: config
     - task: hello
+    - task: ping
 
   config: 
     - task: t:config
 
   hello: 
     - task: t:hello
+
+  ping: 
+    - task: t:ping
 
   defin:
     - task: d:defin
@@ -177,12 +180,14 @@ tasks:
     silent: true
 
   dtest:
-    - task: t:all
+    - task: t:operator
+    - task: t:instance
+    - task: wtest
 
-  uitest:
-    - task: clean
-    - tast: utest
-    - task: itest
+  wtest:
+    - task: t:config
+    - task: t:hello
+    - task: t:ping
 
   test:
     - task: clean
@@ -199,13 +204,19 @@ tasks:
     cmds: 
       - |-
         if test -z "{{.CLI_ARGS}}"
-        then echo 'use "task all-kubes  -- <target> runs the target against all the available kubes'
+        then echo 'use "task all-kubes -- <target> runs the target against all the available kubes'
         else  for cfg in clusters/*.kubeconfig
-              do  cp -v $cfg ~/.kube/config
+              do  /usr/games/cowsay -f duck  $(basename $cfg .kubeconfig) 2>/dev/null
+                  cp -v $cfg ~/.kube/config >/dev/null
                   task {{.CLI_ARGS}}
               done
         fi
     silent: true
+
+  kube-test: 
+    cmds:
+      - task dtest 2>/dev/null >/dev/null
+    
 
   use: 
     cmds:
@@ -242,6 +253,10 @@ includes:
     optional: yes
   eks:
     taskfile: clusters/eks.yml
+    dir: clusters
+    optional: yes
+  aks:
+    taskfile: clusters/aks.yml
     dir: clusters
     optional: yes
   lks:  
