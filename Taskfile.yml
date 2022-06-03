@@ -33,7 +33,12 @@ tasks:
 
   default: true
 
-  image-tag: git tag -d $(git tag) ; git tag -f {{.BASETAG}}.$(date +%y%m%d%H)
+  image-tag: 
+    silent: true
+    cmds:
+    - git tag -d $(git tag) 
+    - git tag -f {{.BASETAG}}.$(date +%y%m%d%H)
+    - env PAGER= git tag
 
   cli-tag: git tag -d $(git tag) ; git tag -f v{{.BASETAG}}.$(date +%y%m%d%H)
 

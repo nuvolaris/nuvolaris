@@ -32,7 +32,7 @@ export PS1="[\[\e[32m\]\W:\[\e[91m\]\$(parse_git_branch)\[\e[00m\]]$ "
 # versions
 export NODENV_VERSION=16.13.0
 export PYENV_VERSION=3.9.9
-export GOENV_VERSION=1.18.0
+export GOENV_VERSION=1.18.2
 export DOCKER_VERSION=19
 export JAVA_VERSION=8
 
@@ -162,7 +162,7 @@ else ok poetry
 fi
 
 # install jest
-if ! nodenv which jest 2>/dev/null
+if ! nodenv which jest >/dev/null
 then npm install -g jest
 else ok jest
 fi
@@ -185,7 +185,7 @@ for REF in \
  honnef.co/go/tools/cmd/staticcheck \
  golang.org/x/tools/gopls 
 do CMD="$(basename $REF)"
-   if which $CMD >dev/null
+   if which $CMD >/dev/null
    then ok $CMD
    else go install $REF@latest
    fi

@@ -19,3 +19,15 @@ alias ga="git add"
 alias t=task
 alias td="task dev:deploy"
 alias tde="task dev:destroy"
+
+function otask {
+  cd /workspaces/nuvolaris/nuvolaris-operator
+  task "$@"
+  cd -
+}
+
+function ntask {
+  cd /workspaces/nuvolaris/nuvolaris-cli/nuv
+  task "$@"
+  cd -
+}
