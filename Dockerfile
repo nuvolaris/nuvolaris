@@ -32,20 +32,20 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
 # install software
 RUN apt-get update &&\
-   apt-get -y install \
-   sudo socat telnet \
-   inetutils-ping \
-   lsb-release \
-   ca-certificates \
-   apt-transport-https \
-   build-essential gettext-base \
-   git gnupg curl wget jq \
-   zlib1g-dev libbz2-dev libncurses5-dev \
-   libgdbm-dev libnss3-dev libssl-dev \
-   libreadline-dev libffi-dev libsqlite3-dev \
-   java-11-amazon-corretto-jdk \
-   docker-ce-cli \
-   google-cloud-cli
+    apt-get -y install \
+    sudo socat telnet \
+    inetutils-ping \
+    lsb-release \
+    ca-certificates \
+    apt-transport-https \
+    build-essential gettext-base \
+    git gnupg curl wget jq \
+    zlib1g-dev libbz2-dev libncurses5-dev \
+    libgdbm-dev libnss3-dev libssl-dev \
+    libreadline-dev libffi-dev libsqlite3-dev \
+    java-11-amazon-corretto-jdk \
+    docker-ce-cli \
+    google-cloud-cli
 # add delta to show diffs
 RUN FILE="git-delta_0.11.2_$(dpkg --print-architecture).deb" ;\
     wget "https://github.com/dandavison/delta/releases/download/0.11.2/$FILE" -O "/tmp/$FILE" ;\
@@ -121,7 +121,7 @@ RUN VER="v1.4.1" ;\
     URL="https://github.com/knative/client/releases/download/knative-$VER/kn-linux-$ARCH" ;\
     curl -sL "$URL" | sudo tee /usr/bin/kn >/dev/null && sudo chmod +x /usr/bin/kn
 # Install nuv
-RUN VER=v0.2.0-trinity.22060414 ;\
+RUN VER=v0.2.0-trinity.22060416 ;\
     BASE=https://github.com/nuvolaris/nuvolaris-cli/releases/download ;\
     ARCH=$(dpkg --print-architecture) ;\
     URL="$BASE/$VER/nuv-$VER-linux-$ARCH.tar.gz" ;\
