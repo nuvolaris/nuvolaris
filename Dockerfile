@@ -121,7 +121,7 @@ RUN VER="v1.4.1" ;\
     URL="https://github.com/knative/client/releases/download/knative-$VER/kn-linux-$ARCH" ;\
     curl -sL "$URL" | sudo tee /usr/bin/kn >/dev/null && sudo chmod +x /usr/bin/kn
 # Install nuv
-RUN VER=v0.2.0-trinity.22060318 ;\
+RUN VER=v0.2.0-trinity.22060414 ;\
     BASE=https://github.com/nuvolaris/nuvolaris-cli/releases/download ;\
     ARCH=$(dpkg --print-architecture) ;\
     URL="$BASE/$VER/nuv-$VER-linux-$ARCH.tar.gz" ;\

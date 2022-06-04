@@ -176,21 +176,6 @@ export PATH="$(nodenv prefix)/bin:$PATH"
 #fi
 #eval "$(cs setup --env 2>/dev/null)"
 
-# install go tools for VSCode
-for REF in \
- github.com/cweill/gotests/gotests \
- github.com/fatih/gomodifytags \
- github.com/josharian/impl \
- github.com/haya14busa/goplay/cmd/goplay \
- honnef.co/go/tools/cmd/staticcheck \
- golang.org/x/tools/gopls 
-do CMD="$(basename $REF)"
-   if which $CMD >/dev/null
-   then ok $CMD
-   else go install $REF@latest
-   fi
-done
-
 # install func
 if ! which func >/dev/null
 then 
@@ -220,6 +205,23 @@ if test -e .env
 then export $(xargs <.env)
      ok .env
 fi
+
+# install go tools for VSCode
+for REF in \
+ github.com/cweill/gotests/gotests \
+ github.com/fatih/gomodifytags \
+ github.com/josharian/impl \
+ github.com/haya14busa/goplay/cmd/goplay \
+ honnef.co/go/tools/cmd/staticcheck \
+ golang.org/x/tools/gopls 
+do CMD="$(basename $REF)"
+   if which $CMD >/dev/null
+   then ok $CMD
+   else go install $REF@latest
+   fi
+done
+
+
 # extra
 if test -e ~/.localrc
 then source ~/.localrc
