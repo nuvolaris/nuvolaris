@@ -1,3 +1,4 @@
+#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -15,12 +16,12 @@
 # specific language governing permissions and limitations
 # under the License.
 
-name: cli-release
-
 on:
   push:
     tags:
       - 'v*'
+    branches-ignore:
+      - '*'
 
 jobs:
 
@@ -45,7 +46,6 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    # not using the release matrix because builds fails for unknown reasons
     - name: Release Go Binaries linux-amd64
       uses: wangyoucao577/go-release-action@v1.22
       with:
@@ -53,8 +53,9 @@ jobs:
         goos: "linux"
         goarch: "amd64"
         project_path: "./nuv"
+        build_command: "env TAG=${{github.ref_name}} bash cibuild.sh"
         binary_name: "nuv"
-        extra_files: LICENSE nuv.txt
+        extra_files: LICENSE
     - name: Release Go Binaries linux-arm64
       uses: wangyoucao577/go-release-action@v1.22
       with:
@@ -62,8 +63,9 @@ jobs:
         goos: "linux"
         goarch: "arm64"
         project_path: "./nuv"
+        build_command: "env TAG=${{github.ref_name}} bash cibuild.sh"
         binary_name: "nuv"
-        extra_files: LICENSE nuv.txt
+        extra_files: LICENSE
     - name: Release Go Binaries darwin-amd64
       uses: wangyoucao577/go-release-action@v1.22
       with:
@@ -71,8 +73,9 @@ jobs:
         goos: "darwin"
         goarch: "amd64"
         project_path: "./nuv"
+        build_command: "env TAG=${{github.ref_name}} bash cibuild.sh"
         binary_name: "nuv"
-        extra_files: LICENSE nuv.txt
+        extra_files: LICENSE
     - name: Release Go Binaries darwin-arm64
       uses: wangyoucao577/go-release-action@v1.22
       with:
@@ -80,8 +83,9 @@ jobs:
         goos: "darwin"
         goarch: "arm64"
         project_path: "./nuv"
+        build_command: "env TAG=${{github.ref_name}} bash cibuild.sh"
         binary_name: "nuv"
-        extra_files: LICENSE nuv.txt
+        extra_files: LICENSE
     - name: Release Go Binaries windows-amd64
       uses: wangyoucao577/go-release-action@v1.22
       with:
@@ -89,5 +93,6 @@ jobs:
         goos: "windows"
         goarch: "amd64"
         project_path: "./nuv"
+        build_command: "env TAG=${{github.ref_name}} bash cibuild.sh"
         binary_name: "nuv"
-        extra_files: LICENSE nuv.txt
+        extra_files: LICENSE
