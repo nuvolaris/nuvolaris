@@ -2,8 +2,6 @@
 
 The goals to reach with this milestone are:
 
-- Use the database (`CouchDB`) with the controller 
-- Deploy an user accessible database for the actions (`MongoDB`)
-- Provide support for storing static frontend content
-- Support at least an external Kubernetes cluster (`AWS EKS`)
+- supports EKS, AKS, GKE, Microk8s and Kind
+- provision the endpoint using either a LoadBalancer or an ingress
 - Implement deployments of projects with the cli `nuv`

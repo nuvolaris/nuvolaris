@@ -17,26 +17,25 @@
   ~ under the License.
   ~
 -->
-# Nuvolaris
+# Welcome to Nuvolaris!
 
-Welcome to the Nuvolaris project. 
-
-Nuvolaris is an [ongoing project](#about) to build an Open Source distribution of [Apache OpenWhisk](https://openwhisk.apache.org) released under the [Apache Licence 2.0](LICENSE) (like OpenWhisk itself).
+Nuvolaris is an [open source project](#about) to build a distribution of [Apache OpenWhisk](https://openwhisk.apache.org) released under the [Apache Licence 2.0](LICENSE) (like OpenWhisk itself).
 
 We want to build a *complete* distribution of a serverless environment that:
 
 - it is easy to install and manage
-- potentially runs in every Kubernetes, but it is tested against a set of supported distributions
+- potentially runs in every Kubernetes, 
+- it is tested regularly tested against a set of supported Kuubernetes environments
 - includes a (possibly large) number of integrated services
 
 This is the main differentiation from Apache OpenWhisk, as it only provides a basic engine for serverless. Our goals are described in our [**roadmap**](docs/ROADMAP.md) document to read about.
-
 
 ## TL;DR
 
 If you are in a hurry, here a few starting points:
 
-- Download the [latest release](https://github.com/nuvolaris/nuvolaris/releases) of the CLI to install Nuvolaris, 
+- Read the [documentation](https://github.com/nuvolaris/nuvolaris-documentation).
+- Download the [latest release](https://github.com/nuvolaris/nuvolaris/releases) of the CLI to install and use Nuvolaris.
 - Check our [YouTube Channel](https://www.youtube.com/channel/UCPt5hk7qcOkESjB7kii1byw) for our trainings and community calls.
 - Chat with us on [Discord](https://discord.gg/VSGG7aQ2Ds) 
 
@@ -49,16 +48,16 @@ If you are a developer, here a few more resources to read:
 - Read the [Overview](docs/OVERVIEW.md) and the [Roadmap](docs/ROADMAP.md) 
 - Check the [Developer Guide](docs/DEVEL.md) and the [Build Guide](docs/BUILD.md).
 
-## Quick Start with our Development Environment
+## Quick Start to use our Development Environment
 
 Prerequisites:
 
- - A machine with **AT LEAST 16 GIGABYTES OF MEMORY** 
+ - A machine with **AT LEAST 12 GIGABYTES OF MEMORY** 
  - Git, at least 2.x 
  - Docker, at least 20.x (either Docker Desktop or Docker CE) 
  - VSCode, at least 1.63.x
  
-then  **`ASSIGN AT LEAST 8 GIGABYTES TO DOCKER`** and open the project as follows.
+then  **`ASSIGN AT LEAST 6 GIGABYTES TO DOCKER`** and open the project as follows.
 
 ![](docs/devenv.png)
 
@@ -70,7 +69,6 @@ code nuvolaris
 VSCode should detect you are using a development container (because of the directory `.devcontainer`) and ask if you want to use it. Click on the button `Reopen in container`.
 
 **NOTE** if the popup does not show up, it is possible you have disabled it. In such a case, click on `F1`, search for the command `Reopen in Container` and execute it.
-
 
 The first time, since it needs to download a large image, it can take some time. It will download the Nuvolaris DevKit  and setup a local development Kubernetes cluster  using [kind](https://kind.sigs.k8s.io/).
 
@@ -95,6 +93,7 @@ Check  [our development guide](docs/DEVEL.md) for more informations.
 - Please discuss with us and ensure you want to do is approved by the [project owners](docs/OWNERS.md), if you want to be sure your PR will be merged We can still merge unsolicited PR, but if you do not discuss it before there is some risk that for some reason we may unable to merge it. 
 - Get an issue assigned. **Seriously**. 
 - Code it!
+
 ## How to submit a contribution
 
 If you want to contribute, **YOU HAVE TO PUT YOUR CODE UNDER A LICENSE** . 
@@ -130,9 +129,7 @@ We split activities in [milestones](https://github.com/nuvolaris/nuvolaris/miles
 
 We name milestones after characters of the movies of The Matrix franchise. 
 
-We reached the first milestone, [Neo](docs/Neo.md).
-
-The current milestone is [Trinity](doc/Trinity.md).
+We reached the second milestone, [Trinity](docs/Trinity.md).
 
 The next milestones will be Morpheus, yet to be planned.
 

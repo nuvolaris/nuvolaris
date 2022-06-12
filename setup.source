@@ -221,6 +221,11 @@ do CMD="$(basename $REF)"
    fi
 done
 
+# replace
+if ! which replace >/dev/null
+then npm install -g replace
+else ok replace
+fi
 
 # extra
 if test -e ~/.localrc
