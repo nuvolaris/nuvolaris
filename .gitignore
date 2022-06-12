@@ -21,3 +21,4 @@ bin/*
 .docker-pid
 kubeconfig
 .DS_Store
+nuvolaris-inc/

@@ -62,6 +62,7 @@ header:
     - '.github/ngrok'
     - 'poetry.lock'
     - 'ngrok'
+    - 'nuvolaris-inc/**'
 
 dependency:
   files:

@@ -25,16 +25,11 @@
 		},
 		{
 			"path": "."
-		},
-		{
-			"path": "nuvolaris-cli/nuv/tests"
 		}
 	],
 	"settings": {
 		"workbench.colorCustomizations": {
-			"activityBar.background": "#1c5389",
-			"titleBar.activeBackground": "#1c5389",
-			"titleBar.activeForeground": "#1c5389"
+			"activityBar.background": "#1c5389"
 		}
 	}
 }
