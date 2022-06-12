@@ -17,11 +17,12 @@
 # under the License.
 
 name: Release
-
 on:
   push:
     tags:
       - 'v*'
+    branches-ignore:
+      - '*'
 
 jobs:
 
@@ -32,67 +33,13 @@ jobs:
     steps:
     - name: Create Release
       uses: softprops/action-gh-release@v1
-    - name: Checkout
-      uses: actions/checkout@v2
+    - name: Download binaries
+      run: bash .github/cidownload.sh "${{ github.ref }}"
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
       with:
-        repository: nuvolaris/nuvolaris-cli
-        ref: ${{ github.ref }}
-        submodules: recursive
-    - name: License
-      uses: apache/skywalking-eyes@main
-    - name: Registry
-      uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    - name: Release Go Binaries linux-amd64
-      uses: wangyoucao577/go-release-action@v1.22
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        goos: "linux"
-        goarch: "amd64"
-        project_path: "./nuv"
-        build_command: "env TAG=${{github.ref_name}} bash cibuild.sh"
-        binary_name: "nuv"
-        extra_files: LICENSE
-    - name: Release Go Binaries linux-arm64
-      uses: wangyoucao577/go-release-action@v1.22
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        goos: "linux"
-        goarch: "arm64"
-        project_path: "./nuv"
-        build_command: "env TAG=${{github.ref_name}} bash cibuild.sh"
-        binary_name: "nuv"
-        extra_files: LICENSE
-    - name: Release Go Binaries darwin-amd64
-      uses: wangyoucao577/go-release-action@v1.22
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        goos: "darwin"
-        goarch: "amd64"
-        project_path: "./nuv"
-        build_command: "env TAG=${{github.ref_name}} bash cibuild.sh"
-        binary_name: "nuv"
-        extra_files: LICENSE
-    - name: Release Go Binaries darwin-arm64
-      uses: wangyoucao577/go-release-action@v1.22
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        goos: "darwin"
-        goarch: "arm64"
-        project_path: "./nuv"
-        build_command: "env TAG=${{github.ref_name}} bash cibuild.sh"
-        binary_name: "nuv"
-        extra_files: LICENSE
-    - name: Release Go Binaries windows-amd64
-      uses: wangyoucao577/go-release-action@v1.22
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        goos: "windows"
-        goarch: "amd64"
-        project_path: "./nuv"
-        build_command: "env TAG=${{github.ref_name}} bash cibuild.sh"
-        binary_name: "nuv"
-        extra_files: LICENSE
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: nuv-*
+        tag: ${{ github.ref }}
+        overwrite: true
+        file_glob: true
