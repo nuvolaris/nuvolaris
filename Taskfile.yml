@@ -78,7 +78,7 @@ tasks:
   destroy: 
     - task: d:destroy
 
-  nsetup:
+  nuv:
     - task: kind:config
     - nuv setup --context=kind-nuvolaris --apihost=auto --image-tag={{.TAG}}
 

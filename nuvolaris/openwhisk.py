@@ -25,7 +25,7 @@ import kopf
 
 CONTROLLER_SPEC = "state.controller.spec"
 
-# this functtions returns
+# this functtions returns the apihost to be stored as annotation
 def apihost(apiHost):
     url = urllib.parse.urlparse("https://pending")
     if len(apiHost) > 0: 
