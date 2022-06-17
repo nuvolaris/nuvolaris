@@ -49,8 +49,6 @@ spec:
         volumeMounts:
         - mountPath: /redis-master
           name: config
-        #- mountPath: /redis-master-data
-        #  name: data
       volumes:
         - name: config
           configMap:
@@ -58,5 +56,3 @@ spec:
             items:
             - key: redis-conf
               path: redis.conf
-    #    - name: data
-    #      emptyDir: {}

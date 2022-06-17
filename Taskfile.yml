@@ -20,7 +20,7 @@ version: '3'
 vars:
   KUBE:
     sh: ./detect.sh
-  BASETAG: 0.2.0-trinity
+  BASETAG: 0.2.1-trinity
   IMAGE: nuvolaris/nuvolaris-operator
   REPO: ghcr.io
   TAG:
@@ -52,7 +52,7 @@ tasks:
       - ssh-key
       - configure-env
     cmds:
-      - task: kind:config
+      - task: kind:get-config
       - poetry install
     status:
       - test -e $GOBIN/kopf
@@ -72,8 +72,8 @@ tasks:
   operator:
     - task: t:operator
 
-  deploy: 
-    - task: d:deploy
+  instance: 
+    - task: d:instance
 
   destroy: 
     - task: d:destroy
@@ -82,9 +82,9 @@ tasks:
     - task: kind:config
     - nuv setup --context=kind-nuvolaris --apihost=auto --image-tag={{.TAG}}
 
-  install:
+  all:
     - task: operator
-    - task: deploy
+    - task: instance
     - task: config
     - task: hello
     - task: ping

@@ -16,30 +16,32 @@
 # under the License.
 #
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   namespace: nuvolaris
   name: controller
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: controller
+  serviceName: "controller"
   template:
     metadata:
       labels:
         app: controller
     spec:
       serviceAccountName: controller
+      restartPolicy: Always
       containers:
       - name: openwhisk-standalone
         image: ghcr.io/nuvolaris/openwhisk-standalone:0.2.0-trinity.22031709
-        #command: ["sleep", "inf"]
         imagePullPolicy: IfNotPresent
         ports:
+        #- containerPort: 3232
+        #  name: playground
         - containerPort: 3233
           name: apihost
-        - containerPort: 3232
-          name: playground
         - containerPort: 7896
           name: debugger
         lifecycle:

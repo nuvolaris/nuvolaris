@@ -74,7 +74,7 @@ def whisk_create(spec, name, **kwargs):
             state['redis'] = "on"
             logging.info(msg)
         except:
-            exception("cannot create redis")
+            logging.exception("cannot create redis")
             state['redis']= "error"
     else:
         state['redis'] = "off"
@@ -85,7 +85,7 @@ def whisk_create(spec, name, **kwargs):
             state['openwhisk'] = "on"
             logging.info(msg)
         except:
-            exception("cannot create openwhisk")
+            logging.exception("cannot create openwhisk")
             state['openwhisk']= "error"
     else:
         state['openwhisk'] = "off"
@@ -148,6 +148,7 @@ def service_update(old, new, name, **kwargs):
     
     apihost = openwhisk.apihost(ingress)
     openwhisk.annotate(f"apihost={apihost}")
+    
 
 #@kopf.on.field("sts", field='status.availableReplicas')
 def deploy_update(old, new, name, **kwargs):

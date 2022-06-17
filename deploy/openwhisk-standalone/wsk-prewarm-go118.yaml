@@ -15,22 +15,15 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-version: '3'
-
-#dotenv: ['../.env']
-tasks:
-
-  create: init.sh
-
-  destroy: init.sh destroy
-
-  list: kind get clusters
-
-  get-config: kind get kubeconfig --name=nuvolaris >kind.kubeconfig
-  
-  config: |-
-    task: get-config
-    cp kind.kubeconfig ~/.kube/config
-    kubectl get nodes
-
-  labels: kubectl get nodes -ojsonpath='{.items[].metadata.labels}' | jq .
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: wsk-prewarm-go118
+  namespace: nuvolaris
+spec:
+  containers:
+  - name: nodejs
+    image: "openwhisk/action-golang-v1.18:nightly"
+    command: ["/bin/true"]
+  restartPolicy: Never

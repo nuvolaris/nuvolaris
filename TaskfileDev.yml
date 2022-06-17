@@ -33,7 +33,7 @@ tasks:
     cmds:
       - ./run.sh {{.CLI_ARGS}}
 
-  deploy:
+  instance:
     -  envsubst <{{.CONFIG}} | kubectl -n nuvolaris apply -f -
 
   show:
