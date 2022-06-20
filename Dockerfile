@@ -15,10 +15,10 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 ARG OPTAG=missing-build-arg
 ENV CONTROLLER_IMAGE=ghcr.io/nuvolaris/openwhisk-standalone
-ENV CONTROLLER_TAG=0.2.0-trinity.22031709
+ENV CONTROLLER_TAG=0.2.1-trinity.22062010
 ENV OPERATOR_IMAGE=ghcr.io/nuvolaris/nuvolaris-operator
 ENV OPERATOR_TAG=${OPTAG}
 # configure dpkg && timezone
@@ -27,7 +27,7 @@ ENV TZ=Europe/London
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # install Python
 RUN apt-get update && apt-get -y upgrade &&\
-    apt-get -y install apt-utils python3.9 python3.9-venv curl sudo telnet inetutils-ping
+    apt-get -y install apt-utils python3.10 python3.10-venv curl sudo telnet inetutils-ping
 # Download Kubectl
 RUN KVER="v1.23.0" ;\
     ARCH="$(dpkg --print-architecture)" ;\
@@ -59,6 +59,6 @@ ADD run.sh dbinit.sh pyproject.toml poetry.lock /home/nuvolaris/
 RUN chown -R nuvolaris:nuvolaris /home/nuvolaris
 USER nuvolaris
 ENV PATH=/home/nuvolaris/.local/bin:/usr/local/bin:/usr/bin:/sbin:/bin
-RUN curl -sSL https://install.python-poetry.org | python3.9 -
+RUN curl -sSL https://install.python-poetry.org | python3.10 -
 RUN cd /home/nuvolaris ; poetry install
 CMD ./run.sh

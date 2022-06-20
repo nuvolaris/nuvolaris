@@ -38,11 +38,36 @@ In order to test the operator against different clusters, you can list all the c
 
 ## Developing the operator
 
-You can develop the operator without having to deploy it. Start it with `task run`.  Then open another terminal and Use `task deploy` to apply a configuration depending on the current clusters, file and `task d:destroy` to remove it. 
+
+You can develop the operator without having to deploy it. Start it with `task run`.  
 
 You can also interact with a python interpreter with the same libraries and some useful imports and configuration ready (most notably the autoreload) with `task cli`. Check `TaskfileDev.yml` for other useful targets for cleanup and debug.
 
-Finally, you can run unit tests with `task utest`, integration tests with `task itest` and deployiment tests with `task dtest`. Also there are the targets `task uitest` to run the first two,  and `uidtest` to run all of them.
+### Creating the operator and the cluster
+
+Then open another terminal and Use `task instance` to apply a crd instance depending on the current clusters.
+
+The crd instance used it is defined by the type of kubernetes custer you are using. The script './detect.sh' tries to detect it. The configuartion used is under `tests/<detected>/whisk.yaml`
+
+If you have not changed the cluster the default cluster is 'kind' so it will apply the configuration `tests/kind/whisk.yaml`
+
+You can change the configuration passing the `WHISK` parameter (without the .yaml).  So if you are running an `eks` cluster and you want to use your configuration `custom` the command `task instance WHISK=custom` will use `tests/eks/custom.yaml`
+
+### Cleanup
+
+Cleanup targets:
+
+- `task destroy` removes the instance but not the operator so you can recreate the cluster with `task instance` maybe with different parameters
+- `task clean` removes everything including the operator and pvc
+- If something get stuck and the cleanup does not complete `task defin` can help removing incomplete finalizers (you need to open another terminal to run it)
+
+### Running tests
+
+Finally, you can run various tests: 
+- `task utest`: unit tests 
+- `task itest`: integration tests
+- `task dtest`: deployment tests 
+- `task wtest`: whisk tests
 
 The target `task all-kubes -- <target>` runs a group of tests against all the available clusters, so you can run all the tests with `task all-kubes -- utest`
 
@@ -58,7 +83,7 @@ To test it against other clusters, you need to build a public image on github. Y
 
 If you have push access to Nuvolaris repository just the tag to trigger the GitHub Action to buld and publish it. 
 
-If you have your own repository, you can run
+If you have your own repository, you can use
 
 `task IMAGE=<user>/nuvolaris-operator buildx-and-push`
 
@@ -68,12 +93,13 @@ First, [switch to the cluster](#kubernetes-cluster) you want to test with and [r
 
 Once you have the right cluster and the image properly published, you can test the operator with the following targets:
 
-- `t:build-and-load`: build and load the operator in the cluster
-- `t:operator`: deploys the operator in the current cluster.
-- `t:instance`: deploy an instance of the configuration to build an actual cluster.
-- `t:config`: once it is deployed, extracts the current configuration to use `wsk`
-- `t:hello`: runs a simple hello world test
-- `t:destroy`: destroy the current deployment
+- `build-and-load`: build and load the operator in the cluster
+- `operator`: deploys the operator in the current cluster.
+- `instance`: deploy an instance of the configuration to build an actual cluster.
+- `config`: once it is deployed, extracts the current configuration to use `wsk`
+- `hello`: runs a simple hello world test
+- `ping`: runs a ping test of redis
+- `destroy`: destroy the current deployment
 
 # Creating a new cluster
 

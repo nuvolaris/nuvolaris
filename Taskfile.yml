@@ -24,7 +24,7 @@ vars:
   IMAGE: nuvolaris/nuvolaris-operator
   REPO: ghcr.io
   TAG:
-    sh: git describe --tags --abbrev=0 2>/dev/null || echo nightly
+    sh: git describe --tags --abbrev=0 2>/dev/null
   N: ""
   G: ""
   T: ""

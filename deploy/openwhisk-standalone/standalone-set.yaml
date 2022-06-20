@@ -35,7 +35,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: openwhisk-standalone
-        image: ghcr.io/nuvolaris/openwhisk-standalone:0.2.0-trinity.22031709
+        image: ghcr.io/nuvolaris/openwhisk-standalone:0.2.1-trinity.22062010
         imagePullPolicy: IfNotPresent
         ports:
         #- containerPort: 3232
