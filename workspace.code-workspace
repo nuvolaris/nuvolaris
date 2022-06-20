@@ -28,6 +28,9 @@
 		},
 		{
 			"path": "nuvolaris-cli"
+		},
+		{
+			"path": "nuvolaris-controller/openwhisk/tests/src/test/scala/org/apache/openwhisk/core/controller"
 		}
 	],
 	"settings": {

@@ -31,7 +31,7 @@ export PS1="[\[\e[32m\]\W:\[\e[91m\]\$(parse_git_branch)\[\e[00m\]]$ "
 
 # versions
 export NODENV_VERSION=16.13.0
-export PYENV_VERSION=3.9.9
+export PYENV_VERSION=3.10.0
 export GOENV_VERSION=1.18.3
 export DOCKER_VERSION=19
 export JAVA_VERSION=8
@@ -220,6 +220,9 @@ do CMD="$(basename $REF)"
    else go install $REF@latest
    fi
 done
+
+# fix for git
+git config --global --add safe.directory /workskspace
 
 # replace
 if ! which replace >/dev/null
