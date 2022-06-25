@@ -28,6 +28,32 @@ vars:
 dotenv:
   - .env
 
+includes:
+  d:
+    taskfile: TaskfileDev.yml
+  t: 
+    taskfile: TaskfileTest.yml
+  b: 
+    taskfile: TaskfileBuild.yml
+  kind:
+    taskfile: clusters/kind.yml
+    dir: clusters
+  eks:
+    taskfile: clusters/eks.yml
+    dir: clusters
+  aks:
+    taskfile: clusters/aks.yml
+    dir: clusters
+  lks:  
+    taskfile: clusters/lks.yml
+    dir: clusters
+  gke:
+    taskfile: clusters/gke.yml
+    dir: clusters
+  m8s:
+    taskfile: clusters/microk8s.yml
+    dir: clusters
+
 tasks:
 
   default: 
@@ -139,7 +165,6 @@ tasks:
         done
     silent: true
 
-
   iclean: rm -f deploy/*/kustomization.yaml deploy/*/__*
 
   itest: 
@@ -209,6 +234,9 @@ tasks:
         fi
     silent: true
 
+  buildx-and-push:
+    - task: b:buildx-and-push
+
   1: task use N=1
   2: task use N=2
   3: task use N=3
@@ -219,30 +247,3 @@ tasks:
   8: task use N=8
   9: task use N=9
 
-includes:
-  d:
-    taskfile: TaskfileDev.yml
-  t: 
-    taskfile: TaskfileTest.yml
-  b: 
-    taskfile: TaskfileBuild.yml
-  kind:
-    taskfile: clusters/kind.yml
-    dir: clusters
-    optional: yes
-  eks:
-    taskfile: clusters/eks.yml
-    dir: clusters
-    optional: yes
-  aks:
-    taskfile: clusters/aks.yml
-    dir: clusters
-    optional: yes
-  lks:  
-    taskfile: clusters/lks.yml
-    dir: clusters
-    optional: yes
-  gke:
-    taskfile: clusters/gke.yml
-    dir: clusters
-    optional: yes

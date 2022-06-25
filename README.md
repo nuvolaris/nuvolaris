@@ -153,9 +153,8 @@ This targes runs a group of tests against all the available clusters, so you can
 
 # Reference
 
-- `use` (or nothing) lists all the clusters; 
+- `use` (default task) lists all the clusters; 
 - `1`, `2`...`9` selects the corresponding entry
-- `build-and-load`: build and load the operator in the cluster
 - `operator`: deploys the operator in the current cluster.
 - `instance`: deploy an instance of the configuration to build an actual cluster.
 - `destroy`: destroy the current deployment
@@ -169,6 +168,13 @@ This targes runs a group of tests against all the available clusters, so you can
 - `hello`: runs a simple hello world test
 - `ping`: runs a ping test of redis
 - `all-kubes -- <target>`: execute the `<target>` against all the configured kubes
+
+Build targets
+
+- `b:buildx-and-push`: build and push the operator in multiple architectectures (slow)
+- `b:build-and-load`: build and load the operator in the kind cluster
+- `b:docker-login`: login into the github docker registry 
+- `b:build-and-push`: build and push the operator in the current architecture
 
 Currently the following clusters are supported: 
 

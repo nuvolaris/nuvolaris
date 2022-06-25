@@ -18,7 +18,7 @@ tasks:
     echo $GITHUB_TOKEN | docker login ghcr.io -u $GITHUB_USER --password-stdin
 
   build: >
-      echo docker build  
+      docker build  
       -t ${MY_OPERATOR_IMAGE:-{{.OPERATOR_IMAGE}}}:{{.OPERATOR_TAG}}
       --build-arg=OPERATOR_IMAGE_DEFAULT=${MY_OPERATOR_IMAGE:-{{.OPERATOR_IMAGE}}}
       --build-arg=OPERATOR_TAG_DEFAULT={{.OPERATOR_TAG}} 
