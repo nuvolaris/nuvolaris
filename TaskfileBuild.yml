@@ -1,0 +1,45 @@
+version: '3'
+
+vars:
+  # taken from the tag
+  OPERATOR_TAG:
+    sh: git describe --tags --abbrev=0 2>/dev/null
+  # taken from the Dockerfile - ovverdable with MY_OPERATOR_IMAGE
+  OPERATOR_IMAGE:
+    sh: awk -F= '/ARG OPERATOR_IMAGE_DEFAULT=/ { print $2 ; exit }' Dockerfile
+
+tasks:
+  image:
+    cmds: 
+      - echo "Operator=${MY_OPERATOR_IMAGE:-{{.OPERATOR_IMAGE}}}:{{.OPERATOR_TAG}}"      
+    silent: true
+
+  docker-login: >
+    echo $GITHUB_TOKEN | docker login ghcr.io -u $GITHUB_USER --password-stdin
+
+  build: >
+      echo docker build  
+      -t ${MY_OPERATOR_IMAGE:-{{.OPERATOR_IMAGE}}}:{{.OPERATOR_TAG}}
+      --build-arg=OPERATOR_IMAGE_DEFAULT=${MY_OPERATOR_IMAGE:-{{.OPERATOR_IMAGE}}}
+      --build-arg=OPERATOR_TAG_DEFAULT={{.OPERATOR_TAG}} 
+      {{.CLI_ARGS}} .
+
+  build-and-push:
+    - task: build 
+    - docker push ${MY_OPERATOR_IMAGE:-{{.OPERATOR_IMAGE}}}:{{.OPERATOR_TAG}}
+
+  build-and-load:
+    - task: build
+    - > 
+      kind load docker-image 
+      ${MY_OPERATOR_IMAGE:-{{.OPERATOR_IMAGE}}}:{{.OPERATOR_TAG}} 
+      --name=nuvolaris
+
+  buildx-and-push:
+    - > 
+      docker buildx build 
+      --platform linux/amd64,linux/arm64 
+      -t ${MY_OPERATOR_IMAGE:-{{.OPERATOR_IMAGE}}}:{{.OPERATOR_TAG}}
+      --build-arg OPERATOR_IMAGE_DEFAULT=${MY_OPERATOR_IMAGE:-{{.OPERATOR_IMAGE}}}
+      --build-arg OPERATOR_TAG_DEFAULT={{.OPERATOR_TAG}} 
+      . --push

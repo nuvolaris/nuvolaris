@@ -18,25 +18,12 @@
 version: '3'
 
 vars:
+  G: ""
+  N: ""
+  T: ""
+  BASETAG: 0.2.1-trinity
   KUBE:
     sh: ./detect.sh
-  BASETAG: 0.2.1-trinity
-  IMAGE: nuvolaris/nuvolaris-operator
-  REPO: ghcr.io
-  TAG:
-    sh: git describe --tags --abbrev=0 2>/dev/null
-  N: ""
-  G: ""
-  T: ""
-
-env:
-  OPERATOR_TAG: "{{.TAG}}"
-  OPERATOR_IMAGE:
-    sh: awk -F= '/OPERATOR_IMAGE/ { print $2}' <Dockerfile
-  CONTROLLER_IMAGE: 
-    sh: awk -F= '/CONTROLLER_IMAGE/ { print $2}' <Dockerfile
-  CONTROLLER_TAG: 
-    sh: awk -F= '/CONTROLLER_TAG/ { print $2}' <Dockerfile
 
 dotenv:
   - .env
@@ -105,15 +92,6 @@ tasks:
     - git tag -d $(git tag) 
     - git tag -f {{.BASETAG}}.$(date +%y%m%d%H) 
     - git tag
-
-  build: docker build  -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} --build-arg OPTAG={{.TAG}} {{.CLI_ARGS}} .
-
-  build-and-load:
-    - task: build
-    - kind load docker-image {{.REPO}}/{{.IMAGE}}:{{.TAG}} --name=nuvolaris
-
-  buildx-and-push:
-    - docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} --build-arg OPTAG={{.TAG}} . --push
 
   # configure env
   configure-env:
@@ -184,7 +162,7 @@ tasks:
     - task: t:instance
     - task: wtest
 
-  wtest:
+  actions:
     - task: t:config
     - task: t:hello
     - task: t:ping
@@ -216,7 +194,6 @@ tasks:
   kube-test: 
     cmds:
       - task dtest 2>/dev/null >/dev/null
-    
 
   use: 
     cmds:
@@ -247,6 +224,8 @@ includes:
     taskfile: TaskfileDev.yml
   t: 
     taskfile: TaskfileTest.yml
+  b: 
+    taskfile: TaskfileBuild.yml
   kind:
     taskfile: clusters/kind.yml
     dir: clusters

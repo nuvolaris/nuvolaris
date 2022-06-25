@@ -16,11 +16,13 @@
 # under the License.
 #
 FROM ubuntu:22.04
-ARG OPTAG=missing-build-arg
-ENV CONTROLLER_IMAGE=ghcr.io/nuvolaris/openwhisk-standalone
-ENV CONTROLLER_TAG=0.2.1-trinity.22062010
-ENV OPERATOR_IMAGE=ghcr.io/nuvolaris/nuvolaris-operator
-ENV OPERATOR_TAG=${OPTAG}
+ARG CONTROLLER_IMAGE=ghcr.io/nuvolaris/openwhisk-standalone
+ARG CONTROLLER_TAG=0.2.1-trinity.22062010
+ARG OPERATOR_IMAGE_DEFAULT=ghcr.io/nuvolaris/nuvolaris-operator
+ARG OPERATOR_TAG_DEFAULT=0.2.1-trinity.22061708
+ENV OPERATOR_IMAGE=${OPERATOR_IMAGE_DEFAULT}
+ENV OPERATOR_TAG=${OPERATOR_TAG_DEFAULT}
+
 # configure dpkg && timezone
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 ENV TZ=Europe/London

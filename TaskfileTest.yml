@@ -18,10 +18,6 @@
 version: '3'
 
 vars:
-  IMAGE: nuvolaris/nuvolaris-operator
-  REPO: ghcr.io
-  TAG:
-    sh: git describe --tags --abbrev=0 2>/dev/null || echo nightly
   KUBE:
     sh: ./detect.sh
   WHISK: '{{default "whisk" .WHISK}}'
@@ -37,7 +33,8 @@ tasks:
       apiVersion: kustomize.config.k8s.io/v1beta1
       kind: Kustomization
       images:
-      - name: {{.REPO}}/{{.IMAGE}}
+      - name: ghcr.io/nuvolaris/nuvolaris-operator:latest
+        newName: ${MY_OPERATOR_IMAGE:-{{.OPERATOR_IMAGE}}}
         newTag: {{.TAG}}
       resources:
       - nuvolaris-common.yaml
@@ -98,6 +95,7 @@ tasks:
     echo $AUTH
     echo wsk property set --apihost $APIHOST --auth $AUTH
     wsk property set --apihost $APIHOST --auth $AUTH
+    nuv wskprops --apihost $APIHOST --auth $AUTH
     while ! wsk action list
     do echo $(( N++)) "waiting for the load balancer to be ready..." ; sleep 10
     done

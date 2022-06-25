@@ -25,16 +25,6 @@ All the code is in the package `nuvolaris`.  Events are handled in `main.py`.
 
 Each event handlers uses utility functions you can find the various service specific files like `openwhisk` or `couchdb`.
 
-Each function is implemented
-
-
-## Developmnet Targets
-
-
-The operator will control Kubernetes either using locally configured `kubeconfig`, or within Kubernetes itself using the configuration files that Kubernetes makes available.
-
-You should start the operator with `test run` that will initialize the environment so the operator can connect to the current configured Kubernetes and control it. You can also interact on the CLI and execute the code using `task cli`.
-
 ## Development Workflow 
 
 In generale the operator react to events and execute kustomizations.
@@ -65,8 +55,7 @@ In `2` there is a customization to create a `patch` for it. There are a few util
 
 4. Finally you apply the configuration with `kube.apply` - there are more utility functions running `kubectl` in a pythonic way.
 
-
-# Testing:
+# Testing
 
 There are multiple level of testings
 
@@ -75,6 +64,4 @@ There are multiple level of testings
 - you can run the operator locally without deploying it (with `task run`) and run task `deploy` to deploy a test CRD.
 - you can then deploy in local kind with `task build-and-load` without having to publish it, then  execute tests (see the TaskfileTest.yml)
 - finally you test built the image and publish it with `task image-tag ; git push --tags`, wait it builds and test against real kubernetes, using the Taskfle
-
-
 
