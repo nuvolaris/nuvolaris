@@ -117,7 +117,7 @@ tasks:
   image-tag: 
     - git tag -d $(git tag) 
     - git tag -f {{.BASETAG}}.$(date +%y%m%d%H) 
-    - git tag
+    - env PAGER= git tag
 
   # configure env
   configure-env:
