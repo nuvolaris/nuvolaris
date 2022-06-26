@@ -132,12 +132,12 @@ GITHUB_USER=<your-user>
 GITHUB_TOKEN=<your-access-token>
 ```
 
-You cannot override the tag of the operator you have to generate a git tag: `task image-tag`. Note the tag is unique for the current hour (it embeds: YYMMDDhh)
+You cannot override the tag of the operator you have to generate a git tag: `task image-tag`. Note the tag is unique for the current hour (it embeds: YYMMDDhh).
 
 If you set those variables you can use 
-- `task docker-login` to log to  
-- `task build-and-push` to build for one single architecture (faster but limited to your architectur)
-- `task buildx-and-push` to build for all the architectues (slower)
+- `task b:docker-login` to log to the current docker registry
+- `task b:build-and-push` to build for one single architecture (faster but limited to your architecture)
+- `task buildx-and-push` to build for all the architectues (slower, used by the GitHub action)
 
 Remember that for GitHub Containter Registry you have to make public the image you are using to tlet it to be accessible by other Kubernetes
 

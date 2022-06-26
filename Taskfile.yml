@@ -234,6 +234,9 @@ tasks:
         fi
     silent: true
 
+  build-and-load:
+    - task: :build-and-load
+
   buildx-and-push:
     - task: b:buildx-and-push
 
