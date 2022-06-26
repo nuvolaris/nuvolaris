@@ -20,6 +20,11 @@ kind: Ingress
 metadata:
   name: standalone
   namespace: nuvolaris
+  annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: 48m
+      nginx.ingress.kubernetes.io/proxy-connect-timeout: 600
+      nginx.ingress.kubernetes.io/proxy-send-timeout: 600
+      nginx.ingress.kubernetes.io/proxy-read-timeout: 600
 spec:
   rules:
     - http:
