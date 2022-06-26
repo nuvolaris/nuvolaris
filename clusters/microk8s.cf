@@ -1,18 +1,22 @@
 Resources:
-  WebAppInstance:
+  MyInstance:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: ami-052efd3df9dad4825 # ImageID valid only in us-east-1 region
       InstanceType: t2.medium
-      KeyName: nuvolaris 
+      KeyName: nuvolaris-dev 
       SecurityGroupIds:
-        - !Ref WebAppSecurityGroup
+        - !Ref MySecurityGroup
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 30
+            DeleteOnTermination: true        
       Tags:
         - Key: Name
           Value: 'nuvolaris-dev'  
       UserData:
-        Fn::Base64:
-          !Sub |
+        Fn::Base64: !Sub |
             #!/bin/bash
             DNS="$(curl -s checkip.amazonaws.com).nip.io"
             apt update
@@ -27,7 +31,7 @@ Resources:
             sudo microk8s start
             microk8s config | sed -e "s/server: .*/server: https:\/\/$DNS:16443/" >/etc/kubeconfig
 
-  WebAppSecurityGroup:
+  MySecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupName: "dev-nuvolaris-sg"
@@ -49,3 +53,10 @@ Resources:
           FromPort: 16443
           ToPort: 16443
           CidrIp: 0.0.0.0/0
+  
+  MyIPAssociation:
+    Type: AWS::EC2::EIPAssociation
+    Properties: 
+      AllocationId: "eipalloc-09cbaf94bb7b02919"
+      InstanceId: !Ref MyInstance
+ 

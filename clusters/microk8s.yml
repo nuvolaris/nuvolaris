@@ -17,39 +17,49 @@
 #
 version: '3'
 
+vars: 
+  REGION: "us-east-1"
+  # preallocated elastic ip and dns pointing to that IP
+  HOSTNAME: "dev.nuvolaris.io"
 
 tasks:
 
   create: 
     - > 
       aws cloudformation create-stack 
-      --stack-name nuvolaris-dev --region us-east-1
+      --stack-name nuvolaris-dev --region {{.REGION}}
       --template-body file://microk8s.cf
     - >
       aws cloudformation wait stack-create-complete
-      --stack-name nuvolaris-dev --region us-east-1
+      --stack-name nuvolaris-dev --region {{.REGION}}
 
   destroy: 
     - >
       aws cloudformation delete-stack 
-      --stack-name nuvolaris-dev --region us-east-1
+      --stack-name nuvolaris-dev --region {{.REGION}}
     - >
       aws cloudformation wait stack-delete-complete
-      --stack-name nuvolaris-dev --region us-east-1
+      --stack-name nuvolaris-dev --region {{.REGION}}
 
-  config: 
+  get-ip: 
     - |-
-      export IP=$(aws ec2 describe-instances \
-        --filters 'Name=tag:Name,Values=nuvolaris-dev' \
-        --filters Name=instance-state-name,Values=running \
-        --region=us-east-1 --output json \
-        | jq -r '.Reservations[].Instances[].PublicIpAddress')
-        ssh -i id_rsa -o "StrictHostKeyChecking=no" \
-        ubuntu@$IP sudo cloud-init status --wait
-        scp -i id_rsa -o "StrictHostKeyChecking=no" \
-        ubuntu@$IP:/etc/kubeconfig microk8s.kubeconfig
+      aws ec2 describe-instances \
+      --filters 'Name=tag:Name,Values=nuvolaris-dev' \
+      --filters Name=instance-state-name,Values=running \
+      --region={{.REGION}} --output json \
+      | jq -r '.Reservations[].Instances[].PublicIpAddress'
+      
+  enter:
+      ssh -i id_rsa -o "StrictHostKeyChecking=no" ubuntu@{{.HOSTNAME}} 
   
-  import-key: > 
-      aws ec2 import-key-pair --key-name "nuvolaris" 
-      --public-key-material fileb://id_rsa.pub --region us-east-1
+  config: 
+      - |-
+        ssh -i id_rsa -o "StrictHostKeyChecking=no" \
+        ubuntu@{{.HOSTNAME}} sudo cloud-init status --wait
+        scp -i id_rsa -o "StrictHostKeyChecking=no" \
+        ubuntu@{{.HOSTNAME}}:/etc/kubeconfig microk8s.kubeconfig
 
+
+  import-key: > 
+      aws ec2 import-key-pair --key-name "nuvolaris-dev" 
+      --public-key-material fileb://./id_rsa.pub --region {{.REGION}}

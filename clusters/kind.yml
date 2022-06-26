@@ -26,7 +26,7 @@ tasks:
 
   list: kind get clusters
 
-  get-config: kind get kubeconfig --name=nuvolaris >kind.kubeconfig
+  get-config: kind get kubeconfig --name=gnuvolaris >kind.kubeconfig
   
   config: |-
     task: get-config

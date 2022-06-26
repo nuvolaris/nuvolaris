@@ -20,6 +20,13 @@ version: '3'
 vars:
   KUBE:
     sh: ./detect.sh
+  # taken from the tag
+  OPERATOR_TAG:
+    sh: git describe --tags --abbrev=0 2>/dev/null
+  # taken from the Dockerfile - ovverdable with MY_OPERATOR_IMAGE
+  OPERATOR_IMAGE:
+    sh: awk -F= '/ARG OPERATOR_IMAGE_DEFAULT=/ { print $2 ; exit }' Dockerfile
+
   WHISK: '{{default "whisk" .WHISK}}'
   CONFIG: "tests/{{.KUBE}}/{{.WHISK}}.yaml"
   T: ""
@@ -35,7 +42,7 @@ tasks:
       images:
       - name: ghcr.io/nuvolaris/nuvolaris-operator:latest
         newName: ${MY_OPERATOR_IMAGE:-{{.OPERATOR_IMAGE}}}
-        newTag: {{.TAG}}
+        newTag: {{.OPERATOR_TAG}}
       resources:
       - nuvolaris-common.yaml
       - operator-roles.yaml
