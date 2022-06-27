@@ -52,6 +52,14 @@ data:
                     limits-actions-invokes-concurrent = {{actions_invokes_concurrent}}
                 }
 
+                api {
+                    host {
+                        proto = "http"
+                        port = "3233"
+                        name = "controller"
+                    }
+                }
+
                 kubernetes {
                     timeouts {
                         # Use higher timeout for run as in local dev the required Docker images may not be pre pulled

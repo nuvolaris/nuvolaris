@@ -16,8 +16,8 @@
 # under the License.
 #
 FROM ubuntu:22.04
-ARG CONTROLLER_IMAGE=ghcr.io/nuvolaris/openwhisk-standalone
-ARG CONTROLLER_TAG=0.2.1-trinity.22062010
+ENV CONTROLLER_IMAGE=ghcr.io/nuvolaris/openwhisk-standalone
+ENV CONTROLLER_TAG=0.2.1-trinity.22062010
 ARG OPERATOR_IMAGE_DEFAULT=ghcr.io/nuvolaris/nuvolaris-operator
 ARG OPERATOR_TAG_DEFAULT=0.2.1-trinity.22061708
 ENV OPERATOR_IMAGE=${OPERATOR_IMAGE_DEFAULT}

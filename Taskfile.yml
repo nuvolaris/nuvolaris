@@ -185,12 +185,15 @@ tasks:
   dtest:
     - task: t:operator
     - task: t:instance
-    - task: wtest
+    - task: actions
 
   actions:
     - task: t:config
     - task: t:hello
     - task: t:ping
+    - task: t:echo
+    - task: t:api
+
 
   test:
     - task: clean
@@ -235,7 +238,7 @@ tasks:
     silent: true
 
   build-and-load:
-    - task: :build-and-load
+    - task: b:build-and-load
 
   buildx-and-push:
     - task: b:buildx-and-push

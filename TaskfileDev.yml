@@ -23,9 +23,14 @@ vars:
   # taken from the tag
   OPERATOR_TAG:
     sh: git describe --tags --abbrev=0 2>/dev/null
-  # taken from the Dockerfile - ovverdable with MY_OPERATOR_IMAGE
+  # taken from the Dockerfile - ovveridable with MY_OPERATOR_IMAGE
   OPERATOR_IMAGE:
     sh: awk -F= '/ARG OPERATOR_IMAGE_DEFAULT=/ { print $2 ; exit }' Dockerfile
+  # taken from the Dockerfile
+  CONTROLLER_TAG:
+    sh: awk -F= '/ENV CONTROLLER_TAG=/ { print $2 ; exit }' Dockerfile
+  CONTROLLER_IMAGE:
+    sh: awk -F= '/ENV CONTROLLER_IMAGE=/ { print $2 ; exit }' Dockerfile
 
 tasks:
 
@@ -34,8 +39,13 @@ tasks:
   cli: poetry run ipython -i profile.ipy
 
   run: 
-    cmds:
-      - ./run.sh {{.CLI_ARGS}}
+    cmds:     
+      # note that the .env is loaded after the env pameters
+      - env OPERATOR_IMAGE="${MY_OPERATOR_IMAGE:-{{.OPERATOR_IMAGE}}}" ./run.sh
+    env:
+      CONTROLLER_IMAGE: "{{.CONTROLLER_IMAGE}}"
+      CONTROLLER_TAG: "{{.CONTROLLER_TAG}}"
+      OPERATOR_TAG: "{{.OPERATOR_TAG}}"
 
   instance:
     -  envsubst <{{.CONFIG}} | kubectl -n nuvolaris apply -f -

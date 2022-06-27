@@ -28,9 +28,9 @@ tasks:
 
   get-config: kind get kubeconfig --name=nuvolaris >kind.kubeconfig
   
-  config: |-
-    task: get-config
-    cp kind.kubeconfig ~/.kube/config
-    kubectl get nodes
+  config: 
+    - task: get-config
+    - cp kind.kubeconfig ~/.kube/config
+    - kubectl get nodes
 
   labels: kubectl get nodes -ojsonpath='{.items[].metadata.labels}' | jq .

@@ -118,3 +118,13 @@ tasks:
     - wsk package update redis -p redis redis://redis
     - wsk action update redis/ping tests/ping.js
     - wsk action invoke redis/ping -r | grep "PONG"
+
+  echo:
+    - wsk action update echo tests/echo.js -a provide-api-key true
+    - wsk action invoke echo -r | grep "__OW_API_KEY"
+
+  api:
+    - wsk action update api tests/api.js -a provide-api-key true
+    - wsk action invoke api -r | grep '"api"' 
+
+  
