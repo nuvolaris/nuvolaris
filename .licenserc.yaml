@@ -22,6 +22,7 @@ header:
 
   paths-ignore:
     - 'playground'
+    - '**/*.off'
     - '**/*.excalidraw'
     - '.pdm.toml'
     - 'nodesource_setup.sh'
