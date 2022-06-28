@@ -176,6 +176,7 @@ tasks:
         do  
             if test -e "$test"
             then  echo "*** [{{.KUBE}}] $test"
+                  rm -f deploy/*/kustomization.yaml deploy/*/__*
                   poetry run ipython $test {{.CLI_ARGS}}
             fi
         done
