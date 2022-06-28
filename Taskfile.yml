@@ -65,7 +65,6 @@ tasks:
       - ssh-key
       - configure-env
     cmds:
-      - task: kind:get-config
       - poetry install
     status:
       - test -e $GOBIN/kopf
