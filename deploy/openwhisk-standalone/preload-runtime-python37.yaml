@@ -19,11 +19,11 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: wsk-prewarm-go118
+  name: preload-runtime-python37
   namespace: nuvolaris
 spec:
   containers:
   - name: nodejs
-    image: "openwhisk/action-golang-v1.18:nightly"
+    image: "openwhisk/action-python-v3.7:nightly"
     command: ["/bin/true"]
   restartPolicy: Never

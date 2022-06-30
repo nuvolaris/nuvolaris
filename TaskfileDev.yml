@@ -22,7 +22,7 @@ vars:
   CONFIG: "tests/{{.KUBE}}/{{.WHISK}}.yaml"
   # taken from the tag
   OPERATOR_TAG:
-    sh: git describe --tags --abbrev=0 2>/dev/null || echo latest
+    sh: git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD
   # taken from the Dockerfile - ovveridable with MY_OPERATOR_IMAGE
   OPERATOR_IMAGE:
     sh: awk -F= '/ARG OPERATOR_IMAGE_DEFAULT=/ { print $2 ; exit }' Dockerfile
