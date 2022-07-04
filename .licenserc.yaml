@@ -22,6 +22,7 @@ header:
 
   paths-ignore:
     - '**/*.excalidraw'
+    - '**/*.off'
     - '.pdm.toml'
     - 'nodesource_setup.sh'
     - '**/pdm.lock'
@@ -65,6 +66,7 @@ header:
     - 'nuvolaris-inc/**'
     - '**/auth.guest'
     - '**/auth.whisk.system'
+    - '**/.task/**'
 
 
 dependency:

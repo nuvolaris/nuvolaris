@@ -22,7 +22,7 @@ ENV TZ=Europe/London
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # add docker and java (amazon corretto) repos
 RUN apt-get update && apt-get -y upgrade &&\
-    apt-get -y install curl wget gpg software-properties-common apt-utils unzip vim silversearcher-ag
+    apt-get -y install curl wget gpg zip unzip software-properties-common apt-utils unzip vim silversearcher-ag
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor > /usr/share/keyrings/docker-archive-keyring.gpg &&\
     wget -O- https://apt.corretto.aws/corretto.key | apt-key add -
 RUN ARCH=$(dpkg --print-architecture) ;\
