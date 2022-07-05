@@ -61,7 +61,7 @@ RUN VER="v4.5.4" ;\
     URL="https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F$VER/kustomize_${VER}_linux_${ARCH}.tar.gz" ;\
     curl -sL "$URL" | tar xzvf - -C /usr/bin
 # Download kind and setup a wrapper
-RUN VER="v0.12.0" ;\
+RUN VER="v0.14.0" ;\
     ARCH="$(dpkg --print-architecture)" ;\
     URL="https://github.com/kubernetes-sigs/kind/releases/download/$VER/kind-linux-$ARCH" ;\
     wget $URL -O /usr/bin/kind.bin ;\
@@ -121,7 +121,7 @@ RUN VER="v1.4.1" ;\
     URL="https://github.com/knative/client/releases/download/knative-$VER/kn-linux-$ARCH" ;\
     curl -sL "$URL" | sudo tee /usr/bin/kn >/dev/null && sudo chmod +x /usr/bin/kn
 # Install nuv
-RUN VER=v0.2.0-trinity.22060416 ;\
+RUN VER=v0.2.1 ;\
     BASE=https://github.com/nuvolaris/nuvolaris-cli/releases/download ;\
     ARCH=$(dpkg --print-architecture) ;\
     URL="$BASE/$VER/nuv-$VER-linux-$ARCH.tar.gz" ;\
