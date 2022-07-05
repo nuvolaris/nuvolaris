@@ -19,11 +19,11 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: preload-runtime-go117
+  name: preload-runtime-go
   namespace: nuvolaris
 spec:
   containers:
-  - name: nodejs
+  - name: golang
     image: "openwhisk/action-golang-v1.17:nightly"
     command: ["/bin/true"]
   restartPolicy: Never
