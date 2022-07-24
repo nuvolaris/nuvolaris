@@ -64,6 +64,7 @@ header:
     - 'poetry.lock'
     - 'ngrok'
     - 'nuvolaris-inc/**'
+    - 'nuvolaris-misc/**'
     - '**/auth.guest'
     - '**/auth.whisk.system'
     - '**/.task/**'

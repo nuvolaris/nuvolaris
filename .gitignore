@@ -22,4 +22,5 @@ bin/*
 kubeconfig
 .DS_Store
 nuvolaris-inc/
+nuvolaris-misc/
 workspace-inc.code-workspace
