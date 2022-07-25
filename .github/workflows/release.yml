@@ -35,7 +35,7 @@ jobs:
     - name: Create Release
       uses: softprops/action-gh-release@v1
     - name: Download binaries
-      run: bash .github/cidownload.sh "${{ github.ref }}"
+      run: bash .github/cidownload.sh "$(cat release)"
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
       with:
