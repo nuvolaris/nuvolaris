@@ -28,6 +28,8 @@ vars:
     sh: echo "${REMOTE:-origin}"
   BRANCH:
     sh: git rev-parse --abbrev-ref HEAD
+  RELEASE:
+    sh: cat release
         
 tasks:
 
@@ -98,3 +100,27 @@ tasks:
           git push {{.REMOTE}} {{.BRANCH}}
           cd ..
        done
+
+  test-osx: bash test-cli.sh {{.RELEASE}}
+  
+  test-linux: 
+    - scp test-cli.sh ubuntu@devkit.nuvolaris.io 
+    - ssh ubuntu@devkit.nuvolaris.io bash test-cli.sh {{.RELEASE}}
+
+  test-windows:
+    - scp test-cli.sh Administrator@wintest.nuvolaris.io 
+    - ssh Administrator@wintest.nuvolaris.io '"C:\Program Files\Git\bin\bash.exe"' test-cli.sh {{.RELEASE}}
+
+  test-and-tag:
+    cmds:
+    - task: test-osx
+    - task: test-linux
+    - task: test-windows
+    - git tag -d $(git tag)
+    - git tag {{.VER}}
+    - echo "tested and tagged, please git push --tags to release"
+    vars:
+      VER:
+        sh: cat release | sed -e 's/-.*.//'
+
+
