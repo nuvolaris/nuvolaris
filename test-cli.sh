@@ -23,6 +23,9 @@ esac
 
 URL="https://github.com/nuvolaris/nuvolaris-cli/releases/download/$VERSION/nuv-$VERSION-$OS-$ARCH.$EXT"
 
+mkdir tmp$$
+cd tmp$$
+
 curl -sL $URL >dld.$EXT
 $EXTRACT "dld.$EXT"
 
