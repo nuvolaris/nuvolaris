@@ -117,7 +117,7 @@ tasks:
     - task: test-linux
     - task: test-windows
     - git tag -d $(git tag)
-    - git tag {{.VER}}
+    - git tag -f {{.VER}}
     - echo "tested and tagged, please git push --tags to release"
     vars:
       VER:
