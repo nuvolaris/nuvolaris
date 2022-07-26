@@ -42,8 +42,6 @@ tasks:
     - git tag -f {{.BASETAG}}.$(date +%y%m%d%H)
     - env PAGER= git tag
 
-  cli-tag: git tag -d $(git tag) ; git tag -f v{{.BASETAG}}.$(date +%y%m%d%H)
-
   buildx-and-push:
     cmds:
       - docker buildx build --platform linux/amd64,linux/arm64 -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} . --push
@@ -83,39 +81,33 @@ tasks:
       - test -f .docker-pid
 
   setup:
-    #cmds:
-    #- cmd: |
-    #     for mod in {{.MODULES}}
-    #     do if test -e $mod/Taskfile.yml
-    #        then task setup -d $mod
-    #        fi
-    #     done 
-    #  ignore_error: true
     silent: true
 
   git-push-all: |
-       for mod in {{.MODULES}}
-       do cd $mod 
+      for mod in {{.MODULES}}
+      do cd $mod 
           echo "*** $mod ***"
           git push {{.REMOTE}} {{.BRANCH}}
           cd ..
-       done
+      done
 
-  test-osx: bash test-cli.sh {{.RELEASE}}
+  cli-test-osx:
+    - mkdir /tmp/nuvolaris ; cp test-cli.sh /tmp/nuvolaris 
+    - cd /tmp/nuvolaris ; bash test-cli.sh {{.RELEASE}}
   
-  test-linux: 
-    - scp test-cli.sh ubuntu@devkit.nuvolaris.io 
-    - ssh ubuntu@devkit.nuvolaris.io bash test-cli.sh {{.RELEASE}}
+  cli-test-linux: 
+    - scp test-cli.sh ubuntu@devkit.nuvolaris.io:test-cli.sh 
+    - ssh ubuntu@devkit.nuvolaris.io bash /home/ubuntu/test-cli.sh {{.RELEASE}}
 
-  test-windows:
-    - scp test-cli.sh Administrator@wintest.nuvolaris.io 
-    - ssh Administrator@wintest.nuvolaris.io '"C:\Program Files\Git\bin\bash.exe"' test-cli.sh {{.RELEASE}}
+  cli-test-windows:
+    - scp test-cli.sh Administrator@wintest.nuvolaris.io:test-cli.sh 
+    - ssh Administrator@wintest.nuvolaris.io '"C:\Program Files\Git\bin\bash.exe"' -x '"C:\Users\administrator\test-cli.sh"' {{.RELEASE}}
 
-  test-and-tag:
+  cli-test-and-tag:
     cmds:
-    - task: test-osx
-    - task: test-linux
-    - task: test-windows
+    - task: cli-test-osx
+    - task: cli-test-linux
+    - task: cli-test-windows
     - git tag -d $(git tag)
     - git tag -f {{.VER}}
     - echo "tested and tagged, please git push --tags to release"
