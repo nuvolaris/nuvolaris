@@ -16,7 +16,7 @@ case "$(uname)" in
         OS="windows"
         EXT="zip"
         ARCH="amd64"
-        EXTRACT="unzip"
+        EXTRACT="unzip -o"
     ;;
     *) echo "unknown platform"; exit 1 ;;
 esac
