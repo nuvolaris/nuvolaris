@@ -92,8 +92,8 @@ tasks:
       done
 
   cli-test-osx:
-    - mkdir /tmp/nuvolaris ; cp test-cli.sh /tmp/nuvolaris 
-    - cd /tmp/nuvolaris ; bash test-cli.sh {{.RELEASE}}
+    - rm -Rf /tmp/nuvolaris-test-cli ; mkdir /tmp/nuvolaris-test-cli ; cp test-cli.sh /tmp/nuvolaris-test-cli 
+    - cd /tmp/nuvolaris-test-cli ; bash test-cli.sh {{.RELEASE}}
   
   cli-test-linux: 
     - scp test-cli.sh ubuntu@devkit.nuvolaris.io:test-cli.sh 
