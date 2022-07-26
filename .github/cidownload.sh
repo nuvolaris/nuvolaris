@@ -17,7 +17,8 @@
 # under the License.
 
 REL="${1:?release}"
-TAG="${2:?version}"
+REL="${REL#refs/*}"
+VER="${2:?version}"
 VER="${TAG#refs/*/}"
 PRE="https://github.com/nuvolaris/nuvolaris-cli/releases/download"
 wget -nc $PRE/$VER/nuv-$VER-windows-amd64.zip -O nuv-$REL-windows-amd64.zip
