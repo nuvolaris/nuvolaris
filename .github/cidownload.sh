@@ -17,7 +17,7 @@
 # under the License.
 
 REL="${1:?release}"
-REL="${REL#refs/*}"
+REL="${REL#refs/*/}"
 VER="${2:?version}"
 VER="${TAG#refs/*/}"
 PRE="https://github.com/nuvolaris/nuvolaris-cli/releases/download"
