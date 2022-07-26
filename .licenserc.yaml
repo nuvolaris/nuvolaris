@@ -68,6 +68,7 @@ header:
     - '**/auth.guest'
     - '**/auth.whisk.system'
     - '**/.task/**'
+    - 'release'
 
 
 dependency:

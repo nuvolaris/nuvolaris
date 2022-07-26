@@ -105,6 +105,7 @@ tasks:
 
   cli-test-and-tag:
     cmds:
+    - license-eye header check
     - task: cli-test-osx
     - task: cli-test-linux
     - task: cli-test-windows
