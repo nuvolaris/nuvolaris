@@ -16,10 +16,10 @@
 # specific language governing permissions and limitations
 # under the License.
 
-REL="${1:?release}"
-REL="${REL#refs/*/}"
-VER="${2:?version}"
-VER="${TAG#refs/*/}"
+ARG1="${1:?release}"
+REL="${ARG1#refs/*/}"
+ARG2="${2:?version}"
+VER="${ARG2#refs/*/}"
 PRE="https://github.com/nuvolaris/nuvolaris-cli/releases/download"
 wget -nc $PRE/$VER/nuv-$VER-windows-amd64.zip -O nuv-$REL-windows-amd64.zip
 wget -nc $PRE/$VER/nuv-$VER-windows-amd64.zip.md5 -O nuv-$REL-windows-amd64.zip.md5
