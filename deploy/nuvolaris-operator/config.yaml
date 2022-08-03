@@ -15,27 +15,10 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+
 ---
 apiVersion: v1
-kind: ServiceAccount
+kind: ConfigMap
 metadata:
-  name: nuvolaris-operator
+  name: config
   namespace: nuvolaris
-  labels:
-    app: nuvolaris-operator
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: nuvolaris-operator-crb
-  namespace: nuvolaris
-  labels:
-    app: nuvolaris-operator
-subjects:
-- kind: ServiceAccount
-  namespace: nuvolaris
-  name: nuvolaris-operator
-roleRef:
-  kind: ClusterRole
-  name: cluster-admin
-  apiGroup: rbac.authorization.k8s.io

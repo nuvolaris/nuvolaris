@@ -18,6 +18,7 @@
 version: '3'
 
 vars:
+  # detect current kubernetes
   KUBE:
     sh: ./detect.sh
   # taken from the tag
@@ -44,42 +45,54 @@ tasks:
         newName: ${MY_OPERATOR_IMAGE:-{{.OPERATOR_IMAGE}}}
         newTag: {{.OPERATOR_TAG}}
       resources:
-      - nuvolaris-common.yaml
-      - operator-roles.yaml
-      - operator-pod.yaml
+      - config.yaml
+      - operator-deploy.yaml
       __EOF__
 
   operator:
   - task: kustomization
   - kubectl apply -k deploy/nuvolaris-operator
-  - | 
-    while ! kubectl -n nuvolaris wait --for=condition=ready pod/nuvolaris-operator
+  - |
+    while ! kubectl -n nuvolaris wait pod --for=condition=ready -l app=nuvolaris-operator
     do echo still waiting...
     done
 
-  destroy-operator:
+  delete-operator:
   - task: kustomization
   - kubectl delete -k deploy/nuvolaris-operator
+
+  restart-operator:
+  - kubectl -n nuvolaris rollout restart deploy/nuvolaris-operator
+
+  permission:
+    - kubectl apply -f deploy/nuvolaris-permissions/ns-sa.yaml
+    - kubectl apply -f deploy/nuvolaris-permissions/whisk-crd.yaml
+    - kubectl apply -f deploy/nuvolaris-permissions/operator-clusterroles.yaml
+    - kubectl apply -f deploy/nuvolaris-permissions/operator-roles.yaml
+    - kubectl apply -f deploy/nuvolaris-permissions/standalone-roles.yaml
+
+  delete-permission:
+    - kubectl apply -f deploy/nuvolaris-permissions
 
   instance:
   - kubectl config set-context --current --namespace nuvolaris
   - >
     cat tests/{{.KUBE}}/whisk.yaml 
     | kubectl apply -f -
-  - |    
+  - |
     while ! kubectl -n nuvolaris wait pod --for=condition=ready -l app=controller
     do sleep 1 ; echo waiting controller...
     done
-  - |    
+  - |
     while ! kubectl -n nuvolaris wait pod redis-0 --for=condition=ready 
     do sleep 1 ; echo waiting redis...
     done
-  - |    
+  - |
     while ! kubectl -n nuvolaris wait pod --for=condition=ready -l user-action-pod=true
     do sleep 1 ; echo waiting actions... 
     done
   
-  destroy-instance:
+  delete-instance:
     - (sleep 5 ; task defin) &
     - kubectl -n nuvolaris delete wsk/controller
   
@@ -126,5 +139,3 @@ tasks:
   api:
     - wsk action update api tests/api.js -a provide-api-key true
     - wsk action invoke api -r | grep '"api"' 
-
-  

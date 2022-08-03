@@ -21,7 +21,7 @@ vars:
   G: ""
   N: ""
   T: ""
-  BASETAG: 0.2.1-trinity
+  BASETAG: 0.3.0-morpheus
   KUBE:
     sh: ./detect.sh
 
@@ -71,20 +71,25 @@ tasks:
 
   env: env
   
-  watch: watch kubectl -n nuvolaris get no,po,svc 
+  watch: watch kubectl -n nuvolaris get deploy,pod,service 
 
-  logs: kubectl -n nuvolaris logs nuvolaris-operator -f
-  
+  logs: >
+    rm -f nuvolaris-operator.log ;
+    kubectl -n nuvolaris logs deploy/nuvolaris-operator -f | tee nuvolaris-operator.log
+ 
   cli: 
     - task: d:cli
 
   run:
     - task: d:run
 
+  permission:
+    - task: t:permission
+
   operator:
     - task: t:operator
 
-  instance: 
+  instance:
     - task: d:instance
 
   destroy: 
@@ -101,7 +106,7 @@ tasks:
     - task: hello
     - task: ping
 
-  config: 
+  config:
     - task: t:config
 
   hello: 
