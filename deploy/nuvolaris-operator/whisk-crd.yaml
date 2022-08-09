@@ -63,6 +63,8 @@ spec:
               #         type: string
               #       s3bucket:
               #         type: string
+              #       cron:
+              #         type: string              
       additionalPrinterColumns:
         - name: OpenWhisk
           type: string
@@ -99,3 +101,8 @@ spec:
           priority: 0
           jsonPath: .status.whisk_create.s3bucket
           description: S3Bucket
+        - name: cron
+          type: string
+          priority: 0
+          jsonPath: .status.whisk_create.cron
+          description: Cron          

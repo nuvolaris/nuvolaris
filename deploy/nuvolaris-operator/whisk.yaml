@@ -37,6 +37,8 @@ spec:
     redis: false
     # start s3ninja
     s3bucket: false
+    # start the scheduler
+    cron: true    
   openwhisk:
     namespaces:
       whisk-system: 789c46b1-71f6-4ed5-8c54-816aa4f8c502:abczO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP
@@ -53,6 +55,8 @@ spec:
     invoker:
       user: controller_admin
       password: s0meP@ass2
+  scheduler:
+    schedule: "* * * * *"      
   # not yet implemented
   mongodb:
     host: mongodb
@@ -70,3 +74,4 @@ spec:
     id: AKIAIOSFODNN7EXAMPLE
     key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
     region: eu-central-1
+

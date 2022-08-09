@@ -25,29 +25,25 @@ def create(owner=None):
     
     img = cfg.get('operator.image') or "missing-operator-image"
     tag = cfg.get('operator.tag') or "missing-operator-tag"
+    image = f"{img}:{tag}"
+    logging.info(f"cron using image {image}")
 
     #default to every minutes if not configured
     schedule = cfg.get('scheduler.schedule') or "* * * * *"
-
-    image = f"{img}:{tag}"
-
-    logging.info(f"cron using image {image}")
 
     config = json.dumps(cfg.getall())
     data = {
         "image": image,
         "schedule": schedule,
         "config": config,
-        "name": "cron-init", 
+        "name": "cron", 
         "dir": "/opt/scheduler/data",
         "size": 1,
         "storageClass": cfg.get("nuvolaris.storageClass")
     }
     
-    kust = kus.patchTemplate("scheduler", "set-attach.yaml", data)    
-    spec = kus.kustom_list("scheduler", kust, templates=["cron-init.yaml"], data=data)
-
-    logging.info(f"applying specs {spec}")
+    kust = kus.patchTemplate("scheduler", "cron-init.yaml", data)    
+    spec = kus.kustom_list("scheduler", kust, templates=[], data=data)
 
     if owner:
         kopf.append_owner_reference(spec['items'], owner)

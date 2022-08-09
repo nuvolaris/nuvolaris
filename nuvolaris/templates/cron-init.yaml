@@ -34,4 +34,7 @@ spec:
             - /bin/sh
             - -c
             - ./cron.sh
+            env:
+            - name: "CRON_SCHEDULE"
+              value: "{{schedule}}"              
           restartPolicy: OnFailure
