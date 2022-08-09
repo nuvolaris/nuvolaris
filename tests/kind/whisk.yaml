@@ -76,3 +76,5 @@ spec:
     id: AKIAIOSFODNN7EXAMPLE
     key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
     region: eu-central-1
+  scheduler:
+    schedule: "* * * * *"

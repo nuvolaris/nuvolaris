@@ -14,13 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: cron-init
   namespace: nuvolaris
 spec:
-  schedule: "* * * * *"
+  schedule: "{{schedule}}"
   jobTemplate:
     spec:
       template:

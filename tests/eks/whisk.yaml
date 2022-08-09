@@ -78,3 +78,6 @@ spec:
     region: eu-central-1
   redis:
     volume-size: 10
+  scheduler:
+    schedule: "* * * * *"
+

@@ -25,6 +25,10 @@ def create(owner=None):
     
     img = cfg.get('operator.image') or "missing-operator-image"
     tag = cfg.get('operator.tag') or "missing-operator-tag"
+
+    #default to every minutes if not configured
+    schedule = cfg.get('scheduler.schedule') or "* * * * *"
+
     image = f"{img}:{tag}"
 
     logging.info(f"cron using image {image}")
@@ -32,6 +36,7 @@ def create(owner=None):
     config = json.dumps(cfg.getall())
     data = {
         "image": image,
+        "schedule": schedule,
         "config": config,
         "name": "cron-init", 
         "dir": "/opt/scheduler/data",
