@@ -15,14 +15,26 @@
 # specific language governing permissions and limitations
 # under the License.
 #
----
-apiVersion: v1
-kind: Namespace
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: nuvolaris
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: config
+  name: nuvolaris-operator
   namespace: nuvolaris
+  labels:
+    app: nuvolaris-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nuvolaris-operator
+  template:
+    metadata:
+      labels:
+        app: nuvolaris-operator
+    spec:
+      serviceAccount: nuvolaris-operator
+      containers:
+        - name: nuvolaris-operator
+          image: ghcr.io/nuvolaris/nuvolaris-operator:0.2.1-trinity.22070510
+          command: ["./run.sh"]
+          args: ["--verbose"]

@@ -20,16 +20,20 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: mongodb-kubernetes-operator
+  namespace: nuvolaris
+
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: mongodb-database
+  namespace: nuvolaris
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: mongodb-kubernetes-operator
+  namespace: nuvolaris
 rules:
 - apiGroups:
   - ""
@@ -96,6 +100,7 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: mongodb-kubernetes-operator
+  namespace: nuvolaris
 subjects:
 - kind: ServiceAccount
   name: mongodb-kubernetes-operator
@@ -108,6 +113,7 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: mongodb-database
+  namespace: nuvolaris
 subjects:
 - kind: ServiceAccount
   name: mongodb-database

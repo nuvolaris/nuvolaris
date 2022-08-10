@@ -15,27 +15,51 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+
 ---
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: nuvolaris-operator
-  namespace: nuvolaris
-  labels:
-    app: nuvolaris-operator
----
+kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: nuvolaris-operator-cr
+  labels:
+    app: nuvolaris-operator-cr
+rules:
+
+# edit nuvolaris crd
+- apiGroups: ["nuvolaris.org"]
+  resources: ["whisks"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+# read nodes storageclasses ingressclasses
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get", "list", "watch"]
+
+- apiGroups: [""]
+  resources: ["namespaces"]
+  verbs: ["get", "list", "watch"]
+
+- apiGroups: ["storage.k8s.io"]
+  resources: ["storageclasses"]
+  verbs: ["get", "list", "watch"]
+
+- apiGroups: ["networking.k8s.io"]
+  resources: ["ingressclasses"]
+  verbs: ["get", "list", "watch"]
+
+---
 kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: nuvolaris-operator-crb
   namespace: nuvolaris
   labels:
-    app: nuvolaris-operator
+    app: nuvolaris-operator-crb
 subjects:
 - kind: ServiceAccount
   namespace: nuvolaris
-  name: nuvolaris-operator
+  name:  nuvolaris-operator
 roleRef:
   kind: ClusterRole
-  name: cluster-admin
+  name: nuvolaris-operator-cr
   apiGroup: rbac.authorization.k8s.io

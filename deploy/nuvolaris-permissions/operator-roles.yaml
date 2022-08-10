@@ -15,44 +15,49 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: controller
-  namespace: nuvolaris
-  labels:
-    app: controller
 ---
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: controller
+  name: nuvolaris-operator-role
   namespace: nuvolaris
   labels:
-    app: controller
+    app: nuvolaris-operator-role
 rules:
-- apiGroups: ["extensions", "apps"]
-  resources: ["deployments"]
-  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+# edit secrets cm po svc pvc ingresses
 - apiGroups: [""]
-  resources: ["pods"]
+  resources: ["configmaps", "secrets", "pods", "services", "persistentvolumeclaims", "ingresses"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+# read logs
 - apiGroups: [""]
   resources: ["pods/log"]
   verbs: ["get", "list"]
+
+# edit deployments daemonset statefulset
+- apiGroups: ["extensions", "apps"]
+  resources: ["deployments", "daemonsets", "statefulsets" ]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+# edit jobs
+- apiGroups: ["batch"]
+  resources: ["jobs"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: controller
+  name: nuvolaris-operator-rb
   namespace: nuvolaris
   labels:
-    app: controller
+    app: nuvolaris-operator-rb
 subjects:
 - kind: ServiceAccount
   namespace: nuvolaris
-  name:  controller 
+  name:  nuvolaris-operator
 roleRef:
   kind: Role
-  name: controller
+  name: nuvolaris-operator-role
   apiGroup: rbac.authorization.k8s.io

@@ -20,6 +20,7 @@ apiVersion: mongodbcommunity.mongodb.com/v1
 kind: MongoDBCommunity
 metadata:
   name: mongodb
+  namespace: nuvolaris
 spec:
   members: 1
   type: ReplicaSet
@@ -48,6 +49,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: my-user-password
+  namespace: nuvolaris
 type: Opaque
 stringData:
   password: ow-str0ng-p4ssw0rd

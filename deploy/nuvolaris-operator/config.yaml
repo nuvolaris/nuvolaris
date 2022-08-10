@@ -15,15 +15,10 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+
 ---
 apiVersion: v1
-kind: Pod
+kind: ConfigMap
 metadata:
-  name: preload-runtime-go117
+  name: config
   namespace: nuvolaris
-spec:
-  containers:
-  - name: nodejs
-    image: "openwhisk/action-golang-v1.17:nightly"
-    command: ["/bin/true"]
-  restartPolicy: Never
