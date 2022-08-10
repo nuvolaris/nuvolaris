@@ -25,7 +25,7 @@ import nuvolaris.couchdb as couchdb
 import nuvolaris.mongodb as mongodb
 import nuvolaris.bucket as bucket
 import nuvolaris.openwhisk as openwhisk
-import nuvolaris.scheduler as cron
+import nuvolaris.cronjob as cron
 
 # tested by an integration test
 @kopf.on.login()

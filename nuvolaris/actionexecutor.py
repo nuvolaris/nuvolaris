@@ -1,4 +1,3 @@
-#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -16,4 +15,16 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-poetry run actionexecutor -v
+import os, logging, json, datetime
+import nuvolaris.config as cfg
+
+#
+# Will queries the internal CouchDB for cron aware actions
+# to be triggered since the last execution time.
+# TODO the interval execution time must be parametrized.
+# Implement the logic to query for actions and evaluate how to execute them
+#
+def start():
+    datetime_object = datetime.datetime.now()
+    print(datetime_object)
+

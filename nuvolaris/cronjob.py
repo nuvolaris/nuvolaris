@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-import kopf, os, logging, json, datetime
+import kopf, logging, json
 import nuvolaris.kube as kube
 import nuvolaris.kustomize as kus
 import nuvolaris.config as cfg
@@ -36,10 +36,7 @@ def create(owner=None):
         "image": image,
         "schedule": schedule,
         "config": config,
-        "name": "cron", 
-        "dir": "/opt/scheduler/data",
-        "size": 1,
-        "storageClass": cfg.get("nuvolaris.storageClass")
+        "name": "cron"
     }
     
     kust = kus.patchTemplate("scheduler", "cron-init.yaml", data)    
@@ -61,13 +58,3 @@ def delete():
         res = kube.delete(spec)
         logging.info(f"delete cron: {res}")
     return res
-
-#
-# Will queries the internal CouchDB for cron aware actions
-# to be triggered since the last execution time.
-# TODO the interval execution time must be parametrized.
-# Implement the logic to query for actions and evaluate how to execute them
-#
-def start():
-    datetime_object = datetime.datetime.now()
-    print(datetime_object)

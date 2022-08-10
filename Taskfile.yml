@@ -71,7 +71,7 @@ tasks:
 
   env: env
   
-  watch: watch kubectl -n nuvolaris get no,po,svc 
+  watch: watch kubectl -n nuvolaris get no,po,svc,cronjob 
 
   logs: kubectl -n nuvolaris logs nuvolaris-operator -f
   
