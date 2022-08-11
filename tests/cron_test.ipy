@@ -15,14 +15,11 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-apiVersion: v1
-kind: Pod
-metadata:
-  name: preload-runtime-nodejs
-  namespace: nuvolaris
-spec:
-  containers:
-  - name: nodejs
-    image: "openwhisk/action-nodejs-v14:nightly"
-    command: ["/bin/true"]
-  restartPolicy: Never
+
+import nuvolaris.cronjob as cron
+import nuvolaris.testutil as tu
+import nuvolaris.kube as kube
+
+assert(cron.create())
+assert(kube.get("cronjob.batch/cron-init"))
+assert(cron.delete())

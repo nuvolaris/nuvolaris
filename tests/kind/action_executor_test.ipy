@@ -15,15 +15,27 @@
 # specific language governing permissions and limitations
 # under the License.
 #
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: preload-runtime-go
-  namespace: nuvolaris
-spec:
-  containers:
-  - name: golang
-    image: "openwhisk/action-golang-v1.17:nightly"
-    command: ["/bin/true"]
-  restartPolicy: Never
+!kubectl -n nuvolaris delete all --all
+!kubectl -n nuvolaris delete pvc --all
+
+import nuvolaris.config as cfg
+import nuvolaris.testutil as tu
+import nuvolaris.kube as kube
+import nuvolaris.actionexecutor as ae
+import nuvolaris.couchdb_util as cu
+
+!kubectl apply -f deploy/couchdb
+!kubectl -n nuvolaris wait --for=condition=ready pod couchdb-0
+
+# init
+assert(cfg.configure(tu.load_sample_config()))
+assert(cfg.put("couchdb.host", "localhost"))
+!nuv action create hello-cron-action tests/hello.js -a cron "*/2 * * * *"
+
+db = cu.CouchDB()
+assert(db.wait_db_ready(60))
+assert len (ae.get_cron_aware_actions(db, cfg.get('couchdb.controller.user'),cfg.get('couchdb.controller.password'))) == 0
+
+# cleanup
+!kubectl delete -f deploy/couchdb
+!kubectl wait deploy/couchdb --for=delete

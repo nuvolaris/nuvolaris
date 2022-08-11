@@ -15,9 +15,14 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-!kubectl -n nuvolaris apply -f deploy/scheduler
-import nuvolaris.scheduler as cron
-import nuvolaris.testutil as tu
-assert(cron.create())
-!kubectl -n nuvolaris delete all --all
-!kubectl -n nuvolaris delete pvc --all
+apiVersion: v1
+kind: Pod
+metadata:
+  name: preload-runtime-nodejs14
+  namespace: nuvolaris
+spec:
+  containers:
+  - name: nodejs
+    image: "openwhisk/action-nodejs-v14:nightly"
+    command: ["/bin/true"]
+  restartPolicy: Never
