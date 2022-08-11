@@ -122,7 +122,7 @@ RUN VER="v1.4.1" ;\
     curl -sL "$URL" | sudo tee /usr/bin/kn >/dev/null && sudo chmod +x /usr/bin/kn
 # Install nuv
 RUN VER=v0.2.2 ;\
-    BASE=https://github.com/nuvolaris/nuvolaris-cli/releases/download ;\
+    BASE=https://github.com/nuvolaris/nuvolaris/releases/download ;\
     ARCH=$(dpkg --print-architecture) ;\
     URL="$BASE/$VER/nuv-$VER-linux-$ARCH.tar.gz" ;\
     curl -sL "$URL" | tar xzvf - -C /usr/bin/
