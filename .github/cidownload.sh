@@ -16,16 +16,16 @@
 # specific language governing permissions and limitations
 # under the License.
 
-TAG="${1:?version}"
-VER="${TAG#refs/*/}"
+ARG1="${1:?release}"
+REL="${ARG1#refs/*/}"
+ARG2="${2:?version}"
+VER="${ARG2#refs/*/}"
 PRE="https://github.com/nuvolaris/nuvolaris-cli/releases/download"
-wget -nc $PRE/$VER/nuv-$VER-windows-amd64.zip
-wget -nc $PRE/$VER/nuv-$VER-windows-amd64.zip.md5
+wget -nc $PRE/$VER/nuv-$VER-windows-amd64.zip -O nuv-$REL-windows-amd64.zip
+wget -nc $PRE/$VER/nuv-$VER-windows-amd64.zip.md5 -O nuv-$REL-windows-amd64.zip.md5
 for OS in linux darwin
 do for ARC in amd64 arm64
-   do wget -nc $PRE/$VER/nuv-$VER-$OS-$ARC.tar.gz
-      wget -nc $PRE/$VER/nuv-$VER-$OS-$ARC.tar.gz.md5
+   do wget -nc $PRE/$VER/nuv-$VER-$OS-$ARC.tar.gz -O nuv-$REL-$OS-$ARC.tar.gz
+      wget -nc $PRE/$VER/nuv-$VER-$OS-$ARC.tar.gz.md5 -O nuv-$REL-$OS-$ARC.tar.gz.md5
    done
 done
-
-
