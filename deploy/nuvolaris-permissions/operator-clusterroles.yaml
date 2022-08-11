@@ -25,10 +25,6 @@ metadata:
     app: nuvolaris-operator-cr
 rules:
 
-# edit nuvolaris crd
-- apiGroups: ["nuvolaris.org"]
-  resources: ["whisks"]
-  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 
 # read nodes storageclasses ingressclasses
 - apiGroups: [""]

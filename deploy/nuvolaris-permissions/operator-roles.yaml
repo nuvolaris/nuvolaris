@@ -45,6 +45,11 @@ rules:
   resources: ["jobs"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 
+# edit nuvolaris crd
+- apiGroups: ["nuvolaris.org"]
+  resources: ["whisks"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
