@@ -51,7 +51,7 @@ then kind export kubeconfig --name nuvolaris
 else
   # create cluster
   mkdir -p $HOME/.nuvolaris/data
-  cat <<EOF | kind create cluster --wait=1m --name=nuvolaris --config=-
+  cat <<EOF >_kind-config-audit.yaml
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
@@ -62,6 +62,23 @@ nodes:
     nodeRegistration:
       kubeletExtraArgs:
         node-labels: "ingress-ready=true,nuvolaris.io/apihost=localhost,nuvolaris.io/apiport=3233,nuvolaris.io/protocol=http,nuvolaris.io/kube=kind"
+  - |
+    kind: ClusterConfiguration
+    apiServer:
+      extraArgs:
+        audit-log-path: /var/log/kubernetes/kube-apiserver-audit.log
+        audit-policy-file: /etc/kubernetes/policies/audit-policy.yaml
+      extraVolumes:
+        - name: audit-policies
+          hostPath: /etc/kubernetes/policies
+          mountPath: /etc/kubernetes/policies
+          readOnly: true
+          pathType: "DirectoryOrCreate"
+        - name: "audit-logs"
+          hostPath: "/var/log/kubernetes"
+          mountPath: "/var/log/kubernetes"
+          readOnly: false
+          pathType: DirectoryOrCreate
   extraPortMappings:
   - containerPort: 80
     hostPort: 80
@@ -69,6 +86,10 @@ nodes:
   - containerPort: 443
     hostPort: 443
     protocol: TCP
+  extraMounts:
+    - hostPath: ./audit-policy.yaml
+      containerPath: /etc/kubernetes/policies/audit-policy.yaml
+      readOnly: true
 - role: worker
   extraMounts:
   - hostPath: $DATADIR
@@ -86,22 +107,17 @@ nodes:
   - containerPort: 30984
     hostPort: 5984
     protocol: TCP  
-  - containerPort: 30992 
-    hostPort: 9092
+  - containerPort: 30017
+    hostPort: 27017
     protocol: TCP
-  - containerPort: 30644
-    hostPort: 9644
+  - containerPort: 30444
+    hostPort: 9444
     protocol: TCP    
   - containerPort: 6379
     hostPort: 30379
     protocol: TCP
-  - containerPort: 27017
-    hostPort: 32717
-    protocol: TCP
-  - containerPort: 28017
-    hostPort: 32817
-    protocol: TCP
 EOF
+  kind create cluster --wait=1m --name=nuvolaris --config=_kind-config-audit.yaml
 fi
 
 if test -f /.dockerenv

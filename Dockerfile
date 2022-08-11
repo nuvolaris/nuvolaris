@@ -39,7 +39,7 @@ RUN apt-get update &&\
     ca-certificates \
     apt-transport-https \
     build-essential gettext-base \
-    git gnupg curl wget jq \
+    git gnupg curl wget jq kafkacat \
     zlib1g-dev libbz2-dev libncurses5-dev \
     libgdbm-dev libnss3-dev libssl-dev \
     libreadline-dev libffi-dev libsqlite3-dev \
@@ -121,7 +121,7 @@ RUN VER="v1.4.1" ;\
     URL="https://github.com/knative/client/releases/download/knative-$VER/kn-linux-$ARCH" ;\
     curl -sL "$URL" | sudo tee /usr/bin/kn >/dev/null && sudo chmod +x /usr/bin/kn
 # Install nuv
-RUN VER=v0.2.1 ;\
+RUN VER=v0.2.2 ;\
     BASE=https://github.com/nuvolaris/nuvolaris-cli/releases/download ;\
     ARCH=$(dpkg --print-architecture) ;\
     URL="$BASE/$VER/nuv-$VER-linux-$ARCH.tar.gz" ;\

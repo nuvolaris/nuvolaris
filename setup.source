@@ -206,6 +206,13 @@ if ! which linode-cli >/dev/null
 then pip install linode-cli
 else ok linode-cli
 fi
+
+if ! test -e $GOBIN/z.sh
+then curl -sL https://raw.githubusercontent.com/rupa/z/master/z.sh >$GOBIN/z.sh
+else ok z
+fi
+source $GOBIN/z.sh
+
 # env
 if test -e .env
 then export $(xargs <.env)
