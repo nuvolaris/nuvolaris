@@ -20,6 +20,7 @@ import nuvolaris.config as cfg
 import nuvolaris.couchdb_util as cu
 import nuvolaris.kube as kube
 import croniter as cn
+import requests as req
 from datetime import datetime
 
 def check(f, what, res):
@@ -88,17 +89,18 @@ def action_should_trigger(currentDate, executionInterval, actionCronExpression):
 
     return result
 
-def get_cron_aware_actions(db, username, password):
-    actions = []
-    dbn = "whisks"
-    query = json.loads('{"selector":{"entityType":"action", "annotations": {"$elemMatch": {"key": "cron"}}}, "fields": ["_id", "annotations", "name", "_rev","namespace","parameters"]}')
-    logging.info(f"Querying couchdb {dbn} for actions")
+#
+# query the dbn database using the specified selecto
+#
+def find_docs(db, dbn, selector, username, password):
+    documents = []
+    query = json.loads(selector)
+    logging.info(f"Querying couchdb {dbn} for documents")
 
     #CouchDB returns no more than 25 records. We iterate to get all the cron enabled actions.
     while(True):
         logging.info(f"select query param {json.dumps(query)}")
         res = db.find_doc(dbn, json.dumps(query), username, password)
-        logging.info(f"couchdb response {json.dumps(res)}")
 
         if(res == None):
             break
@@ -106,51 +108,110 @@ def get_cron_aware_actions(db, username, password):
         if(res['docs']):
             docs = list(res['docs'])
             if(len(docs) > 0):
-                actions.extend(docs)
+                documents.extend(docs)
                 if(res['bookmark']):
                     query['bookmark']=res['bookmark']                
             else:
-                logging.info('docs item is an emtpy list. No more actions found')
+                logging.info('docs item is an emtpy list. No more documents found')
                 break 
         else:
-            logging.info('docs items not present. no more actions found')
+            logging.info('docs items not present. no more documents found')
             break 
        
-    return list(actions)
+    return list(documents)
 
+#
+# Get subject from nuvolaris_subjects db
+#
+#TODO need to find a way to build a dictionary with dynamic key or a hashmap
+def get_subjects(db, username, password):
+    subjects = []
+    selector = '{"selector":{"subject": {"$exists": true}},"fields":["namespaces"]}'
+    namespaces = find_docs(db, "subjects", selector, username, password)
 
+    for entry in namespaces:
+        currentNamespaceList = list(entry['namespaces'])
+        for namespace in currentNamespaceList:            
+            subjects.append(namespace);            
+
+    return list(subjects)
+
+#
+# get actions from the nuvolaris_whisks db
+#
+def get_cron_aware_actions(db, username, password):
+    selector = '{"selector":{"entityType":"action", "annotations": {"$elemMatch": {"key": "cron"}}}, "fields": ["_id", "annotations", "name", "_rev","namespace","parameters","entityType"]}'
+    return find_docs(db, "whisks", selector, username, password)
+#
+# POST a request to invoke the ow action
+#
+def call_ow_action(url, parameters, ow_auth):
+    logging.info(f"POST request to {url}")
+    headers = {'Content-Type': 'application/json'}
+
+    try:
+        response = None
+        if(len(parameters)>0):
+            response = req.post(url, auth=(ow_auth['username'],ow_auth['password']), headers=headers, data=json.dumps(parameters))
+        else:
+            #If the body is empty Content-Type must be not provided otherwise OpenWhisk api returns a 400 error    
+            response = req.post(url, auth=(ow_auth['username'],ow_auth['password']))
+
+        if (response.status_code in [200,202]):
+            logging.info(f"call to {url} succeeded with {response.status_code}. Body {response.text}")
+            return True        
+            
+        logging.warn(f"query to {url} failed with {response.status_code}. Body {response.text}")
+        return False
+    except Exception as inst:
+        logging.warn(f"Failed to invoke action {type(inst)}")
+        logging.warn(inst)
+        return False        
+    
 #
 # Evaluate if the given whisk action must be executed or not
 # 
-# jAction input is a json Object with similar structure.
+# dAction input is a json Object with similar structure.
 # 
-# jAction = '{"_id":"nuvolaris/hello-cron-action","annotations":[{"key":"cron","value":"*/2 * * * *"},{"key":"provide-api-key","value":false},{"key":"exec","value":"nodejs:14"}],"name":"hello-cron-action","_rev":"1-19f424e1fec1c02a2ecccf6f90978e31","namespace":"nuvolaris","parameters":[]}'
-def handle_action(currentDate, executionInterval, jAction):  
-    actionName = jAction['name']
-    actionNamespace = jAction['namespace']
-    actionParameter = list(jAction['parameters'])
-    actionAnnotations = list(jAction['annotations'])
-    actionCronExpression = " "
+# dAction = '{"_id":"nuvolaris/hello-cron-action","annotations":[{"key":"cron","value":"*/2 * * * *"},{"key":"provide-api-key","value":false},{"key":"exec","value":"nodejs:14"}],"name":"hello-cron-action","_rev":"1-19f424e1fec1c02a2ecccf6f90978e31","namespace":"nuvolaris","parameters":[],"entityType":"action"}'
+def handle_action(baseurl, currentDate, executionInterval, dAction, subjects):  
+    actionName = dAction['name']
+    entityType = dAction['entityType']
+    actionNamespace = dAction['namespace']
+    actionParameters = list(dAction['parameters'])
+    actionAnnotations = list(dAction['annotations'])
+    actionCronExpression = " "    
 
     for a in actionAnnotations:
         if(a['key'] == 'cron'):
             actionCronExpression = a['value']
-
-    logging.info(f"Evaluating cron expression {actionCronExpression} for action {actionNamespace}/{actionName}")    
-
+ 
     if not cn.croniter.is_valid(actionCronExpression):
-        logging.warn(f"cron expression {actionCronExpression} for action {actionNamespace}/{actionName} is not a valid one. Exiting evaluation")
-        return None
-    
-    shouldTrigger = action_should_trigger(currentDate, executionInterval, actionCronExpression)
-
-    if not shouldTrigger:
-        logging.warn(f"cron expression {actionCronExpression} for action {actionNamespace}/{actionName} does not trigger execution at {currentDate}")
+        logging.warn(f"action {actionNamespace}/{actionName} cron expression {actionCronExpression} is not valid. Skipping execution")
         return None
 
-    #TODO call action trigger
-    logging.info(f"triggering call for action {actionNamespace}/{actionName} at {currentDate}")
-    return None    
+    if not action_should_trigger(currentDate, executionInterval, actionCronExpression):
+        logging.warn(f"action {actionNamespace}/{actionName} cron expression {actionCronExpression} does not trigger an execution at {currentDate}")
+        return None
+
+    subjectName = actionNamespace.split("/")[0]
+    auth = get_auth(subjects, subjectName)
+    if(auth):
+        call_ow_action(f"{baseurl}{actionNamespace}/actions/{actionName}?blocking=false&result=false", actionParameters, auth)
+    else:
+        logging.warn('No subject {subjectName} credentials found!')
+    return None
+
+#
+# Search and return a {'username':'xxx','passowrd':'xxx'} dictionary
+#
+def get_auth(subjects, subjectName):
+    for subject in subjects:
+        if(subject['name'] == subjectName):
+            return {'username':subject['uuid'], 'password':subject['key']}
+        
+    return None
+
 
 #
 # Will queries the internal CouchDB for cron aware actions
@@ -167,19 +228,24 @@ def start():
         cfg.configure(spec)
         for k in cfg.getall(): logging.info(f"{k} = {cfg.get(k)}")
 
-    base = datetime.now()
-    interval = from_cron_to_seconds(base, cfg.get('scheduler.schedule'))   
-
+    currentDate = datetime.now()
+    interval = from_cron_to_seconds(currentDate, cfg.get('scheduler.schedule'))
     logging.info(f"interval in seconds between 2 execution is {interval} seconds")
 
     db = cu.CouchDB()
     res = check(db.wait_db_ready(60), "wait_db_ready", True)
 
-    if(res):        
+    if(res):
+        ow_protocol = cfg.get('controller.protocol') or "http"
+        ow_host = cfg.get('controller.host') or "controller"
+        ow_port = cfg.get('controller.port') or "3233"
+        baseurl = f"{ow_protocol}://{ow_host}:{ow_port}/api/v1/namespaces/"                
         actions = get_cron_aware_actions(db, cfg.get('couchdb.controller.user'),cfg.get('couchdb.controller.password'))
+
         if(len(actions) > 0):
+            subjects = get_subjects(db, cfg.get('couchdb.controller.user'),cfg.get('couchdb.controller.password'))
             for action in actions:
-                handle_action(base, interval, action)
+                handle_action(baseurl, currentDate, interval, action, subjects)
         else:
             logging.info('No cron aware action extracted. Exiting....')
     else:

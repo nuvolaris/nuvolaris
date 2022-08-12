@@ -76,5 +76,10 @@ spec:
     id: AKIAIOSFODNN7EXAMPLE
     key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
     region: eu-central-1
+  controller:
+    protocol: "http"
+    host : "localhost"
+    port: "3233"
   scheduler:
     schedule: "* * * * *"    
+

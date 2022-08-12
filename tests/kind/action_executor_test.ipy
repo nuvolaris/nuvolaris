@@ -36,6 +36,9 @@ db = cu.CouchDB()
 assert(db.wait_db_ready(60))
 assert len (ae.get_cron_aware_actions(db, cfg.get('couchdb.controller.user'),cfg.get('couchdb.controller.password'))) == 0
 
+assert(cfg.get("controller.host") == "localhost")
+assert(cfg.get("controller.port") == "3233")
+
 # cleanup
 !kubectl delete -f deploy/couchdb
 !kubectl wait deploy/couchdb --for=delete
