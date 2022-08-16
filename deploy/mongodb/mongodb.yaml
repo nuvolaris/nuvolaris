@@ -1,25 +1,8 @@
-# Licensed to the Apache Software Foundation (ASF) under one
-# or more contributor license agreements.  See the NOTICE file
-# distributed with this work for additional information
-# regarding copyright ownership.  The ASF licenses this file
-# to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
-# with the License.  You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied.  See the License for the
-# specific language governing permissions and limitations
-# under the License.
-#
 ---
 apiVersion: mongodbcommunity.mongodb.com/v1
 kind: MongoDBCommunity
 metadata:
-  name: mongodb
+  name: nuvolaris-mongodb
   namespace: nuvolaris
 spec:
   members: 1
@@ -29,16 +12,24 @@ spec:
     authentication:
       modes: ["SCRAM"]
   users:
-    - name: my-user
+    - name: admin
       db: admin
       passwordSecretRef: # a reference to the secret that will be used to generate the user's password
-        name: my-user-password
+        name: mongodb-admin-password
       roles:
         - name: clusterAdmin
           db: admin
         - name: userAdminAnyDatabase
           db: admin
-      scramCredentialsSecretName: my-scram
+      scramCredentialsSecretName: mongodb-admin-scram
+    - name: nuvolaris
+      db: nuvolaris
+      passwordSecretRef: # a reference to the secret that will be used to generate the user's password
+        name: mongodb-nuvolaris-password
+      roles:
+        - name: userAdmin
+          db: nuvolaris
+      scramCredentialsSecretName: mongodb-nuvolaris-scram
   additionalMongodConfig:
     storage.wiredTiger.engineConfig.journalCompressor: zlib
 
@@ -48,8 +39,17 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: my-user-password
+  name: mongodb-admin-password
   namespace: nuvolaris
 type: Opaque
 stringData:
-  password: ow-str0ng-p4ssw0rd
+  password: sUpErs3cr3t
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mongodb-nuvolaris-password
+  namespace: nuvolaris
+type: Opaque
+stringData:
+  password: s3cr3t

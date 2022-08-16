@@ -1,0 +1,15 @@
+{
+  "name": "boh",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "build": "docker build . -t ghcr.io/msciabarra/hellonode",
+    "push": "docker push ghcr.io/msciabarra/hellonode"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
