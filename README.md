@@ -21,14 +21,14 @@
 
 Nuvolaris is an [Open Source](https://opensource.org/) project to build a complete and portable [Serverless](https://martinfowler.com/articles/serverless.html) environment that runs in every [Kubernetes](https://kubernetes.io/).
 
- Technically it is a distribution of [Apache OpenWhisk](https://openwhisk.apache.org) released under the [Apache Licence 2.0](LICENSE) (like OpenWhisk itself), that includes other services out of the box.
+Technically it is a distribution of [Apache OpenWhisk](https://openwhisk.apache.org) released under the [Apache Licence 2.0](LICENSE) (like OpenWhisk itself), that includes other services out of the box.
 
 We want to build a *complete* distribution of a serverless environment that:
 
-- it is easy to install and manage
-- potentially runs in every Kubernetes, 
-- it is tested regularly tested against a set of supported Kuubernetes environments
-- includes a (possibly large) number of integrated services
+- It is easy to install and manage.
+- Potentially runs in every Kubernetes.
+- It is tested regularly against a set of supported Kubernetes environments.
+- Includes a (possibly large) number of integrated services.
 
 This is the main differentiation from Apache OpenWhisk, as it only provides a basic engine for serverless. Our goals are described in our [**roadmap**](docs/ROADMAP.md) document to read about.
 
@@ -39,14 +39,13 @@ If you are in a hurry, here a few starting points:
 - Read the [documentation](https://github.com/nuvolaris/nuvolaris-documentation).
 - Download the [latest release](https://github.com/nuvolaris/nuvolaris/releases) of the CLI to install and use Nuvolaris.
 - Check our [YouTube Channel](https://www.youtube.com/channel/UCPt5hk7qcOkESjB7kii1byw) for our trainings and community calls.
-- Chat with us on [Discord](https://discord.gg/VSGG7aQ2Ds) 
+- Chat with us on [Discord](https://discord.gg/VSGG7aQ2Ds).
 
 ## Do you want to help?
 
 If you are a developer, here a few more resources to read:
 
-- If you want to test the cutting edge,  download a [pre-release](https://github.com/nuvolaris/nuvolaris-cli/releases) of the CLI and report issues
+- If you want to test the cutting edge, download a [pre-release](https://github.com/nuvolaris/nuvolaris-cli/releases) of the CLI and report issues.
 - Check our issue tracker for [unassigned and open issues](https://github.com/nuvolaris/nuvolaris/issues).
-- Read the [Overview](docs/OVERVIEW.md) and the [Roadmap](docs/ROADMAP.md) 
+- Read the [Overview](docs/OVERVIEW.md) and the [Roadmap](docs/ROADMAP.md).
 - Check the [Quick Start](docs/QUICK.md) for developers, then read the [Developer Guide](docs/DEVEL.md) and the [Build Guide](docs/BUILD.md).
-
