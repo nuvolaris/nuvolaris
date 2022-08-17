@@ -148,3 +148,5 @@ tasks:
     - wsk action update mongo/mongo tests/mongo.js --docker {{.MONGO_RT}}
     - wsk action invoke mongo/mongo -r | grep "hello"
     
+  mongo2:
+    - wsk project deploy --manifest tests/mongo.yaml

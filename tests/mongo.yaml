@@ -1,0 +1,11 @@
+packages:
+  mongo2:
+    version: 1.0
+    license: Apache-2.0
+    actions:
+      mongo2:
+        function: mongo.js
+        docker: ghcr.io/nuvolaris/action-nodejs-v14:0.3.0-morpheus.22081008
+        inputs:
+          dburi: "mongodb://nuvolaris:s3cr3t@nuvolaris-mongodb-0.nuvolaris-mongodb-svc/nuvolaris"
+  
