@@ -19,6 +19,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: mongosh
+  namespace: nuvolaris
   labels:
     app: mongosh
 spec:
@@ -28,3 +29,6 @@ spec:
     env:
       - name: "MONGODB_URL" 
         value: "mongodb://nuvolaris:s3cr3t@nuvolaris-mongodb-0.nuvolaris-mongodb-svc/nuvolaris"
+      - name: "MONGODB_ADMIN_URL" 
+        value: "mongodb://admin:sUpErs3cr3t@nuvolaris-mongodb-0.nuvolaris-mongodb-svc/admin"
+

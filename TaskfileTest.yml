@@ -30,6 +30,9 @@ vars:
 
   WHISK: '{{default "whisk" .WHISK}}'
   CONFIG: "tests/{{.KUBE}}/{{.WHISK}}.yaml"
+  REDIS_URI: "redis://redis"
+  MONGO_URI: "mongodb://nuvolaris:s3cr3t@nuvolaris-mongodb-0.nuvolaris-mongodb-svc/nuvolaris"
+  MONGO_RT: "ghcr.io/nuvolaris/action-nodejs-v14:0.3.0-morpheus.22081008"
   T: ""
   
 tasks:
@@ -115,7 +118,7 @@ tasks:
     echo $AUTH
     echo wsk property set --apihost $APIHOST --auth $AUTH
     wsk property set --apihost $APIHOST --auth $AUTH
-    which nuv && nuv wskprops --apihost $APIHOST --auth $AUTH
+    which nuv && nuv auth --apihost $APIHOST --auth $AUTH
     while ! wsk action list
     do echo $(( N++)) "waiting for the load balancer to be ready..." ; sleep 10
     done
@@ -128,7 +131,7 @@ tasks:
       curl -sL $URL | grep hello
 
   ping:
-    - wsk package update redis -p redis redis://redis
+    - wsk package update redis -p redis "{{.REDIS_URI}}"
     - wsk action update redis/ping tests/ping.js
     - wsk action invoke redis/ping -r | grep "PONG"
 
@@ -139,3 +142,9 @@ tasks:
   api:
     - wsk action update api tests/api.js -a provide-api-key true
     - wsk action invoke api -r | grep '"api"' 
+
+  mongo:
+    - wsk package update mongo -p dburi {{.MONGO_URI}}
+    - wsk action update mongo/mongo tests/mongo.js --docker {{.MONGO_RT}}
+    - wsk action invoke mongo/mongo -r | grep "hello"
+    

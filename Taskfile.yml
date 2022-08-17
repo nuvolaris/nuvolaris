@@ -100,6 +100,7 @@ tasks:
     - nuv setup --context=kind-nuvolaris --apihost=auto --image-tag={{.TAG}}
 
   all:
+    - task: permission
     - task: operator
     - task: instance
     - task: config
