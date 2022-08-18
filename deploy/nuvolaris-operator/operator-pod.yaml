@@ -15,15 +15,15 @@
 # specific language governing permissions and limitations
 # under the License.
 #
----
 apiVersion: v1
 kind: Pod
 metadata:
-  name: preload-runtime-go
+  name: nuvolaris-operator
   namespace: nuvolaris
 spec:
+  serviceAccount: nuvolaris-operator
   containers:
-  - name: golang
-    image: "openwhisk/action-golang-v1.17:nightly"
-    command: ["/bin/true"]
-  restartPolicy: Never
+    - name: nuvolaris-operator
+      image: ghcr.io/nuvolaris/nuvolaris-operator:latest
+      command: ["./run.sh"]
+      args: ["--verbose"]

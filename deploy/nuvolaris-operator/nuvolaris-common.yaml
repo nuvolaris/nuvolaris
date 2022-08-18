@@ -15,7 +15,11 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nuvolaris
 ---
 apiVersion: v1
 kind: ConfigMap

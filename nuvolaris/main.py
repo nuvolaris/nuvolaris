@@ -25,6 +25,7 @@ import nuvolaris.couchdb as couchdb
 import nuvolaris.mongodb as mongodb
 import nuvolaris.bucket as bucket
 import nuvolaris.openwhisk as openwhisk
+import nuvolaris.cronjob as cron
 
 # tested by an integration test
 @kopf.on.login()
@@ -54,7 +55,8 @@ def whisk_create(spec, name, **kwargs):
         "kafka": "?",  # Kafka
         "redis": "?",  # Redis
         "mongodb": "?",  # MongoDB
-        "s3bucket": "?"   # S3-compatbile buckets
+        "s3bucket": "?",   # S3-compatbile buckets
+        "cron": "?"   # Cron based actions executor
     }
 
     if cfg.get('components.couchdb'):
@@ -115,6 +117,17 @@ def whisk_create(spec, name, **kwargs):
     else:
         state['s3bucket'] = "off"
 
+    if cfg.get('components.cron'):
+        try:
+            msg = cron.create(owner)
+            state['cron'] = "on"
+            logging.info(msg)
+        except:
+            logging.exception("cannot create cron")
+            state['cron']= "error"
+    else:
+        state['cron'] = "off"         
+
     return state
 
 # tested by an integration test
@@ -133,6 +146,10 @@ def whisk_delete(spec, **kwargs):
     if cfg.get("components.openwhisk"):
         msg = openwhisk.delete()
         logging.info(msg)
+
+    if cfg.get("components.cron"):
+        msg = cron.delete()
+        logging.info(msg)        
 
 
 # tested by integration test

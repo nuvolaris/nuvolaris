@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-import os, json, time, sys
+import os, json, time, sys, logging
 import requests as req
 
 from jinja2 import Environment, FileSystemLoader
@@ -142,3 +142,23 @@ class CouchDB:
     url = f"{self.db_base}{database}/_security"
     res = req.put(url, auth=self.db_auth, json=roles)
     return res.status_code in [200, 201, 421]
+
+#
+# Submit a POST request to the _find endpoint using the specified selector
+#
+  def find_doc(self, database, selector, user=None, password="", no_auth=False):
+    url = f"{self.db_base}{database}/_find"
+    headers = {'Content-Type': 'application/json'}
+
+    if no_auth:
+      db_auth=None
+    elif user:
+      db_auth=req.auth.HTTPBasicAuth(user, password)
+    else:
+      db_auth = self.db_auth
+    r = req.post(url, auth=db_auth, headers=headers, data=selector)
+    if r.status_code == 200:
+      return json.loads(r.text)
+    
+    logging.warn(f"query to {url} failed with {r.status_code}. Body {r.text}")
+    return None    

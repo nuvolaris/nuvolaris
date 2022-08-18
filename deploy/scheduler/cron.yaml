@@ -16,40 +16,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-apiVersion: apps/v1
-kind: StatefulSet
+---
+apiVersion: batch/v1
+kind: CronJob
 metadata:
-  name: couchdb
+  name: cron-init
   namespace: nuvolaris
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      name: couchdb
-  serviceName: "couchdb"
-  template:
-    metadata:
-      labels:
-        name: couchdb
+  schedule: "* * * * *"
+  jobTemplate:
     spec:
-      restartPolicy: Always   
-      containers:
-      - name: couchdb
-        image: "apache/couchdb:2.3"
-        imagePullPolicy: "IfNotPresent"
-        ports:
-        - name: couchdb
-          containerPort: 5984
-        env:
-        - name: "COUCHDB_USER"
-          valueFrom:
-            secretKeyRef:
-              name: couchdb-auth
-              key: db_username
-        - name: "COUCHDB_PASSWORD"
-          valueFrom:
-            secretKeyRef:
-              name: couchdb-auth
-              key: db_password
-        - name: "NODENAME"
-          value: "couchdb0"
+      template:
+        spec:
+          containers:
+          - name: cron-init
+            image: "ghcr.io/nuvolaris/nuvolaris-operator:0.2.1-trinity.22080920"
+            imagePullPolicy: IfNotPresent
+            command:
+            - /bin/sh
+            - -c
+            - ./cron.sh
+            env:
+            - name: "NUVOLARIS_CONFIG"
+              value: "{}"             
+          restartPolicy: OnFailure
+

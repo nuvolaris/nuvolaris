@@ -15,15 +15,14 @@
 # specific language governing permissions and limitations
 # under the License.
 #
----
 apiVersion: v1
 kind: Pod
 metadata:
-  name: preload-runtime-python
+  name: preload-runtime-nodejs14
   namespace: nuvolaris
 spec:
   containers:
   - name: nodejs
-    image: "openwhisk/action-python-v3.7:nightly"
+    image: "openwhisk/action-nodejs-v14:nightly"
     command: ["/bin/true"]
   restartPolicy: Never

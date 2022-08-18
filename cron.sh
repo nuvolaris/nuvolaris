@@ -1,3 +1,4 @@
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -15,26 +16,4 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nuvolaris-operator
-  namespace: nuvolaris
-  labels:
-    app: nuvolaris-operator
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: nuvolaris-operator
-  template:
-    metadata:
-      labels:
-        app: nuvolaris-operator
-    spec:
-      serviceAccount: nuvolaris-operator
-      containers:
-        - name: nuvolaris-operator
-          image: ghcr.io/nuvolaris/nuvolaris-operator:0.2.1-trinity.22070510
-          command: ["./run.sh"]
-          args: ["--verbose"]
+poetry run actionexecutor -v
