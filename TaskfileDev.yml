@@ -58,11 +58,15 @@ tasks:
 
   couchdb:
     - rm -f deploy/*/kustomization.yaml deploy/*/__*
-    - kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
+    - task: permission
     - kubectl apply -f deploy/couchdb
 
   couchdb-forward:
     - kubectl -n nuvolaris port-forward svc/couchdb 5985:5984
+
+  mongodb:
+    - kubectl apply -f deploy/mongodb-operator
+    - kubectl apply -f deploy/mongodb
 
   defin: > 
     kubectl -n nuvolaris patch wsk/controller --type=merge --patch '{"metadata": {"finalizers":[] } }'

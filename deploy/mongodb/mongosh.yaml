@@ -1,4 +1,3 @@
-#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -16,7 +15,20 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-echo CONTROLLER: "$CONTROLLER_IMAGE:$CONTROLLER_TAG"
-echo OPERATOR: "$OPERATOR_IMAGE:$OPERATOR_TAG"
-kubectl apply -f deploy/nuvolaris-permissions/
-poetry run kopf run -n nuvolaris -m nuvolaris nuvolaris/main.py "$@"
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mongosh
+  namespace: nuvolaris
+  labels:
+    app: mongosh
+spec:
+  containers:
+  - name: mongosh
+    image: rtsp/mongosh
+    env:
+      - name: "MONGODB_URL" 
+        value: "mongodb://nuvolaris:s3cr3t@nuvolaris-mongodb-0.nuvolaris-mongodb-svc/nuvolaris"
+      - name: "MONGODB_ADMIN_URL" 
+        value: "mongodb://admin:sUpErs3cr3t@nuvolaris-mongodb-0.nuvolaris-mongodb-svc/admin"
+

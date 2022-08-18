@@ -21,7 +21,7 @@ Resources:
     Properties:
       ImageId: ami-052efd3df9dad4825 # ImageID valid only in us-east-1 region
       InstanceType: t2.medium
-      KeyName: nuvolaris-dev 
+      KeyName: dev.nuvolaris.io 
       SecurityGroupIds:
         - !Ref MySecurityGroup
       BlockDeviceMappings:

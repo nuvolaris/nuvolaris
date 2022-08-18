@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: hellonode
+ labels:
+   app: hellonode
+spec:
+ replicas: 1
+ selector:
+   matchLabels:
+     app: hellonode
+ template:
+   metadata:
+     labels:
+       app: hellonode
+   spec:
+     containers:
+     - name: podcool
+       image: ghcr.io/msciabarra/hellonode
+       ports:
+       - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hellonode
+  labels:
+    app: hellonode
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 30880
+    protocol: TCP
+  selector:
+    app: hellonode

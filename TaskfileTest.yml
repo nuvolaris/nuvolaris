@@ -29,6 +29,9 @@ vars:
 
   WHISK: '{{default "whisk" .WHISK}}'
   CONFIG: "tests/{{.KUBE}}/{{.WHISK}}.yaml"
+  REDIS_URI: "redis://redis"
+  MONGO_URI: "mongodb://nuvolaris:s3cr3t@nuvolaris-mongodb-0.nuvolaris-mongodb-svc/nuvolaris"
+  MONGO_RT: "ghcr.io/nuvolaris/action-nodejs-v14:0.3.0-morpheus.22081008"
   T: ""
   
 tasks:
@@ -45,9 +48,11 @@ tasks:
         newTag: {{.OPERATOR_TAG}}
       resources:
       - nuvolaris-common.yaml
-      - operator-roles.yaml
       - operator-pod.yaml
       __EOF__
+
+
+  permission: kubectl apply -f deploy/nuvolaris-permissions
 
   operator:
   - task: kustomization
@@ -115,7 +120,7 @@ tasks:
       curl -sL $URL | grep hello
 
   ping:
-    - wsk package update redis -p redis redis://redis
+    - wsk package update redis -p redis "{{.REDIS_URI}}"
     - wsk action update redis/ping tests/ping.js
     - wsk action invoke redis/ping -r | grep "PONG"
 
@@ -126,3 +131,11 @@ tasks:
   api:
     - wsk action update api tests/api.js -a provide-api-key true
     - wsk action invoke api -r | grep '"api"'
+
+  mongo:
+    - wsk package update mongo -p dburi {{.MONGO_URI}}
+    - wsk action update mongo/mongo tests/mongo.js --docker {{.MONGO_RT}}
+    - wsk action invoke mongo/mongo -r | grep "hello"
+    
+  mongo2:
+    - wsk project deploy --manifest tests/mongo.yaml
