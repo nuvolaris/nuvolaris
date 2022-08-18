@@ -17,10 +17,6 @@
 #
 import os, json, time, sys, logging
 import requests as req
-
-from jinja2 import Environment, FileSystemLoader
-loader = FileSystemLoader(["./nuvolaris/templates", "./nuvolaris/files"])
-env = Environment(loader=loader)
 import nuvolaris.config as cfg
 
 class CouchDB:
@@ -113,11 +109,6 @@ class CouchDB:
         r = req.delete(url, auth=self.db_auth)
         return r.status_code == 200
     return False
-
-  def update_templated_doc(self, database, template, data):
-      tpl = env.get_template(template)
-      doc = json.loads(tpl.render(data))
-      return self.update_doc(database, doc)
 
   def configure_single_node(self):
     url = f"{self.db_url}/_cluster_setup"

@@ -22,6 +22,16 @@ import nuvolaris.couchdb_util as cu
 import nuvolaris.config as cfg
 import nuvolaris.couchdb_util
 
+from jinja2 import Environment, FileSystemLoader
+loader = FileSystemLoader(["./nuvolaris/templates", "./nuvolaris/files"])
+env = Environment(loader=loader)
+
+def update_templated_doc(db, database, template, data):
+    tpl = env.get_template(template)
+    doc = json.loads(tpl.render(data))
+    return db.update_doc(database, doc)
+
+
 def create(owner=None):
     logging.info("create couchdb")
     u = cfg.get('couchdb.admin.user', "COUCHDB_ADMIN_USER", "whisk_admin")
@@ -92,7 +102,7 @@ def init_subjects(db):
     members = [cfg.get('couchdb.controller.user'), cfg.get('couchdb.invoker.user')]
     res = check(db.add_role(dbn, members), "add_role: subjects", res)
     for i in subjects_design_docs:
-        res = check(db.update_templated_doc(dbn, i, {}), f"add {i}", res)
+        res = check(update_templated_doc(db, dbn, i, {}), f"add {i}", res)
     return res
 
 def init_activations(db):
@@ -109,7 +119,7 @@ def init_activations(db):
     members = [cfg.get('couchdb.controller.user'), cfg.get('couchdb.invoker.user')]
     res = check(db.add_role(dbn, members), "add_role: activations", res)
     for i in activations_design_docs:
-        res = check(db.update_templated_doc(dbn, i, {}), f"add {i}", res)
+        res = check(update_templated_doc(db, dbn, i, {}), f"add {i}", res)
     return res
 
 def init_actions(db):
@@ -123,7 +133,7 @@ def init_actions(db):
     members = [cfg.get('couchdb.controller.user'), cfg.get('couchdb.invoker.user')]
     res = check(db.add_role(dbn, members), "add_role: actions", res)
     for i in whisks_design_docs:
-        res = check(db.update_templated_doc(dbn, i, {}), f"add {i}", res)
+        res = check(update_templated_doc(db, dbn, i, {}), f"add {i}", res)
     return res
 
 def add_initial_subjects(db):
@@ -133,7 +143,7 @@ def add_initial_subjects(db):
         [uuid, key] = value.split(":")
         basename = name.split(".")[-1]
         data = { "name": basename, "key": key, "uuid": uuid}
-        res = check(db.update_templated_doc(dbn, "subject.json", data), f"add {name}", res)
+        res = check(update_templated_doc(db, dbn, "subject.json", data), f"add {name}", res)
     return res
 
 def init():

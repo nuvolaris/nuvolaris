@@ -21,6 +21,8 @@
 import nuvolaris.config as cfg
 import nuvolaris.testutil as tu
 import nuvolaris.kube as kube
+import nuvolaris.couchdb as cdb
+
 
 !kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
 !kubectl apply -f deploy/couchdb
@@ -58,9 +60,9 @@ assert(db.update_doc("test",  doc))
 assert(db.get_doc("test", "test")['value']  == 'world')
 assert(db.delete_doc("test", "test"))
 assert(not db.delete_doc(db, "test"))
-assert(db.update_templated_doc("test", "test.json", {"item": "first"}))
+assert(cdb.update_templated_doc(db, "test", "test.json", {"item": "first"}))
 assert(db.get_doc("test", "test")['value'] == 'first')
-assert(db.update_templated_doc("test", "test.json", {"item": "second"}))
+assert(cdb.update_templated_doc(db, "test", "test.json", {"item": "second"}))
 assert(db.get_doc("test", "test")['value'] == 'second')
 assert(db.delete_doc("test", "test"))
 assert(db.delete_db("test"))

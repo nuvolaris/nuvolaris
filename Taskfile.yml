@@ -176,8 +176,7 @@ tasks:
     cmds:
       - task: iclean
       - |
-        kubectl apply -f deploy/nuvolaris-operator/whisk-crd.yaml
-        kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
+        kubectl apply -f deploy/nuvolaris-permissions
         for test in tests/{{.T}}*.ipy tests/{{.KUBE}}/{{.T}}*.ipy
         do  
             if test -e "$test"
@@ -189,8 +188,9 @@ tasks:
     silent: true
 
   dtest:
-    - task: t:operator
-    - task: t:instance
+    - task: permission
+    - task: operator
+    - task: instance
     - task: actions
 
   actions:
