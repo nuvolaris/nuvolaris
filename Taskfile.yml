@@ -246,6 +246,9 @@ tasks:
   build-and-load:
     - task: b:build-and-load
 
+  build-and-push:
+    - task: b:build-and-push
+
   buildx-and-push:
     - task: b:buildx-and-push
 

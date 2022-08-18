@@ -18,7 +18,5 @@
 #
 echo CONTROLLER: "$CONTROLLER_IMAGE:$CONTROLLER_TAG"
 echo OPERATOR: "$OPERATOR_IMAGE:$OPERATOR_TAG"
-kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
-kubectl apply -f deploy/nuvolaris-operator/operator-roles.yaml
-kubectl apply -f deploy/nuvolaris-operator/whisk-crd.yaml
+kubectl apply -f deploy/nuvolaris-permission/
 poetry run kopf run -n nuvolaris -m nuvolaris nuvolaris/main.py "$@"
