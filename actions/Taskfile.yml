@@ -1,0 +1,63 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+version: '3'
+
+vars:
+  KUBE:
+    sh: ../detect.sh
+  WHISK: '{{default "whisk" .WHISK}}'
+  CONFIG: "../tests/{{.KUBE}}/{{.WHISK}}.yaml"
+  APIHOST: 
+    sh: kubectl -n nuvolaris get cm/config -o yaml | awk '/apihost:/ {print $2}' | sed -e 's/https:/http:/'
+  SYSTEM: 
+    sh: kubectl -n nuvolaris get wsk/controller -o yaml | awk '/whisk-system:/{print $2}'
+  WSKSYS: wsk --apihost {{.APIHOST}} -u {{.SYSTEM}}
+  DEPLOY: ../deploy/whisk-system
+  CDB_USER:
+    sh: yq .spec.couchdb.admin.user {{.CONFIG}}
+  CDB_PASSWORD:
+    sh: yq .spec.couchdb.admin.password {{.CONFIG}}
+  CDB_HOST:
+    sh: yq .spec.couchdb.host {{.CONFIG}}
+
+tasks:
+
+  list: "{{.WSKSYS}} action list"
+
+  invoke: "{{.WSKSYS}} action invoke -r {{.CLI_ARGS}}"
+
+  config: wsk property set --apihost '{{.APIHOST}}' -u '{{.SYSTEM}}'
+
+  echo:
+    - zip -j {{.DEPLOY}}/echo.zip echo/*
+    - "{{.WSKSYS}} action update echo {{.DEPLOY}}/echo.zip --kind python:3"
+
+  user_manager:
+    - |- 
+      mkdir -p user_manager/nuvolaris
+      cp ../nuvolaris/config.py ../nuvolaris/couchdb_util.py user_manager/nuvolaris
+    - |-
+      cd user_manager
+      rm  ../{{.DEPLOY}}/user_manager.zip
+      zip -r ../{{.DEPLOY}}/user_manager.zip *
+    - > 
+      {{.WSKSYS}} action update user_manager 
+      {{.DEPLOY}}/user_manager.zip --kind python:3
+      -p couchdb_user "{{.CDB_USER}}"
+      -p couchdb_password "{{.CDB_PASSWORD}}"
+      -p couchdb_host "{{.CDB_HOST}}"

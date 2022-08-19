@@ -31,7 +31,6 @@ def update_templated_doc(db, database, template, data):
     doc = json.loads(tpl.render(data))
     return db.update_doc(database, doc)
 
-
 def create(owner=None):
     logging.info("create couchdb")
     u = cfg.get('couchdb.admin.user', "COUCHDB_ADMIN_USER", "whisk_admin")

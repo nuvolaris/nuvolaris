@@ -128,7 +128,8 @@ class CouchDB:
     res = req.put(url, auth=self.db_auth, json=userpass)
     return res.status_code in [200, 201, 421]
 
-  def add_role(self, database: str, members: list[str] = [], admins: list[str] =[]):  
+  #def add_role(self, database: str, members: list[str] = [], admins: list[str] =[]):  
+  def add_role(self, database: str, members = [], admins =[]):  
     roles =  {"admins": { "names": admins, "roles": [] }, "members": { "names": members, "roles": [] } }
     url = f"{self.db_base}{database}/_security"
     res = req.put(url, auth=self.db_auth, json=roles)

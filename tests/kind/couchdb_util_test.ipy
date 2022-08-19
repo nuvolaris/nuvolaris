@@ -22,7 +22,7 @@ import nuvolaris.config as cfg
 import nuvolaris.testutil as tu
 import nuvolaris.kube as kube
 import nuvolaris.couchdb as cdb
-
+import nuvolaris.couchdb_util as cu
 
 !kubectl apply -f deploy/nuvolaris-operator/nuvolaris-common.yaml
 !kubectl apply -f deploy/couchdb
@@ -32,7 +32,7 @@ import nuvolaris.couchdb as cdb
 assert(cfg.configure(tu.load_sample_config()))
 assert(cfg.put("couchdb.host", "localhost"))
 import nuvolaris.couchdb_util 
-db = nuvolaris.couchdb_util.CouchDB()
+db = cu.CouchDB()
 assert(db.wait_db_ready(60))
 
 # database init

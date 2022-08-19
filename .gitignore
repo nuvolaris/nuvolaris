@@ -26,6 +26,7 @@ playground
 examples/
 aliases
 deploy/extract/
+deploy/whisk-system/
 node_modules/
 .env
 __*
@@ -33,5 +34,5 @@ clusters/id_rsa*
 *.kubeconfig
 run.pid
 *.off
-
+actions/*/nuvolaris/
 _*.yaml

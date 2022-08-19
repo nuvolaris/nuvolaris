@@ -17,7 +17,7 @@
 # under the License.
 #
 sudo sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
-sudo apt-get -y install python3.9 python3.9-venv curl sudo
+sudo apt-get -y install python3.9 python3.9-venv curl wget jq
 WSK_VERSION=1.2.0
 WSK_BASE=https://github.com/apache/openwhisk-cli/releases/download
 ARCH=amd64
@@ -28,6 +28,9 @@ VER="v4.5.4"
 ARCH="$(dpkg --print-architecture)"
 URL="https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F$VER/kustomize_${VER}_linux_${ARCH}.tar.gz"
 curl -sL $URL | tar tzvf - -C ~/.local/bin
+YQ_VER=v4.27.2
+YQ_BIN=yq_linux_amd64
+wget https://github.com/mikefarah/yq/releases/download/${YQ_VER}/${YQ_BIN} -O /usr/bin/yq && chmod +x /usr/bin/yq
 #URL="https://dl.k8s.io/release/$VER/bin/linux/$ARCH/kubectl"
 #curl -sSL "$URL" | sudo tee /usr/local/bin/kubectl && sudo chmod +x /usr/bin/kubectl
 #kubectl version
