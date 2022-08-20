@@ -23,7 +23,7 @@ import nuvolaris.kustomize as nku
 import nuvolaris.template as ntp
 
 # execute the kustomization of a folder under "deploy"
-# sperficied with `where`
+# specified with `where`
 # it generate a kustomization.yaml, adding the header 
 # then including all the files of that folder as resources
 # you have to pass a list of kustomizations to apply
@@ -68,6 +68,55 @@ def kustomize(where, *what, templates=[], data={}):
             f.write(f"- __{template}\n")
     res = subprocess.run(["kustomize", "build", dir], capture_output=True)
     return res.stdout.decode("utf-8")
+
+# execute the kustomization of a folder under "deploy"
+# specified with `where`
+# it generate a kustomization.yaml, adding the header 
+# then including all the files of that folder as resources limited to the one
+# specified in templates_filter parameter
+# you have to pass a list of kustomizations to apply
+# you can use various helpers in this module to generate customizations
+# it returns the expanded kustomization
+def restricted_kustomize(where, *what, templates=[], templates_filter=[],data={}):
+    """Test kustomize
+    >>> import nuvolaris.kustomize as ku
+    >>> import nuvolaris.testutil as tu
+    >>> tu.grep(ku.restricted_kustomize("test", ku.image("nginx", "busybox"), templates_filter=["pod.yaml","svc.yaml"]), "kind|image:", sort=True)
+    - image: busybox
+    kind: Pod
+    kind: Service
+    >>> tu.grep(ku.restricted_kustomize("test", ku.configMapTemplate("test-cm", "test", "test.json", {"item":"value"}),templates_filter=["pod.yaml","svc.yaml"]), r"_id|value")
+    "_id": "test",
+    "value": "value"
+    >>> tu.grep(ku.restricted_kustomize("test", ku.image("nginx", "busybox"), templates=['testcm.yaml'], templates_filter=["pod.yaml","svc.yaml"],data={"name":"test-config"}), "name: test-", sort=True)
+    name: test-config
+    name: test-pod
+    name: test-svc
+    """
+    # prepare the kustomization
+    dir = f"deploy/{where}"
+    tgt = f"{dir}/kustomization.yaml"
+    with open(tgt, "w") as f:
+        f.write("apiVersion: kustomize.config.k8s.io/v1beta1\nkind: Kustomization\n")
+        for s in list(what):
+            f.write(s)
+        f.write("resources:\n")
+        dirs = os.listdir(f"deploy/{where}")
+        dirs.sort()
+        for file in dirs:
+            if file == "kustomization.yaml":
+              continue
+            if file.startswith("_"):
+              continue
+            if file in templates_filter:  
+              f.write(f"- {file}\n")
+        # adding extra temmplatized resources
+        for template in templates:
+            out = f"deploy/{where}/__{template}"
+            file = ntp.spool_template(template, out, data)
+            f.write(f"- __{template}\n")
+    res = subprocess.run(["kustomize", "build", dir], capture_output=True)
+    return res.stdout.decode("utf-8")    
 
 # generate image kustomization
 def image(name, newName=None, newTag=None):
@@ -189,6 +238,24 @@ def kustom_list(where, *what, templates=[], data={}):
   ['Pod', 'Service']
   """
   yml = nku.kustomize(where, *what, templates=templates, data=data)
+  stream = io.StringIO(yml)
+  res = list(yaml.load_all(stream, yaml.Loader))
+  return {"apiVersion": "v1", "kind": "List", "items": res }
+
+
+  # returns a list of kustomized objects restricting the deploy avaialbe templates to gven ones
+def restricted_kustom_list(where, *what, templates=[], templates_filter=[], data={}):
+  """
+  >>> import nuvolaris.kustomize as nku
+  >>> where = "test"
+  >>> what = []
+  >>> res = nku.restricted_kustom_list(where, *what,templates_filter=["pod.yaml","svc.yaml"])
+  >>> out = [x['kind'] for x in res['items']]
+  >>> out.sort()
+  >>> print(out)
+  ['Pod', 'Service']
+  """
+  yml = nku.restricted_kustomize(where, *what, templates=templates, templates_filter=templates_filter,data=data)
   stream = io.StringIO(yml)
   res = list(yaml.load_all(stream, yaml.Loader))
   return {"apiVersion": "v1", "kind": "List", "items": res }

@@ -39,13 +39,15 @@ def create(owner=None):
     admin_user = cfg.get('mongodb.admin.user') or "whisk_user"
     admin_pwd = cfg.get('mongodb.admin.password') or "0therPa55"
     nuv_user = cfg.get('mongodb.nuvolaris.user') or "nuvolaris"
-    nuv_pwd = cfg.get('mongodb.nuvolaris.password') or "s0meP@ass3"    
+    nuv_pwd = cfg.get('mongodb.nuvolaris.password') or "s0meP@ass3"
+    exposed = cfg.get('mongodb.exposed') or "false"  
 
     data = {
         'mongo_admin_user':admin_user,
         'mongo_admin_password': admin_pwd,
         'mongo_nuvolaris_user':nuv_user,
-        'mongo_nuvolaris_password':nuv_pwd
+        'mongo_nuvolaris_password':nuv_pwd,
+        'exposed_externally':exposed
     }
 
     spec = kus.kustom_list("mongodb-operator")
@@ -69,7 +71,7 @@ def create(owner=None):
         
         logging.info("creating a mongodb instance")        
         mkust = kus.patchTemplates("mongodb", ["mongodb-auth.yaml","mongodb-config.yaml"], data)    
-        mspec = kus.kustom_list("mongodb", mkust, templates=[], data=data)
+        mspec = kus.restricted_kustom_list("mongodb", mkust, templates=[],templates_filter=["mongodb-auth.yaml","mongodb.yaml"], data=data)
 
         if owner:
             kopf.append_owner_reference(mspec['items'], owner)

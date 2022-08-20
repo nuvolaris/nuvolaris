@@ -54,6 +54,7 @@ ADD nuvolaris/*.py /home/nuvolaris/nuvolaris/
 ADD nuvolaris/files /home/nuvolaris/nuvolaris/files
 ADD nuvolaris/templates /home/nuvolaris/nuvolaris/templates
 ADD deploy/nuvolaris-operator /home/nuvolaris/deploy/nuvolaris-operator
+ADD deploy/nuvolaris-permissions /home/nuvolaris/deploy/nuvolaris-permissions
 ADD deploy/openwhisk-standalone /home/nuvolaris/deploy/openwhisk-standalone
 ADD deploy/couchdb /home/nuvolaris/deploy/couchdb
 ADD deploy/redis /home/nuvolaris/deploy/redis

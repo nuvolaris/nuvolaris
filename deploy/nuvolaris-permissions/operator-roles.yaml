@@ -25,9 +25,9 @@ metadata:
     app: nuvolaris-operator-role
 rules:
 
-# edit secrets cm po svc pvc ingresses
+# edit secrets cm po svc pvc ingresses serviceaccounts events
 - apiGroups: [""]
-  resources: ["configmaps", "secrets", "pods", "services", "persistentvolumeclaims", "ingresses"]
+  resources: ["configmaps", "secrets", "pods", "services", "persistentvolumeclaims", "ingresses","serviceaccounts","events"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 
 # read logs
@@ -47,18 +47,22 @@ rules:
 
 # edit nuvolaris crd
 - apiGroups: ["nuvolaris.org"]
-  resources: ["whisks"]
+  resources: ["whisks","whisks/status"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 
-# edit nuvolaris crd status
-- apiGroups: ["nuvolaris.org"]
-  resources: ["whisks/status"]
-  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]  
+# networking.k8s.io
+- apiGroups: ["networking.k8s.io"]
+  resources: ["ingresses"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 
-# mongofb related
+# required for mongodb
 - apiGroups: ["rbac.authorization.k8s.io"]
   resources: ["roles","rolebindings"]
-  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]    
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+- apiGroups: ["mongodbcommunity.mongodb.com"]
+  resources: ["mongodbcommunity","mongodbcommunity/finalizers","mongodbcommunity/spec","mongodbcommunity/status"]
+  verbs: ["get","patch","list","update","watch","create","delete"]
 
 ---
 kind: RoleBinding
