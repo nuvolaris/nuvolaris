@@ -32,7 +32,7 @@ spec:
     # start kafka
     kafka: false
     # start mongodb
-    mongodb: false
+    mongodb: true
     # start redis
     redis: false
     # start s3ninja
@@ -56,14 +56,16 @@ spec:
       user: controller_admin
       password: s0meP@ass2
   scheduler:
-    schedule: "* * * * *"      
-  # not yet implemented
+    schedule: "* * * * *"  
   mongodb:
     host: mongodb
     volume-size: 10
     admin: 
-      user: admin
+      user: whisk_admin
       password: 0therPa55
+    nuvolaris:
+      user: nuvolaris
+      password: s0meP@ass3
   # not yet implemented
   kafka:
     host: kafka

@@ -14,22 +14,13 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-#
 ---
 apiVersion: v1
-kind: Pod
+kind: Secret
 metadata:
-  name: mongosh
+  name: mongodb-auth
   namespace: nuvolaris
-  labels:
-    app: mongosh
-spec:
-  containers:
-  - name: mongosh
-    image: rtsp/mongosh
-    env:
-      - name: "MONGODB_URL" 
-        value: "mongodb://nuvolaris:s3cr3t@nuvolaris-mongodb-0.nuvolaris-mongodb-svc/nuvolaris"
-      - name: "MONGODB_ADMIN_URL" 
-        value: "mongodb://admin:sUpErs3cr3t@nuvolaris-mongodb-0.nuvolaris-mongodb-svc/admin"
-
+type: Opaque
+stringData:
+  mongodb_admin_psw: sUpErs3cr3t
+  mongodb_nuvolaris_psw: s3cr3t

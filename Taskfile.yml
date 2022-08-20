@@ -160,6 +160,8 @@ tasks:
         ignore_error: true
       - cmd: kubectl -n nuvolaris delete ing --all
         ignore_error: true
+      - cmd: kubectl -n nuvolaris delete deployments --all
+        ignore_error: true        
 
   utest:
     cmds:

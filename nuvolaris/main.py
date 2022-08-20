@@ -22,10 +22,10 @@ import nuvolaris.config as cfg
 import nuvolaris.kube as kube
 import nuvolaris.redis as redis
 import nuvolaris.couchdb as couchdb
-import nuvolaris.mongodb as mongodb
 import nuvolaris.bucket as bucket
 import nuvolaris.openwhisk as openwhisk
 import nuvolaris.cronjob as cron
+import nuvolaris.mongodb as mongodb
 
 # tested by an integration test
 @kopf.on.login()
@@ -92,6 +92,17 @@ def whisk_create(spec, name, **kwargs):
     else:
         state['openwhisk'] = "off"
 
+    if cfg.get('components.cron'):
+        try:
+            msg = cron.create(owner)
+            state['cron'] = "on"
+            logging.info(msg)
+        except:
+            logging.exception("cannot create cron")
+            state['cron']= "error"
+    else:
+        state['cron'] = "off"         
+
     if cfg.get('components.kafka'):
         logging.warn("invoker not yet implemented")
         state['kafka'] = "n/a"
@@ -104,29 +115,18 @@ def whisk_create(spec, name, **kwargs):
     else:
         state['invoker'] = "off"
 
-    if cfg.get('components.mongodb'):
-        logging.warn("invoker not yet implemented")
-        state['mongodb'] = "n/a"
-    else:
-        state['mongodb'] = "off"
-
-
     if cfg.get('components.s3bucket'):
         logging.warn("invoker not yet implemented")
         state['s3bucket'] = "n/a"
     else:
-        state['s3bucket'] = "off"
+        state['s3bucket'] = "off"       
 
-    if cfg.get('components.cron'):
-        try:
-            msg = cron.create(owner)
-            state['cron'] = "on"
-            logging.info(msg)
-        except:
-            logging.exception("cannot create cron")
-            state['cron']= "error"
+    if cfg.get('components.mongodb'):
+        msg = mongodb.create(owner)
+        logging.info(msg)
+        state['mongodb'] = "on"
     else:
-        state['cron'] = "off"         
+        state['mongodb'] = "off"          
 
     return state
 
@@ -147,9 +147,13 @@ def whisk_delete(spec, **kwargs):
         msg = openwhisk.delete()
         logging.info(msg)
 
+    if cfg.get("components.mongodb"):
+        msg = mongodb.delete()
+        logging.info(msg)         
+
     if cfg.get("components.cron"):
         msg = cron.delete()
-        logging.info(msg)        
+        logging.info(msg)               
 
 
 # tested by integration test

@@ -133,6 +133,31 @@ def patchTemplate(where, template, data):
 - path: __{template}
 """
 
+# generate a patch from a list of templates
+def patchTemplates(where, templates=[], data={}):
+    """   
+    >>> import nuvolaris.testutil as tu
+    >>> import os.path
+    >>> data = {"name":"test-pod", "dir":"/usr/share/nginx/html"}
+    >>> print(patchTemplates("test",  ["set-attach.yaml","cron-init.yaml"], data), end='')
+    patches:
+    - path: __set-attach.yaml
+    - path: __cron-init.yaml
+    >>> os.path.exists("deploy/test/__set-attach.yaml")
+    True
+    """
+    paths = []
+    for template in templates:
+      out = f"deploy/{where}/__{template}"
+      file = ntp.spool_template(template, out, data)
+      paths.append(f"- path: __{template}\n")
+
+    patches = ""
+    for path in paths: 
+      patches += path
+
+    return f"""patches:\n{patches}""" 
+
 def secretLiteral(name, *args):
   """
   >>> import nuvolaris.testutil as tu
