@@ -31,7 +31,7 @@ spec:
     - name: {{mongo_admin_user}}
       db: admin
       passwordSecretRef: # a reference to the secret that will be used to generate the user's password
-        name: mongodb-auth
+        name: mongodb-admin-auth
         key: mongodb_admin_psw       
       roles:
         - name: clusterAdmin
@@ -42,7 +42,7 @@ spec:
     - name: {{mongo_nuvolaris_user}}
       db: nuvolaris
       passwordSecretRef: # a reference to the secret that will be used to generate the user's password
-        name: mongodb-auth
+        name: mongodb-nuvolaris-auth
         key: mongodb_nuvolaris_psw     
       roles:
         - name: readWrite
@@ -50,3 +50,13 @@ spec:
       scramCredentialsSecretName: mongodb-nuvolaris-scram
   additionalMongodConfig:
     storage.wiredTiger.engineConfig.journalCompressor: zlib
+  statefulSet:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: mongodb-agent
+              readinessProbe:
+                failureThreshold: 40
+                initialDelaySeconds: 5
+                timeout: 30    

@@ -15,6 +15,22 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+
+#
+# Containers can get the nuvolaris mongodb connection string
+# deployed from the nuvolaris-operator using something similar to
+#containers:
+# - name: test-app
+#   env:
+#    - name: "CONNECTION_STRING"
+#      valueFrom:
+#        secretKeyRef:
+#          name: nuvolaris-mongodb-nuvolaris-nuvolaris
+#          key: connectionString.standardSrv
+#
+# WARNING connectionString.standardSrv it is normally a base64 endoded string
+#
+
 import kopf, json, time
 import nuvolaris.kube as kube
 import nuvolaris.kustomize as kus
@@ -66,12 +82,12 @@ def create(owner=None):
     if( pod_name ):
         logging.info(f"checking for {pod_name}")
         while not kube.wait(f"pod/{pod_name}", "condition=ready"):
-            logging.info(f"waiting for {pod_name} ready...")
+            logging.info(f"waiting for {pod_name} to be ready...")
             time.sleep(1)
         
-        logging.info("creating a mongodb instance")        
-        mkust = kus.patchTemplates("mongodb", ["mongodb-auth.yaml","mongodb-config.yaml"], data)    
-        mspec = kus.restricted_kustom_list("mongodb", mkust, templates=[],templates_filter=["mongodb-auth.yaml","mongodb.yaml"], data=data)
+        logging.info("*** creating a mongodb instance")        
+        mkust = kus.patchTemplates("mongodb", ["mongodb-auth.yaml","mongodb-auth-nuvolaris.yaml","mongodb-config.yaml"], data)    
+        mspec = kus.restricted_kustom_list("mongodb", mkust, templates=[],templates_filter=["mongodb-auth.yaml","mongodb-auth-nuvolaris.yaml","mongodb.yaml"], data=data)
 
         if owner:
             kopf.append_owner_reference(mspec['items'], owner)
@@ -80,9 +96,9 @@ def create(owner=None):
         
         # skipping this at the moment
         res = kube.apply(mspec)
-        logging.info(f"created mongodb instance: {res}")
+        logging.info(f"*** created mongodb instance: {res}")
     else:
-        logging.info("something went wrong deploying mongodb operator")    
+        logging.info("*** something went wrong deploying mongodb operator")    
     return res 
 
 def delete():

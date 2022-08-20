@@ -18,8 +18,8 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: mongodb-admin-auth
+  name: mongodb-nuvolaris-auth
   namespace: nuvolaris
 type: Opaque
 stringData:
-  mongodb_admin_psw: sUpErs3cr3t
+  mongodb_nuvolaris_psw: s3cr3t

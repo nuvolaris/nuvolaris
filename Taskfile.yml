@@ -95,6 +95,9 @@ tasks:
   destroy: 
     - task: d:destroy
 
+  mongo: 
+    - task: t:mongo    
+
   nuv:
     - task: kind:config
     - nuv setup --context=kind-nuvolaris --apihost=auto --image-tag={{.TAG}}
@@ -106,6 +109,7 @@ tasks:
     - task: config
     - task: hello
     - task: ping
+    - task: mongo
 
   config:
     - task: t:config

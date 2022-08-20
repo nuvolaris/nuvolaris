@@ -30,7 +30,7 @@ vars:
   WHISK: '{{default "whisk" .WHISK}}'
   CONFIG: "tests/{{.KUBE}}/{{.WHISK}}.yaml"
   REDIS_URI: "redis://redis"
-  MONGO_URI: "mongodb://nuvolaris:s3cr3t@nuvolaris-mongodb-0.nuvolaris-mongodb-svc/nuvolaris"
+  MONGO_URI: "mongodb://nuvolaris:s0meP%40ass3@nuvolaris-mongodb-0.nuvolaris-mongodb-svc.nuvolaris.svc.cluster.local:27017/nuvolaris?replicaSet=nuvolaris-mongodb&ssl=false"
   MONGO_RT: "ghcr.io/nuvolaris/action-nodejs-v14:0.3.0-morpheus.22081008"
   T: ""
   
@@ -133,6 +133,10 @@ tasks:
     - wsk action invoke api -r | grep '"api"'
 
   mongo:
+    - |
+      while ! kubectl -n nuvolaris wait pod nuvolaris-mongodb-0 --for=condition=ready 
+        do sleep 1 ; echo waiting mongodb... 
+      done
     - wsk package update mongo -p dburi {{.MONGO_URI}}
     - wsk action update mongo/mongo tests/mongo.js --docker {{.MONGO_RT}}
     - wsk action invoke mongo/mongo -r | grep "hello"

@@ -14,12 +14,23 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: mongodb-admin-auth
-  namespace: nuvolaris
-type: Opaque
-stringData:
-  mongodb_admin_psw: sUpErs3cr3t
+#
+!kubectl -n nuvolaris delete all --all
+!kubectl -n nuvolaris delete pvc --all
+
+import nuvolaris.config as cfg
+import nuvolaris.testutil as tu
+import nuvolaris.kube as kube
+import nuvolaris.mongodb as mdb
+import logging
+
+# test
+assert(cfg.configure(tu.load_sample_config()))
+assert(mdb.create())
+while not kube.wait("pod/nuvolaris-mongodb-0", "condition=ready"): pass
+assert(kube.get("service/nuvolaris-mongodb-svc"))
+assert(kube.get("mdbc/nuvolaris-mongodb"))
+
+!kubectl get secret -n nuvolaris -ojson nuvolaris-mongodb-nuvolaris-nuvolaris | jq -r '.data | with_entries(.value |= @base64d)'
+
+assert(mdb.delete())

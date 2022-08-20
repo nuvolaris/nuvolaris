@@ -31,7 +31,7 @@ spec:
     - name: admin
       db: admin
       passwordSecretRef: # a reference to the secret that will be used to generate the user's password
-        name: mongodb-auth
+        name: mongodb-admin-auth
         key: mongodb_admin_psw
       roles:
         - name: clusterAdmin
@@ -42,7 +42,7 @@ spec:
     - name: nuvolaris
       db: nuvolaris
       passwordSecretRef: # a reference to the secret that will be used to generate the user's password
-        name: mongodb-auth
+        name: mongodb-nuvolaris-auth
         key: mongodb_nuvolaris_psw
       roles:
         - name: readWrite
