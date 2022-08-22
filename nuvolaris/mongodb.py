@@ -30,6 +30,9 @@
 #
 # WARNING connectionString.standardSrv it is normally a base64 endoded string
 #
+# Currently for development purposes it is possible to access mongodb by port forwarding
+# kubectl -n nuvolaris port-forward service/nuvolaris-mongodb-svc 27017:27017
+#
 
 import kopf, json, time
 import nuvolaris.kube as kube
@@ -56,14 +59,13 @@ def create(owner=None):
     admin_pwd = cfg.get('mongodb.admin.password') or "0therPa55"
     nuv_user = cfg.get('mongodb.nuvolaris.user') or "nuvolaris"
     nuv_pwd = cfg.get('mongodb.nuvolaris.password') or "s0meP@ass3"
-    exposed = cfg.get('mongodb.exposed') or "false"  
+    exposed = cfg.get('mongodb.exposedExternally') or False 
 
     data = {
         'mongo_admin_user':admin_user,
         'mongo_admin_password': admin_pwd,
         'mongo_nuvolaris_user':nuv_user,
-        'mongo_nuvolaris_password':nuv_pwd,
-        'exposed_externally':exposed
+        'mongo_nuvolaris_password':nuv_pwd
     }
 
     spec = kus.kustom_list("mongodb-operator")
@@ -85,9 +87,16 @@ def create(owner=None):
             logging.info(f"waiting for {pod_name} to be ready...")
             time.sleep(1)
         
-        logging.info("*** creating a mongodb instance")        
+        logging.info("*** creating a mongodb instance")
+        
+        tpl_filter =  ["mongodb-auth.yaml","mongodb-auth-nuvolaris.yaml","mongodb.yaml"]
+        if exposed: 
+            logging.info("*** invluding mongodb service for localhost access")
+            tpl_filter.append("mongodb-svc.yaml")
+        
+
         mkust = kus.patchTemplates("mongodb", ["mongodb-auth.yaml","mongodb-auth-nuvolaris.yaml","mongodb-config.yaml"], data)    
-        mspec = kus.restricted_kustom_list("mongodb", mkust, templates=[],templates_filter=["mongodb-auth.yaml","mongodb-auth-nuvolaris.yaml","mongodb.yaml"], data=data)
+        mspec = kus.restricted_kustom_list("mongodb", mkust, templates=[],templates_filter=tpl_filter, data=data)
 
         if owner:
             kopf.append_owner_reference(mspec['items'], owner)
