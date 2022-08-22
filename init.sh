@@ -101,6 +101,9 @@ nodes:
   - containerPort: 28017
     hostPort: 32817
     protocol: TCP
+  - containerPort: 32717
+    hostPort: 27017
+    protocol: TCP    
 EOF
 fi
 
