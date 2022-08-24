@@ -7,7 +7,7 @@ alias kde="kubectl -n nuvolaris describe"
 function ke { 
   kubectl -n nuvolaris exec -ti "$1" -- bash 
 }
-alias kns="kubectl config  set-context --current --namespace"
+alias kns="kubectl config set-context --current --namespace"
 alias kfin='kubectl -n nuvolaris patch -p {"metadata":{"finalizers":[]}} --type=merge' 
 alias gst="git status"
 alias gl="git log --pretty=oneline"
