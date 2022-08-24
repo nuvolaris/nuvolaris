@@ -74,23 +74,27 @@ RUN ARCH="$(dpkg --print-architecture)" ;\
     curl -sL $URL -o /tmp/terraform.zip ;\
     unzip /tmp/terraform.zip -d /usr/bin ;\
     rm /tmp/terraform.zip
-# Add the aws cli and eksctl
+# Add the aws cli
 RUN mkdir /tmp/awscli ;\
     curl -sL "https://awscli.amazonaws.com/awscli-exe-linux-$(arch).zip" -o "/tmp/awscli/awscliv2.zip" ;\
     cd /tmp/awscli ; unzip awscliv2.zip ;\
     ./aws/install ;\
     rm -Rvf /tmp/awscli
 # Install eksctl
-RUN curl -sL "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_$(dpkg --print-architecture).tar.gz" |\
-    tar xzf - -C /usr/bin
+RUN VER=v0.109.0 ;\
+    ARCH="$(dpkg --print-architecture)" ;\
+    curl -sL "https://github.com/weaveworks/eksctl/releases/download/${VER}/eksctl_Linux_${ARCH}.tar.gz" |\
+    tar xzvf - -C /usr/bin
 # Install azure cli - commented out: buggy on arm
 # RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 # Download openshift installer
-RUN VER=4.10.4 ;\
-    BASE=https://mirror.openshift.com/pub/openshift-v4/clients/ocp ;\
+RUN VER=4.10.27 ;\
     ARCH=$(dpkg --print-architecture) ;\
-    URL="$BASE/$VER/openshift-install-linux-$VER.tar.gz" ;\
-    curl -sL "$URL" | tar xzvf - -C /usr/bin/
+    BASE=https://mirror.openshift.com/pub/openshift-v4/$ARCH/clients/ocp ;\
+    URL1="$BASE/$VER/openshift-install-linux-$VER.tar.gz" ;\
+    URL2="$BASE/$VER/openshift-client-linux-$VER.tar.gz" ;\
+    curl -sL "$URL1" | tar xzvf - -C /usr/bin/ ;\
+    curl -sL "$URL2" | tar xzvf - -C /usr/bin/
 # install juju
 RUN mkdir /tmp/juju ; cd /tmp/juju ;\
     curl -sL https://launchpad.net/juju/2.9/2.9.0/+download/juju-2.9.0-linux-$(dpkg --print-architecture).tar.xz | tar xJvf - ;\
