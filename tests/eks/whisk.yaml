@@ -31,7 +31,7 @@ spec:
     # start kafka
     kafka: false
     # start mongodb
-    mongodb: false
+    mongodb: true
     # start redis
     redis: true
     # start s3ninja
@@ -66,8 +66,11 @@ spec:
     host: mongodb
     volume-size: 10
     admin: 
-      user: admin
+      user: whisk_admin
       password: 0therPa55
+    nuvolaris:
+      user: nuvolaris
+      password: s0meP@ass3
   kafka:
     host: kafka
     volume-size: 10

@@ -14,7 +14,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
 ---
 apiVersion: mongodbcommunity.mongodb.com/v1
 kind: MongoDBCommunity
@@ -32,7 +31,8 @@ spec:
     - name: admin
       db: admin
       passwordSecretRef: # a reference to the secret that will be used to generate the user's password
-        name: mongodb-admin-password
+        name: mongodb-admin-auth
+        key: mongodb_admin_psw
       roles:
         - name: clusterAdmin
           db: admin
@@ -42,31 +42,11 @@ spec:
     - name: nuvolaris
       db: nuvolaris
       passwordSecretRef: # a reference to the secret that will be used to generate the user's password
-        name: mongodb-nuvolaris-password
+        name: mongodb-nuvolaris-auth
+        key: mongodb_nuvolaris_psw
       roles:
         - name: readWrite
           db: nuvolaris
       scramCredentialsSecretName: mongodb-nuvolaris-scram
   additionalMongodConfig:
     storage.wiredTiger.engineConfig.journalCompressor: zlib
-
-# the user credentials will be generated from this secret
-# once the credentials are generated, this secret is no longer required
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: mongodb-admin-password
-  namespace: nuvolaris
-type: Opaque
-stringData:
-  password: sUpErs3cr3t
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: mongodb-nuvolaris-password
-  namespace: nuvolaris
-type: Opaque
-stringData:
-  password: s3cr3t

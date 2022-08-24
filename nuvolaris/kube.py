@@ -137,6 +137,15 @@ def get(name):
     except:
         return None
 
+def get_pods(selector):
+    """
+    filter the existing pods using the given selector expression. (ex name=mongodb-kubernetes-operator)
+    """
+    try:
+        return json.loads(kubectl("get", "pods", f"--selector={selector}","-ojson"))
+    except:
+        return None        
+
 def wait(name, condition, timeout="600s"):
     try:
         return kubectl("wait", name, f"--for={condition}", f"--timeout={timeout}")

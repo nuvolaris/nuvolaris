@@ -233,7 +233,7 @@ def start():
     logging.info(f"interval in seconds between 2 execution is {interval} seconds")
 
     db = cu.CouchDB()
-    res = check(db.wait_db_ready(60), "wait_db_ready", True)
+    res = check(db.wait_db_ready(30), "wait_db_ready", True)
 
     if(res):
         ow_protocol = cfg.get('controller.protocol') or "http"
