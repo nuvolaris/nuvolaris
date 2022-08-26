@@ -133,10 +133,6 @@ tasks:
     - wsk action invoke api -r | grep '"api"'
 
   mongo:
-    - |
-      while ! kubectl -n nuvolaris wait pod nuvolaris-mongodb-0 --for=condition=ready 
-        do sleep 1 ; echo waiting mongodb... 
-      done
     - wsk package update mongo -p dburi {{.MONGO_URI}}
     - wsk action update mongo/mongo tests/mongo.js --docker {{.MONGO_RT}}
     - wsk action invoke mongo/mongo -r | grep "hello"
