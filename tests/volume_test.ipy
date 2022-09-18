@@ -19,7 +19,6 @@
 !kubectl -n nuvolaris delete all --all
 !kubectl -n nuvolaris delete pvc --all
 
-
 import nuvolaris.testutil as tu
 import nuvolaris.config as cfg
 import nuvolaris.kustomize as kus
@@ -36,7 +35,7 @@ assert(len(kube.get("pvc")["items"]) ==0)
 
 data = {"name": "test-nginx", 
         "size": "1", 
-        "dir": "/usr/share/nginx/html",
+        "dir": "/app",
         "storageClass": cfg.get("nuvolaris.storageClass")
 }
 #print(data)

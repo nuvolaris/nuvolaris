@@ -25,6 +25,24 @@ All the code is in the package `nuvolaris`.  Events are handled in `main.py`.
 
 Each event handlers uses utility functions you can find the various service specific files like `openwhisk` or `couchdb`.
 
+The operator image is also used to execute utility tasks like the database initializations and other functions like scheduled invocations. 
+
+The operator can thus invoke itself to perform other operations. In order to find itself, in the Dockerfile there are two environment variables to locate the image that are set (as parameters) when building the images: `OPERATOR_IMAGE` and `OPERATOR_TAG`, and are initialized properly when executing `task cli` for development and `task itest` for test.
+
+## Deployment
+
+To deploy the operator you need to:
+
+- deploy permissions and crd definitions
+- deploy the operator itself with the right parameters
+- deploy a crd instance to 
+
+For test:
+
+-  `task permission` to deploy the permissions stored `deploy/nuvolaris-permissions`) 
+- task `operator` to deploy the operator using `deploy/nuvolaris-operarator`
+- task `instance` to deploy the crd instance under the `test/<type>/whisk.yaml` where `<type>` is the cluster type detected by the script `./detect.sh`
+
 ## Development Workflow 
 
 In generale the operator react to events and execute kustomizations.

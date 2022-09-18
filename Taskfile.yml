@@ -50,6 +50,9 @@ includes:
   gke:
     taskfile: clusters/gke.yml
     dir: clusters
+  osh: 
+    taskfile: clusters/openshift.yml
+    dir: clusters
   m8s:
     taskfile: clusters/microk8s.yml
     dir: clusters
@@ -71,7 +74,7 @@ tasks:
 
   env: env
   
-  watch: watch kubectl -n nuvolaris get deploy,pod,service,cronjob 
+  watch: watch kubectl -n nuvolaris get node,deploy,pod,service,cronjob 
 
   logs: >
     rm -f nuvolaris-operator.log ;
@@ -180,18 +183,26 @@ tasks:
 
   itest: 
     cmds:
+      - echo $MY_OPERATOR_IMAGE
+      - echo $OPERATOR_IMAGE 
       - task: iclean
+      - kubectl apply -f deploy/nuvolaris-permissions
       - |
-        kubectl apply -f deploy/nuvolaris-permissions
         for test in tests/{{.T}}*.ipy tests/{{.KUBE}}/{{.T}}*.ipy
         do  
             if test -e "$test"
             then  echo "*** [{{.KUBE}}] $test"
-                  rm -f deploy/*/kustomization.yaml deploy/*/__*
-                  poetry run ipython $test {{.CLI_ARGS}}
+                  env OPERATOR_IMAGE=${MY_OPERATOR_IMAGE:-OPERATOR_IMAGE} poetry run ipython $test {{.CLI_ARGS}}
             fi
         done
     silent: true
+    env:
+       # taken from the tag
+      OPERATOR_TAG:
+        sh: git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD
+      # taken from the Dockerfile - ovverdable with MY_OPERATOR_IMAGE
+      OPERATOR_IMAGE:
+        sh: awk -F= '/ARG OPERATOR_IMAGE_DEFAULT=/ { print $2 ; exit }' Dockerfile
 
   dtest:
     - task: permission
@@ -205,7 +216,6 @@ tasks:
     - task: t:ping
     - task: t:echo
     - task: t:api
-
 
   test:
     - task: clean

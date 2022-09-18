@@ -87,6 +87,8 @@ def detect_labels(labels=None):
                 kube = "microk8s"
             elif j.find("lke.linode.com") >=0:
                 kube = "lks"
+            elif j.find("node.openshift.io") >=0:
+                kube = "openshift"
             # assign all the 'nuvolaris.io' labels
             if j.startswith("nuvolaris.io/"):
                 key = f"nuvolaris.{j[13:]}"

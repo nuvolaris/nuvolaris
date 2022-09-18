@@ -36,7 +36,13 @@ tasks:
 
   env: env
 
-  cli: poetry run ipython -i profile.ipy
+  cli: 
+    cmds:
+      - env OPERATOR_IMAGE="${MY_OPERATOR_IMAGE:-{{.OPERATOR_IMAGE}}}" poetry run ipython -i profile.ipy
+    env:
+      CONTROLLER_IMAGE: "{{.CONTROLLER_IMAGE}}"
+      CONTROLLER_TAG: "{{.CONTROLLER_TAG}}"
+      OPERATOR_TAG: "{{.OPERATOR_TAG}}"
 
   run: 
     cmds:     

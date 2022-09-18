@@ -1,0 +1,46 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+!kubectl config set-context --current --namespace nuvolaris
+!kubectl -n nuvolaris delete all --all
+!kubectl -n nuvolaris delete pvc --all
+
+import nuvolaris.couchdb as cdb
+import nuvolaris.config as cfg
+import nuvolaris.testutil as tu
+
+cfg.clean()
+assert(cfg.configure(tu.load_sample_config()))
+cfg.detect()
+cfg.put("couchdb.host", "couchdb")
+
+print(cfg.getall("operator"))
+
+cdb.create()
+
+#kubectl get po -l name=couchdb -o=jsonpath='{..status.phase}'
+#kubectl get po -l job-name=couchdb-init -o=jsonpath='{..status.phase}' 
+
+r = !kubectl wait po -l name=couchdb --for=jsonpath='{.status.phase}=Running'
+assert(r[0].find("condition met")!= -1)
+
+r = !kubectl wait po -l job-name=couchdb-init --for=jsonpath='{.status.phase}=Succeeded'
+assert(r[0].find("condition met")!= -1)
+
+#cdb.delete()
+!kubectl -n nuvolaris delete all --all
+!kubectl -n nuvolaris delete pvc --all

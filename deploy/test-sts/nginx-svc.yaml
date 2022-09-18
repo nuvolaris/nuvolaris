@@ -25,6 +25,6 @@ spec:
   selector:
     name: test-nginx
   ports:
-  - port: 80
-    targetPort: 80
+  - port: 8080
+    targetPort: 8080
     nodePort: 30800

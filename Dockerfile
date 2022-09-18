@@ -46,8 +46,8 @@ RUN WSK_VERSION=1.2.0 ;\
     WSK_URL="$WSK_BASE/$WSK_VERSION/OpenWhisk_CLI-$WSK_VERSION-linux-$ARCH.tgz" ;\
     curl -sL "$WSK_URL" | tar xzvf - -C /usr/bin/
 # add user
-RUN useradd -m -s /bin/bash nuvolaris && \
-    echo "nuvolaris ALL=(ALL:ALL) NOPASSWD: ALL" >>/etc/sudoers
+RUN mkdir /home/nuvolaris
+ENV HOME=/home/nuvolaris
 WORKDIR /home/nuvolaris
 # install the operator
 ADD nuvolaris/*.py /home/nuvolaris/nuvolaris/
@@ -62,9 +62,9 @@ ADD deploy/scheduler /home/nuvolaris/deploy/scheduler
 ADD deploy/mongodb-operator /home/nuvolaris/deploy/mongodb-operator
 ADD deploy/mongodb /home/nuvolaris/deploy/mongodb
 ADD run.sh dbinit.sh cron.sh pyproject.toml poetry.lock /home/nuvolaris/
-RUN chown -R nuvolaris:nuvolaris /home/nuvolaris
-USER nuvolaris
+RUN chgrp -R 0 /home/nuvolaris ; chmod -R g=u /home/nuvolaris
 ENV PATH=/home/nuvolaris/.local/bin:/usr/local/bin:/usr/bin:/sbin:/bin
 RUN curl -sSL https://install.python-poetry.org | python3.10 -
 RUN cd /home/nuvolaris ; poetry install
+USER 1000
 CMD ./run.sh

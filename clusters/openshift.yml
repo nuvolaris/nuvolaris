@@ -1,4 +1,3 @@
-#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -16,20 +15,41 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-if ! test -e .env
-then echo "kind" ; exit 0
-else export $(xargs <.env)
-fi
-LABELS="$(kubectl get nodes -ojsonpath='{.items[].metadata.labels}' 2>/dev/null)"
-if echo "$LABELS" | jq . | grep eksctl.io >/dev/null
-then echo "eks"
-elif echo "$LABELS" | jq . | grep microk8s.io >/dev/null
-then echo "microk8s"
-elif echo "$LABELS" | jq . | grep lke.linode.com >/dev/null
-then echo "lks"
-elif echo "$LABELS" | jq . | grep openshift.io >/dev/null
-then echo "openshift"
-elif echo "$LABELS" | jq . | awk '/nuvolaris.io\/kube/ {print $2}' | grep kind >/dev/null
-then echo "kind"
-else echo "generic"
-fi
+version: '3'
+
+vars:
+  DOMAIN: "sciabarra.net"
+  SSH_KEY:
+    sh: cat id_rsa.pub
+
+tasks:
+
+  init:
+    cmds:
+    - |-
+      mkdir -p openshift
+      ssh-add id_rsa
+      env SSH_KEY='{{.SSH_KEY}}' DOMAIN={{.DOMAIN}} \
+      envsubst <openshift-install-config.yaml >openshift/install-config.yaml
+
+  create:
+    deps:
+    - init
+    cmds: 
+    - |- 
+      openshift-install create cluster \
+      --dir openshift \
+      --log-level=debug
+
+  destroy: 
+    deps:
+    - init
+    cmds: 
+    - >
+      openshift-install destroy cluster --dir openshift --log-level=debug
+
+  config: 
+      - |-
+        mkdir -p ~/.kube
+        cp openshift/auth/kubeconfig ~/.kube/config
+        kubectl get nodes

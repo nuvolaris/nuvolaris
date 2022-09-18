@@ -15,6 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+attic/
 __pycache__/
 __pypackages__
 .pdm.toml
@@ -36,3 +37,4 @@ run.pid
 *.off
 actions/*/nuvolaris/
 _*.yaml
+clusters/openshift/

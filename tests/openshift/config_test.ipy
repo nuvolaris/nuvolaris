@@ -1,4 +1,3 @@
-#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -16,20 +15,21 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-if ! test -e .env
-then echo "kind" ; exit 0
-else export $(xargs <.env)
-fi
-LABELS="$(kubectl get nodes -ojsonpath='{.items[].metadata.labels}' 2>/dev/null)"
-if echo "$LABELS" | jq . | grep eksctl.io >/dev/null
-then echo "eks"
-elif echo "$LABELS" | jq . | grep microk8s.io >/dev/null
-then echo "microk8s"
-elif echo "$LABELS" | jq . | grep lke.linode.com >/dev/null
-then echo "lks"
-elif echo "$LABELS" | jq . | grep openshift.io >/dev/null
-then echo "openshift"
-elif echo "$LABELS" | jq . | awk '/nuvolaris.io\/kube/ {print $2}' | grep kind >/dev/null
-then echo "kind"
-else echo "generic"
-fi
+import nuvolaris.config as cfg
+import nuvolaris.kube as kube
+import nuvolaris.testutil as tu
+
+import os
+
+cfg.clean()
+
+spec = tu.load_sample_config("openshift/whisk")
+cfg.configure(spec)
+cfg.detect()
+
+assert(cfg.get("nuvolaris.kube")=="openshift")
+assert(cfg.get("operator.image") == os.environ["OPERATOR_IMAGE"])
+assert(cfg.get("operator.tag") == os.environ["OPERATOR_TAG"])
+assert(cfg.get("nuvolaris.storageClass")=="gp2")
+
+cfg.getall("couchdb")

@@ -35,8 +35,18 @@ spec:
       restartPolicy: Always   
       containers:
       - name: couchdb
-        image: "apache/couchdb:2.3"
-        imagePullPolicy: "IfNotPresent"
+        securityContext:
+          capabilities:
+            drop:
+            - ALL
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false 
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
+        image: "ghcr.io/nuvolaris/couchdb:2.3.1-morpheus.22090618"
+        imagePullPolicy: "Always"
+        #command: ["sleep", "inf"]
         ports:
         - name: couchdb
           containerPort: 5984

@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
         - name: test-nginx
-          image: nginx
+          image: bitnami/nginx
           ports:
             - name: web
-              containerPort: 80
+              containerPort: 8080
