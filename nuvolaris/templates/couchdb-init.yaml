@@ -35,6 +35,15 @@ spec:
         imagePullPolicy: "IfNotPresent"
         command: ["./dbinit.sh"]
         #command: ["sleep", "inf"]
+        securityContext:
+          capabilities:
+            drop:
+            - ALL
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false 
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
         env:
         - name: "NUVOLARIS_CONFIG"
           value: >

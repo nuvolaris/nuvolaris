@@ -76,9 +76,7 @@ tasks:
   
   watch: watch kubectl -n nuvolaris get node,deploy,pod,service,cronjob 
 
-  logs: >
-    rm -f nuvolaris-operator.log ;
-    kubectl -n nuvolaris logs deploy/nuvolaris-operator -f | tee nuvolaris-operator.log
+  logs: kubectl -n nuvolaris logs po/nuvolaris-operator -f
  
   cli: 
     - task: d:cli
@@ -183,8 +181,6 @@ tasks:
 
   itest: 
     cmds:
-      - echo $MY_OPERATOR_IMAGE
-      - echo $OPERATOR_IMAGE 
       - task: iclean
       - kubectl apply -f deploy/nuvolaris-permissions
       - |
@@ -203,6 +199,12 @@ tasks:
       # taken from the Dockerfile - ovverdable with MY_OPERATOR_IMAGE
       OPERATOR_IMAGE:
         sh: awk -F= '/ARG OPERATOR_IMAGE_DEFAULT=/ { print $2 ; exit }' Dockerfile
+      # taken from the Dockerfile 
+      CONTROLLER_IMAGE:
+        sh: awk -F= '/ENV CONTROLLER_IMAGE=/ { print $2 ; exit }' Dockerfile
+      CONTROLLER_TAG:
+        sh: awk -F= '/ENV CONTROLLER_TAG=/ { print $2 ; exit }' Dockerfile
+
 
   dtest:
     - task: permission

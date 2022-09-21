@@ -38,6 +38,15 @@ spec:
         command:
           - redis-server
           - "/redis-master/redis.conf"
+        securityContext:
+          capabilities:
+            drop:
+            - ALL
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false 
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
         env:
         - name: MASTER
           value: "true"

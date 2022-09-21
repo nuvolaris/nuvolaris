@@ -25,5 +25,22 @@ spec:
   containers:
     - name: nuvolaris-operator
       image: ghcr.io/nuvolaris/nuvolaris-operator:latest
+      imagePullPolicy: "Always"
       command: ["./run.sh"]
       args: ["--verbose"]
+      securityContext:
+        capabilities:
+          drop:
+          - ALL
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: false 
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      resources:
+        limits:
+          cpu: "1"
+          memory: "512M"
+        requests:
+          cpu: "0.5"
+          memory: "128M"

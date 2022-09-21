@@ -27,7 +27,7 @@ rules:
 
 # edit secrets cm po svc pvc ingresses serviceaccounts events
 - apiGroups: [""]
-  resources: ["configmaps", "secrets", "pods", "services", "persistentvolumeclaims", "ingresses","serviceaccounts","events"]
+  resources: ["configmaps", "secrets", "pods", "services", "persistentvolumeclaims", "ingresses","serviceaccounts","events", "*/finalizers"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 
 # read logs
@@ -37,17 +37,22 @@ rules:
 
 # edit deployments daemonset statefulset
 - apiGroups: ["extensions", "apps"]
-  resources: ["deployments", "daemonsets", "statefulsets" ]
+  resources: ["deployments", "daemonsets", "statefulsets", "*/finalizers" ]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+# rbac
+- apiGroups: ["rbac.authorization.k8s.io"]
+  resources: ["roles", "rolebindings", "rolebindings/finalizers"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 
 # edit jobs
 - apiGroups: ["batch"]
-  resources: ["jobs", "cronjobs"]
+  resources: ["jobs", "cronjobs", "*/finalizers"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 
 # edit nuvolaris crd
 - apiGroups: ["nuvolaris.org"]
-  resources: ["whisks","whisks/status"]
+  resources: ["whisks","whisks/status", "*/finalizers"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 
 # networking.k8s.io
@@ -55,11 +60,8 @@ rules:
   resources: ["ingresses"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 
-# required for mongodb
-- apiGroups: ["rbac.authorization.k8s.io"]
-  resources: ["roles","rolebindings"]
-  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 
+# required for mongodb
 - apiGroups: ["mongodbcommunity.mongodb.com"]
   resources: ["mongodbcommunity","mongodbcommunity/finalizers","mongodbcommunity/spec","mongodbcommunity/status"]
   verbs: ["get","patch","list","update","watch","create","delete"]

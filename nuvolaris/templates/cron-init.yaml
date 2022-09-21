@@ -34,6 +34,15 @@ spec:
             - /bin/sh
             - -c
             - ./cron.sh
+            securityContext:
+              capabilities:
+                drop:
+                - ALL
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false 
+              runAsNonRoot: true
+              seccompProfile:
+                type: RuntimeDefault
             env:
             - name: "NUVOLARIS_CONFIG"
               value: >
