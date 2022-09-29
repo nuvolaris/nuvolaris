@@ -49,7 +49,22 @@ tasks:
       openshift-install destroy cluster --dir openshift --log-level=debug
 
   config: 
-      - |-
-        mkdir -p ~/.kube
-        cp openshift/auth/kubeconfig ~/.kube/config
-        kubectl get nodes
+    - |-
+      mkdir -p ~/.kube
+      cp openshift/auth/kubeconfig ~/.kube/config
+      kubectl get nodes
+
+  user:
+    - oc apply -f openshift-user.yaml
+
+  user1:
+    - oc adm policy add-role-to-user admin nuvolaris
+    - oc adm policy add-role-to-user nuvolaris-operator-cr nuvolaris
+    - oc adm policy add-role-to-user nuvolaris-operator-role nuvolaris
+
+  project:
+    - oc new-project nuvolaris --description="Nuvolaris" --display-name="Nuvolaris"
+    - oc project nuvolaris
+    - oc adm policy add-role-to-user admin nuvolaris
+ 
+  login:

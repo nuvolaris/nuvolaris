@@ -15,13 +15,26 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+---
 apiVersion: v1
-kind: Pod
+kind: Secret
 metadata:
-  name: test-pod
-  labels:
-    app: test-pod 
+  name: nuvolaris-htpass-secret
+  namespace: openshift-config
+type: Opaque
+data:
+  # encoding user:nuvoaris password: s3cr3t
+  htpasswd: bnV2b2xhcmlzOiQyeSQxMCRLeVRBM3pkRDhXaTNEYmtmbmRXNUNPa2ZERDNxdWQ3M0RJaGh3bjJSb0tSeWs1enZ4SWltUw==
+---
+apiVersion: config.openshift.io/v1
+kind: OAuth
+metadata:
+  name: cluster
 spec:
-  containers:
-    - name: nginx
-      image: bitnami/nginx
+  identityProviders:
+  - name: nuvolaris_htpass 
+    mappingMethod: claim 
+    type: HTPasswd
+    htpasswd:
+      fileData:
+        name: nuvolaris-htpass-secret

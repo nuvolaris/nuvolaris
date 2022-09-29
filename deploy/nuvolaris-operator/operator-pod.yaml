@@ -24,7 +24,8 @@ spec:
   serviceAccount: nuvolaris-operator
   containers:
     - name: nuvolaris-operator
-      image: ghcr.io/nuvolaris/nuvolaris-operator:latest
+      #image: ghcr.io/nuvolaris/nuvolaris-operator:latest
+      image: ghcr.io/msciabarra/nuvolaris-operator:0.3.0-morpheus.22092512
       imagePullPolicy: "Always"
       command: ["./run.sh"]
       args: ["--verbose"]
