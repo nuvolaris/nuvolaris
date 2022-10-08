@@ -74,8 +74,11 @@ def detect_labels(labels=None):
     # read labels if not avaibale
     if not labels:
         import nuvolaris.kube as kube
-        labels = kube.kubectl("get", "nodes", jsonpath='{.items[].metadata.labels}')
-    
+        try: 
+            labels = kube.kubectl("get", "nodes", jsonpath='{.items[].metadata.labels}')
+        except Exception:
+            labels = []
+
     res = {}
     kube = None
     for i in labels:
@@ -119,6 +122,8 @@ def detect_storage(storages=None):
                     _config['nuvolaris.provisioner'] = st['provisioner']
             except:
                 pass
+    if not "storageClass" in res:
+        res["nuvolaris.storageClass"] = "default"
     return res
 
 def detect_env():
