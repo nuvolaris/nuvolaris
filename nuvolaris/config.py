@@ -122,8 +122,9 @@ def detect_storage(storages=None):
                     _config['nuvolaris.provisioner'] = st['provisioner']
             except:
                 pass
-    if not "storageClass" in res:
+    if not "storageClass" in _config:
         res["nuvolaris.storageClass"] = "default"
+        _config["nuvolaris.storageClass"] = "default"
     return res
 
 def detect_env():
