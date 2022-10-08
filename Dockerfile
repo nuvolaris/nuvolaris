@@ -61,7 +61,7 @@ ADD deploy/redis /home/nuvolaris/deploy/redis
 ADD deploy/scheduler /home/nuvolaris/deploy/scheduler
 ADD deploy/mongodb-operator /home/nuvolaris/deploy/mongodb-operator
 ADD deploy/mongodb /home/nuvolaris/deploy/mongodb
-ADD run.sh dbinit.sh cron.sh pyproject.toml poetry.lock /home/nuvolaris/
+ADD run.sh dbinit.sh cron.sh pyproject.toml poetry.lock cli.sh Dockerfile /home/nuvolaris/
 RUN chgrp -R 0 /home/nuvolaris ; chmod -R g=u /home/nuvolaris
 ENV PATH=/home/nuvolaris/.local/bin:/usr/local/bin:/usr/bin:/sbin:/bin
 RUN curl -sSL https://install.python-poetry.org | python3.10 -

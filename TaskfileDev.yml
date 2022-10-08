@@ -22,7 +22,7 @@ vars:
   CONFIG: "tests/{{.KUBE}}/{{.WHISK}}.yaml"
   # taken from the tag
   OPERATOR_TAG:
-    sh: git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD
+    sh: git describe --tags --abbrev=0
   # taken from the Dockerfile - ovveridable with MY_OPERATOR_IMAGE
   OPERATOR_IMAGE:
     sh: awk -F= '/ARG OPERATOR_IMAGE_DEFAULT=/ { print $2 ; exit }' Dockerfile
@@ -36,13 +36,15 @@ tasks:
 
   env: env
 
-  cli: 
+  cli-old: 
     cmds:
       - env OPERATOR_IMAGE="${MY_OPERATOR_IMAGE:-{{.OPERATOR_IMAGE}}}" poetry run ipython -i profile.ipy
     env:
       CONTROLLER_IMAGE: "{{.CONTROLLER_IMAGE}}"
       CONTROLLER_TAG: "{{.CONTROLLER_TAG}}"
       OPERATOR_TAG: "{{.OPERATOR_TAG}}"
+
+  cli: ./cli.sh
 
   run: 
     cmds:     
