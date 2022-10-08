@@ -46,6 +46,8 @@ tasks:
 
   cli: ./cli.sh
 
+  ecli: kubectl -n nuvolaris exec -ti pod/nuvolaris-operator -- ./cli.sh
+
   run: 
     cmds:     
       # note that the .env is loaded after the env pameters

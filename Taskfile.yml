@@ -81,6 +81,9 @@ tasks:
   cli: 
     - task: d:cli
 
+  ecli:
+    - task: d:ecli
+
   run:
     - task: d:run
 
