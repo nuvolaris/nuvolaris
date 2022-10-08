@@ -44,6 +44,7 @@ def whisk_create(spec, name, **kwargs):
 
     cfg.clean()
     cfg.configure(spec)
+    # cfg.reconfigure() # use to configure re-reading the configuration
     cfg.detect()
     for k in cfg.getall(): logging.info(f"{k} = {cfg.get(k)}")
     owner = kube.get(f"wsk/{name}")

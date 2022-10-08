@@ -29,6 +29,16 @@ def configure(spec: dict):
     _config = dict(flatdict.FlatDict(spec, delimiter="."))
     return True
 
+# reconfigure, reading the current configuration
+def reconfigure():
+    try:
+        spec = kube.kubectl("get", "wsk/controller", jsonpath="{.spec}")[0]
+        configure(spec)
+        return True
+    except:
+        return False
+
+
 def clean():
     global _config
     _config = {}
