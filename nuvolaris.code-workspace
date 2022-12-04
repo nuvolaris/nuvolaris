@@ -31,9 +31,6 @@
 		},
 		{
 			"path": "nuvolaris-controller/openwhisk/tests/src/test/scala/org/apache/openwhisk/core/controller"
-		},
-		{
-			"path": "nuvolaris-inc/skybattle"
 		}
 	],
 	"settings": {

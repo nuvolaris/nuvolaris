@@ -33,7 +33,7 @@ vars:
         
 tasks:
 
-  default: true
+  default: "true"
 
   image-tag: 
     silent: true
@@ -49,7 +49,7 @@ tasks:
   build:
     cmds:
       - docker build . -t {{.REPO}}/{{.IMAGE}}:{{.TAG}} {{.CLI_ARGS}}
-  
+
   start:
     cmds:
       - > 
