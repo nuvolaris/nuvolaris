@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 # configure dpkg && timezone
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 ENV TZ=Europe/London
@@ -44,14 +44,13 @@ RUN apt-get update &&\
     libgdbm-dev libnss3-dev libssl-dev \
     libreadline-dev libffi-dev libsqlite3-dev \
     java-11-amazon-corretto-jdk \
-    docker-ce-cli \
-    google-cloud-cli
+    docker-ce-cli google-cloud-cli
 # add delta to show diffs
 RUN FILE="git-delta_0.11.2_$(dpkg --print-architecture).deb" ;\
     wget "https://github.com/dandavison/delta/releases/download/0.11.2/$FILE" -O "/tmp/$FILE" ;\
     dpkg -i "/tmp/$FILE" ; rm "/tmp/$FILE"
 # Download Kubectl
-RUN VER="v1.23.0" ;\
+RUN VER="$(curl -L -s https://dl.k8s.io/release/stable.txt)" ;\
     ARCH="$(dpkg --print-architecture)" ;\
     URL="https://dl.k8s.io/release/$VER/bin/linux/$ARCH/kubectl" ;\
     wget $URL -O /usr/bin/kubectl && chmod +x /usr/bin/kubectl
@@ -113,23 +112,24 @@ RUN VER=0.11.3 ;\
     if [[ $ARCH == "amd64" ]] ; then ARCH="" ; fi ;\
     URL="$BASE/$VER/k3sup${ARCH}" ;\
     curl -sL "$URL" >/usr/bin/k3sup ; chmod +x /usr/bin/k3sup
+# install kn
+RUN VER="v1.4.1" ;\
+    ARCH="$(dpkg --print-architecture)" ;\
+    URL="https://github.com/knative/client/releases/download/knative-$VER/kn-linux-$ARCH" ;\
+    curl -sL "$URL" | sudo tee /usr/bin/kn >/dev/null && sudo chmod +x /usr/bin/kn
 # Download WSK
 RUN VER=1.2.0 ;\
     BASE=https://github.com/apache/openwhisk-cli/releases/download ;\
     ARCH=$(dpkg --print-architecture) ;\
     URL="$BASE/$VER/OpenWhisk_CLI-$VER-linux-$ARCH.tgz" ;\
     curl -sL "$URL" | tar xzvf - -C /usr/bin/
-# install kn
-RUN VER="v1.4.1" ;\
-    ARCH="$(dpkg --print-architecture)" ;\
-    URL="https://github.com/knative/client/releases/download/knative-$VER/kn-linux-$ARCH" ;\
-    curl -sL "$URL" | sudo tee /usr/bin/kn >/dev/null && sudo chmod +x /usr/bin/kn
 # Install nuv
 RUN VER=v0.2.2 ;\
     BASE=https://github.com/nuvolaris/nuvolaris/releases/download ;\
     ARCH=$(dpkg --print-architecture) ;\
     URL="$BASE/$VER/nuv-$VER-linux-$ARCH.tar.gz" ;\
     curl -sL "$URL" | tar xzvf - -C /usr/bin/
+
 # add and configure user
 RUN useradd -m nuvolaris -s /bin/bash &&\
     echo "nuvolaris ALL=(ALL:ALL) NOPASSWD: ALL" >>/etc/sudoers
