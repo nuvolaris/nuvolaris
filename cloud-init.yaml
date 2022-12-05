@@ -24,6 +24,12 @@ write_files:
       content: |-
          ANSIBLE_CMD="ansible-playbook -i environments/local -e docker_image_prefix=testing"
          TZ=Europe/London
+    - path: "/etc/docker/daemon.json"
+      content: |- 
+       {"storage-driver": "overlay", 
+       "userns-remap": "default", 
+       "hosts": ["tcp://0.0.0.0:4243", 
+       "unix:///var/run/docker.sock"]}
 runcmd:
  - > 
    export TZ=Europe/London ;
