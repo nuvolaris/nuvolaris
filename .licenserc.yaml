@@ -69,6 +69,7 @@ header:
     - '**/auth.whisk.system'
     - '**/.task/**'
     - 'release'
+    - '**/results/**'
 
 
 dependency:
