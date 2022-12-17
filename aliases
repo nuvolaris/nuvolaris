@@ -26,16 +26,14 @@ function gsnap {
   fi
 }
 
-function otask {
-  cd /workspaces/nuvolaris/nuvolaris-operator
-  task "$@"
-  cd -
-}
-
-function ntask {
-  cd /workspaces/nuvolaris/nuvolaris-cli/nuv
-  task "$@"
-  cd -
+function gtag {
+  TAG=$(parse_git_branch)-$(date +%s)
+  if test -n "$1"
+  then TAG="$TAG-$1"
+  fi
+  git tag -d $(git tag)
+  git tag $TAG
+  git push upstream --tags 
 }
 
 
@@ -49,7 +47,6 @@ alias nvl="nuv wsk activation list"
 alias nvg="nuv wsk activation logs"
 alias nvgl="nuv wsk activation logs --last"
 alias nvp="nuw wsk activation poll"
-
 
 alias t=task
 alias tt="task --taskfile TaskfileTest.yml"
