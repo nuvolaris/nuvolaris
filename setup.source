@@ -30,9 +30,9 @@ parse_git_branch() {
 export PS1="[\[\e[32m\]\W:\[\e[91m\]\$(parse_git_branch)\[\e[00m\]]$ "
 
 # versions
-export NODENV_VERSION=16.13.0
+export NODENV_VERSION=16.19.0
 export PYENV_VERSION=3.10.0
-export GOENV_VERSION=1.18.3
+export GOENV_VERSION=1.19.4
 export DOCKER_VERSION=19
 export JAVA_VERSION=8
 
@@ -124,14 +124,14 @@ export GOBIN="$HOME/.local/bin"
 export PATH="$GOBIN:$GOENV_ROOT/bin:$NODENV_ROOT/bin:$PYENV_ROOT/bin:$PATH"
 
 eval "$(nodenv init -)"
-nodenv install $NODENV_VERSION -s
+nodenv install $NODENV_VERSION -s || echo Please "rm -Rvf ~/$NODENV_ROOT" and retry
 
 eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
-pyenv install $PYENV_VERSION -s
+pyenv install $PYENV_VERSION -s || echo Please "rm -Rvf ~/$PYENV_ROOT" and retry
 
 eval "$(goenv init -)"
-goenv install $GOENV_VERSION -s
+goenv install $GOENV_VERSION -s || echo Please "rm -Rvf ~/$GOENV_ROOT" and retry
 
 # install task
 if ! which task >/dev/null
@@ -157,6 +157,12 @@ then pip install httpie
 else ok httpie
 fi
 
+# install xonsh
+if ! which xonsh >/dev/null
+then pip install xonsh[full]
+else ok xonsh
+fi
+
 # install addlicense
 if ! which license-eye >/dev/null
 then go install github.com/apache/skywalking-eyes/cmd/license-eye@latest
@@ -170,7 +176,7 @@ else ok poetry
 fi
 
 # install jest
-if ! nodenv which jest >/dev/null
+if ! which jest >/dev/null
 then npm install -g jest
 else ok jest
 fi
@@ -183,12 +189,12 @@ else ok zx
 fi
 
 # install coursier - commented out as not required for now
-#if ! which cs >/dev/null
-#then curl -sfLo $HOME/.local/bin/cs https://git.io/coursier-cli-"$(uname | tr LD ld)"
-#     chmod +.git/hooks/pre-commit $HOME/.local/bin/cs  
-#else ok coursier
-#fi
-#eval "$(cs setup --env 2>/dev/null)"
+if ! which cs >/dev/null
+then curl -sfLo $HOME/.local/bin/cs https://git.io/coursier-cli-"$(uname | tr LD ld)"
+     chmod +x $HOME/.local/bin/cs  
+else ok coursier
+fi
+eval "$(cs setup --env 2>/dev/null)"
 
 # install func
 if ! which func >/dev/null

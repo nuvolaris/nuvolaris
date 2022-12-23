@@ -117,3 +117,21 @@ tasks:
         sh: cat release | sed -e 's/-.*.//'
 
 
+  snap: 
+    silent: true
+    cmds:
+    - |-
+      TAG="{{.BASETAG}}.{{.TIMESTAMP}}{{.S}}-{{.T}}"
+      if test -n "{{.CLI_ARGS}}"
+      then git commit -m "{{.CLI_ARGS}}" -a
+      else
+      if [[ "$(git status -s | wc -l)" = "0" ]]
+      then 
+      git tag | xargs git tag -d
+      git tag -f $TAG
+      git push upstream --tags
+      else git status -s
+      echo commit with task snap -- message
+      echo push with task snap [T=test] [S=suffix]
+      fi
+      fi
