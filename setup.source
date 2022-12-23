@@ -41,6 +41,14 @@ export PYENV_ROOT="$HOME/.pyenv"
 export NODENV_ROOT="$HOME/.nodenv"
 export GOENV_ROOT="$HOME/.goenv"
 
+# git config
+export GIT_EDITOR=vim
+cat <<EOF >.git/hooks/pre-commit
+#!/bin/sh
+license-eye header check
+EOF
+chmod +x .git/hooks/pre-commit
+
 # Preflight checks
 die() {
     echo ERROR: "$@"
@@ -177,7 +185,7 @@ fi
 # install coursier - commented out as not required for now
 #if ! which cs >/dev/null
 #then curl -sfLo $HOME/.local/bin/cs https://git.io/coursier-cli-"$(uname | tr LD ld)"
-#     chmod +x $HOME/.local/bin/cs  
+#     chmod +.git/hooks/pre-commit $HOME/.local/bin/cs  
 #else ok coursier
 #fi
 #eval "$(cs setup --env 2>/dev/null)"
@@ -226,7 +234,7 @@ for REF in \
  github.com/josharian/impl \
  github.com/haya14busa/goplay/cmd/goplay \
  honnef.co/go/tools/cmd/staticcheck \
- golang.org/x/tools/gopls 
+ golang.org/.git/hooks/pre-commit/tools/gopls 
 do CMD="$(basename $REF)"
    if which $CMD >/dev/null
    then ok $CMD

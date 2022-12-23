@@ -23,5 +23,5 @@ bin/*
 kubeconfig
 .DS_Store
 workspace-inc.code-workspace
-priv
-hack
+private/
+hack/
