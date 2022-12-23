@@ -53,12 +53,13 @@ runcmd:
     wget -O- https://apt.corretto.aws/corretto.key | apt-key add - ;
     add-apt-repository 'deb https://apt.corretto.aws stable main' ;
     apt-get update && apt-get -y install java-11-amazon-corretto-jdk ;
-    pip3 install --upgrade pip setuptools six
- - >
-    ln -sf /usr/bin/python2 /usr/bin/python ;
-    curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py ;
-    python get-pip.py ;
-    python -m pip install ansible==2.8.18 pydocumentdb humanize requests
+    pip3 install --upgrade pip setuptools six 
+    'jinja2<3.1' ansible==2.8.18 pydocumentdb humanize requests
+    #- >
+    #ln -sf /usr/bin/python2 /usr/bin/python ;
+    #curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py ;
+    #python get-pip.py ;
+    #python -m pip install setuptools six ansible==2.8.18 pydocumentdb humanize requests
  - >
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu bionic stable" > /etc/apt/sources.list.d/docker.list ;
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor > /usr/share/keyrings/docker-archive-keyring.gpg ;
