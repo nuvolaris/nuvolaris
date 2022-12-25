@@ -45,6 +45,7 @@ function gsnap {
 }
 
 alias gl1="git log --pretty=oneline"
+alias gd1="git diff --name-only"
 
 alias na="nuv wsk action"
 alias nau="nuv wsk action update"
@@ -58,6 +59,7 @@ alias nvgl="nuv wsk activation logs --last"
 alias nvp="nuw wsk activation poll"
 
 alias t=task
+alias tu='task -d ..'
 alias tsn="task snap --"
 alias dtag="date +%y%m%d%H"
 alias va="vi ~/nuvolaris/aliases ; source ~/nuvolaris/aliases"

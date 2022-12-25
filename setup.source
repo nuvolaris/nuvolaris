@@ -43,11 +43,6 @@ export GOENV_ROOT="$HOME/.goenv"
 
 # git config
 export GIT_EDITOR=vim
-cat <<EOF >.git/hooks/pre-commit
-#!/bin/sh
-license-eye header check
-EOF
-chmod +x .git/hooks/pre-commit
 
 # Preflight checks
 die() {
@@ -102,36 +97,42 @@ then die "Please install wsk"
 else ok wsk
 fi
 
-# Install
-if ! test -d $GOENV_ROOT
-then git clone https://github.com/syndbg/goenv.git $GOENV_ROOT
-else ok goenv
+# Install Go
+if test -e $GOENV_ROOT/$GOENV_VERSION
+then ok goenv
+else rm -Rvf $GOENV_ROOT 
+     git clone https://github.com/syndbg/goenv.git $GOENV_ROOT
+     touch $GOENV_ROOT/$GOENV_VERSION
 fi
+export GOBIN="$HOME/.local/bin"
+export PATH="$GOBIN:$GOENV_ROOT/bin:$PATH"
+eval "$(goenv init -)"
+goenv install $GOENV_VERSION -s && touch $GOENV_ROOT/$GOENV_VERSION
 
-if ! test -e $NODENV_ROOT
-then git clone https://github.com/nodenv/nodenv.git $NODENV_ROOT
+# Install Node
+if test -e $NODENV_ROOT/$NODENV_VERSION
+then ok nodenv
+else rm -Rvf $NODENV_ROOT
+     git clone https://github.com/nodenv/nodenv.git $NODENV_ROOT
      mkdir "$NODENV_ROOT/plugins"
      git clone https://github.com/nodenv/node-build.git "$NODENV_ROOT"/plugins/node-build
-else ok nodenv
 fi
-
-if ! test -e $PYENV_ROOT
-then git clone https://github.com/pyenv/pyenv.git $PYENV_ROOT
-else ok pyenv
-fi
-
-export GOBIN="$HOME/.local/bin"
-export PATH="$GOBIN:$GOENV_ROOT/bin:$NODENV_ROOT/bin:$PYENV_ROOT/bin:$PATH"
-
+export PATH="$NODENV_ROOT/bin:$PATH"
 eval "$(nodenv init -)"
-nodenv install $NODENV_VERSION -s || echo Please "rm -Rvf ~/$NODENV_ROOT" and retry
+nodenv install $NODENV_VERSION -s && touch $NODENV_ROOT/$NODENV_VERSION
 
+
+# Install Python
+if test -e $PYENV_ROOT/$PYENV_VERSION
+then ok pyenv
+else rm -Rvf $PYENV_ROOT
+     git clone https://github.com/pyenv/pyenv.git $PYENV_ROOT
+fi
+export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
-pyenv install $PYENV_VERSION -s || echo Please "rm -Rvf ~/$PYENV_ROOT" and retry
+pyenv install $PYENV_VERSION -s && touch $PYENV_ROOT/$PYENV_VERSION
 
-eval "$(goenv init -)"
-goenv install $GOENV_VERSION -s || echo Please "rm -Rvf ~/$GOENV_ROOT" and retry
 
 # install task
 if ! which task >/dev/null
@@ -168,6 +169,19 @@ if ! which license-eye >/dev/null
 then go install github.com/apache/skywalking-eyes/cmd/license-eye@latest
 else ok license-eye
 fi
+
+# add git hook for checking licenses
+if ! test -e .git-hooks/pre-commit
+then
+  mkdir -p .git-hooks
+  cat <<EOF >.git-hooks/pre-commit
+#!/bin/sh
+license-eye header check
+EOF
+  chmod +x .git-hooks/pre-commit
+  git config core.hooksPath .git-hooks
+fi
+
 
 # install poetry
 if ! which poetry >/dev/null
