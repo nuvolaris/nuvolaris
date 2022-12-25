@@ -19,6 +19,9 @@ name: License Check
 on: 
   push:
     branches:
+     - '*'
+    tags-ignore: 
+     - '*'
 
 jobs:
   check:
