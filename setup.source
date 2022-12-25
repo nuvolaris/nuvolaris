@@ -171,14 +171,16 @@ else ok license-eye
 fi
 
 # add git hook for checking licenses
-if ! test -e .git-hooks/pre-commit
+if ! test -e .git-hooks/pre-push
 then
   mkdir -p .git-hooks
-  cat <<EOF >.git-hooks/pre-commit
+  cat <<EOF >.git-hooks/pre-push
 #!/bin/sh
-license-eye header check
+if test -e .licenserc.yaml
+then license-eye header check
+fi
 EOF
-  chmod +x .git-hooks/pre-commit
+  chmod +x .git-hooks/pre-push
   git config core.hooksPath .git-hooks
 fi
 
