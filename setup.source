@@ -171,7 +171,7 @@ else ok license-eye
 fi
 
 # add git hook for checking licenses
-if ! test -e .git-hooks/pre-push
+if [[ -e .git ]] && ! [[ -e .git-hooks/pre-push ]]
 then
   mkdir -p .git-hooks
   cat <<EOF >.git-hooks/pre-push

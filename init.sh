@@ -44,7 +44,9 @@ if test -f /.dockerenv
 then DATADIR=$REAL_HOME/.nuvolaris_data
 else DATADIR=$HOME/.nuvolaris_data
 fi
-
+for i in data openwhisk/standalone openwhisk/invoker openwhisk/controller couchdb redis mongodb zookeeper/data zookeeper/log kafka
+do mkdir -p $DATADIR/$i
+done
 # if the nuvolaris cluster already running export its configuration
 if kind get clusters | grep nuvolaris >/dev/null 2>/dev/null
 then kind export kubeconfig --name nuvolaris
@@ -71,8 +73,26 @@ nodes:
     protocol: TCP
 - role: worker
   extraMounts:
-  - hostPath: $DATADIR
+  - hostPath: $DATADIR/data
     containerPath: /data
+  - hostPath: $DATADIR/openwhisk/standalone
+    containerPath: /openwhisk/standalone
+  - hostPath: $DATADIR/openwhisk/invoker
+    containerPath: /openwhisk/invoker
+  - hostPath: $DATADIR/openwhisk/controller
+    containerPath: /openwhisk/controller
+  - hostPath: $DATADIR/couchdb
+    containerPath: /couchdb
+  - hostPath: $DATADIR/mongodb
+    containerPath: /mongodb
+  - hostPath: $DATADIR/redis
+    containerPath: /redis
+  - hostPath: $DATADIR/zookeper/data
+    containerPath: /zookeeper/data
+  - hostPath: $DATADIR/zookeeper/log
+    containerPath: /zookeeper/log
+  - hostPath: $DATADIR/kafka
+    containerPath: /kafka
   extraPortMappings:
   - containerPort: 30232
     hostPort: 3232
