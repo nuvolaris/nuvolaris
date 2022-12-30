@@ -28,6 +28,7 @@ header:
     - '**/*.excalidraw'
     - 'nuvolaris-*/**'
     - 'private/**'
+    - 'nuv/**'
 
 
 dependency:
