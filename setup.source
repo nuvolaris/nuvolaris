@@ -146,10 +146,10 @@ then go install github.com/mikefarah/yq/v4@latest
 else ok yq
 fi
 
-# install ansible
-if ! which ansible >/dev/null
-then pip install ansible
-else ok ansible
+# install virtualenv
+if ! which virtualenv >/dev/null
+then pip install virtualenv
+else ok virtualenv
 fi
 
 # install httpie
@@ -242,6 +242,11 @@ then curl -sL https://raw.githubusercontent.com/rupa/z/master/z.sh >$GOBIN/z.sh
 else ok z
 fi
 source $GOBIN/z.sh
+
+if ! which godaddy-cli >/dev/null
+then go install github.com/Cabemo/godaddy-cli@v1.0.0
+else ok go-daddy
+fi
 
 # env
 if test -e .env

@@ -40,7 +40,7 @@ function gsnap {
   then echo msg please
   else x=""; for i in "$@" ; do x="$x$i " ; done
        git commit -a -m "$x" 
-       git push upstream 
+       git push 
   fi
 }
 
