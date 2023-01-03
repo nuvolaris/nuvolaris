@@ -42,7 +42,7 @@ RUN apt-get update &&\
     git gnupg curl wget jq kafkacat \
     zlib1g-dev libbz2-dev libncurses5-dev \
     libgdbm-dev libnss3-dev libssl-dev \
-    libreadline-dev libffi-dev libsqlite3-dev \
+    libreadline-dev libffi-dev libsqlite3-dev liblzma-dev \
     java-11-amazon-corretto-jdk \
     docker-ce-cli google-cloud-cli
 # add delta to show diffs
