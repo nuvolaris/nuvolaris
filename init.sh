@@ -49,7 +49,13 @@ do mkdir -p $DATADIR/$i
 done
 # if the nuvolaris cluster already running export its configuration
 if kind get clusters | grep nuvolaris >/dev/null 2>/dev/null
-then kind export kubeconfig --name nuvolaris
+then
+  if test -f $HOME/.kube/config.keep 
+  then
+    echo "Skipping extraction of current kind config. If needed execute nuvolaris-operator/task kind:config"
+  else 
+    kind export kubeconfig --name nuvolaris
+  fi
 else
   # create cluster
   mkdir -p $HOME/.nuvolaris/data
