@@ -31,7 +31,7 @@ export PS1="[\[\e[32m\]\w:\[\e[91m\]\$(parse_git_branch)\[\e[00m\]]\n$ "
 
 # versions
 export NODENV_VERSION=16.19.0
-export PYENV_VERSION=3.10.0
+export PYENV_VERSION=3.11.2
 export GOENV_VERSION=1.19.4
 export DOCKER_VERSION=19
 export JAVA_VERSION=8
@@ -157,6 +157,14 @@ if ! which http >/dev/null
 then pip install httpie
 else ok httpie
 fi
+
+# install ipython
+if ! which ipython >/dev/null
+then pip install ipython
+else ok httpie
+fi
+
+
 
 # install xonsh
 if ! which xonsh >/dev/null
