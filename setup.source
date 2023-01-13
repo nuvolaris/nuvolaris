@@ -262,16 +262,17 @@ fi
 
 # install go tools for VSCode
 for REF in \
- github.com/cweill/gotests/gotests \
- github.com/fatih/gomodifytags \
- github.com/josharian/impl \
- github.com/haya14busa/goplay/cmd/goplay \
- honnef.co/go/tools/cmd/staticcheck \
- golang.org/.git/hooks/pre-commit/tools/gopls 
-do CMD="$(basename $REF)"
+ github.com/cweill/gotests/gotests@v1.6.0 \
+ github.com/fatih/gomodifytags@v1.16.0 \
+ github.com/josharian/impl@v1.1.0 \
+ github.com/haya14busa/goplay/cmd/goplay@v1.0.0 \
+ github.com/go-delve/delve/cmd/dlv@latest \
+ honnef.co/go/tools/cmd/staticcheck@latest \
+ golang.org/x/tools/gopls@latest 
+do CMD="$(basename ${REF%%@*})"
    if which $CMD >/dev/null
    then ok $CMD
-   else go install $REF@latest
+   else go install $REF
    fi
 done
 
