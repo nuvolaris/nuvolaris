@@ -77,7 +77,7 @@ RUN ARCH="$(dpkg --print-architecture)" ;\
 RUN mkdir /tmp/awscli ;\
     curl -sL "https://awscli.amazonaws.com/awscli-exe-linux-$(arch).zip" -o "/tmp/awscli/awscliv2.zip" ;\
     cd /tmp/awscli ; unzip awscliv2.zip ;\
-    ./aws/install ;\
+    ./aws/install -b /usr/bin  ;\
     rm -Rvf /tmp/awscli
 # Install eksctl
 RUN VER=v0.109.0 ;\
