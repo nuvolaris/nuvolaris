@@ -23,26 +23,26 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
 then echo "You must source this script with bash, not execute it." ; kill -INT $$
 fi
 
-# prompt
-parse_git_branch() {
-     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'
-}
-export PS1="[\[\e[32m\]\w:\[\e[91m\]\$(parse_git_branch)\[\e[00m\]]\n$ "
-
 # versions
 export NODENV_VERSION=16.19.0
-export PYENV_VERSION=3.11.2
+export PYENV_VERSION=3.11.1
 export GOENV_VERSION=1.19.4
 export DOCKER_VERSION=19
 export JAVA_VERSION=8
 
-# env roots
+# env 
 export PYENV_ROOT="$HOME/.pyenv"
 export NODENV_ROOT="$HOME/.nodenv"
 export GOENV_ROOT="$HOME/.goenv"
 
 # git config
 export GIT_EDITOR=vim
+
+# prompt
+parse_git_branch() {
+     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'
+}
+export PS1="[\[\e[32m\]\w:\[\e[91m\]\$(parse_git_branch)\[\e[00m\]]\n$ "
 
 # Preflight checks
 die() {
@@ -121,7 +121,6 @@ export PATH="$NODENV_ROOT/bin:$PATH"
 eval "$(nodenv init -)"
 nodenv install $NODENV_VERSION -s && touch $NODENV_ROOT/$NODENV_VERSION
 
-
 # Install Python
 if test -e $PYENV_ROOT/$PYENV_VERSION
 then ok pyenv
@@ -132,7 +131,6 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
 pyenv install $PYENV_VERSION -s && touch $PYENV_ROOT/$PYENV_VERSION
-
 
 # install task
 if ! which task >/dev/null

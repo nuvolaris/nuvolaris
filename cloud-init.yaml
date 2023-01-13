@@ -39,7 +39,7 @@ runcmd:
    curl wget gpg sudo
    socat  inetutils-ping
    unzip vim telnet less sudo git jq
-   python2 python2-dev libffi-dev libssl-dev
+   python2 python2-dev libffi-dev libssl-dev libsqlite3-dev liblzma-dev
    python3-pip gcc g++ make kafkacat telnet inetutils-ping
  - snap install google-cloud-cli --classic
  - >
