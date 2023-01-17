@@ -50,7 +50,7 @@ RUN FILE="git-delta_0.11.2_$(dpkg --print-architecture).deb" ;\
     wget "https://github.com/dandavison/delta/releases/download/0.11.2/$FILE" -O "/tmp/$FILE" ;\
     dpkg -i "/tmp/$FILE" ; rm "/tmp/$FILE"
 # Download Kubectl
-RUN VER="$(curl -L -s https://dl.k8s.io/release/stable.txt)" ;\
+RUN VER="v1.23.6" ;\
     ARCH="$(dpkg --print-architecture)" ;\
     URL="https://dl.k8s.io/release/$VER/bin/linux/$ARCH/kubectl" ;\
     wget $URL -O /usr/bin/kubectl && chmod +x /usr/bin/kubectl
@@ -84,6 +84,15 @@ RUN VER=v0.109.0 ;\
     ARCH="$(dpkg --print-architecture)" ;\
     curl -sL "https://github.com/weaveworks/eksctl/releases/download/${VER}/eksctl_Linux_${ARCH}.tar.gz" |\
     tar xzvf - -C /usr/bin
+# Install helm
+RUN VER=v3.11.0-rc.2 ;\
+    ARCH="$(dpkg --print-architecture)" ;\
+    mkdir /tmp/helm ;\    
+    curl -sL "https://get.helm.sh/helm-${VER}-linux-${ARCH}.tar.gz" -o "/tmp/helm/helm-${VER}-linux-${ARCH}.tar.gz"; \
+    cd /tmp/helm ;\
+    tar -zxvf "helm-${VER}-linux-${ARCH}.tar.gz" ;\
+    mv "./linux-${ARCH}/helm" /usr/bin/helm ;\
+    rm -Rvf /tmp/helm
 # Install azure cli - commented out: buggy on arm
 # RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 # Download openshift okd installer
