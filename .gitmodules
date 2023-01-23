@@ -27,3 +27,6 @@
 [submodule "nuvolaris-documentation"]
 	path = nuvolaris-documentation
 	url = https://github.com/nuvolaris/nuvolaris-documentation/
+[submodule "nuvolaris-runtimes"]
+	path = nuvolaris-runtimes
+	url = https://github.com/nuvolaris/nuvolaris-runtimes
