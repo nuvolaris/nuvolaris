@@ -52,7 +52,7 @@ if kind get clusters | grep nuvolaris >/dev/null 2>/dev/null
 then
   if test -f $HOME/.kube/config.keep 
   then
-    echo "Skipping extraction of current kind config. If needed execute nuvolaris-operator/task kind:config"
+    echo "Skipping extraction of current kind config. If needed execute task kind:config inside folder nuvolaris-operator"
   else 
     kind export kubeconfig --name nuvolaris
   fi
@@ -129,7 +129,13 @@ nodes:
     protocol: TCP
   - containerPort: 32717
     hostPort: 27017
-    protocol: TCP    
+    protocol: TCP
+  - containerPort: 32090
+    hostPort: 9000
+    protocol: TCP 
+  - containerPort: 32091
+    hostPort: 9090
+    protocol: TCP            
 EOF
 fi
 

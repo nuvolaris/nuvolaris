@@ -163,7 +163,15 @@ runcmd:
     cd /tmp/helm ; 
     tar -zxvf "helm-${VER}-linux-${ARCH}.tar.gz" ;
     mv "./linux-${ARCH}/helm" /usr/bin/helm ;
-    rm -Rvf /tmp/helm           
+    rm -Rvf /tmp/helm  
+ - >
+    PATH=/usr/bin:$PATH ;
+    ARCH=$(dpkg --print-architecture) ;        
+    mkdir /tmp/minio-binaries ;     
+    curl -sL "https://dl.min.io/client/mc/release/linux-${ARCH}/mc" --create-dirs -o /tmp/minio-binaries/mc;
+    chmod +x /tmp/minio-binaries/mc;
+    mv /tmp/minio-binaries/mc /usr/bin/mc;
+    rm -Rvf /tmp/minio-binaries               
  - |
    PATH=/usr/bin:$PATH
    cd /home/ubuntu
