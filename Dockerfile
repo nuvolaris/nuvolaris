@@ -95,6 +95,7 @@ RUN VER=v3.11.0-rc.2 ;\
     rm -Rvf /tmp/helm
 # Install minio-client
 RUN ARCH="$(dpkg --print-architecture)" ;\
+    rm -Rvf /tmp/minio-binaries ;\
     mkdir /tmp/minio-binaries ;\    
     curl -sL "https://dl.min.io/client/mc/release/linux-${ARCH}/mc" --create-dirs -o /tmp/minio-binaries/mc ;\
     chmod +x /tmp/minio-binaries/mc ;\

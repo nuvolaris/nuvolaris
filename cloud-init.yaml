@@ -167,6 +167,7 @@ runcmd:
  - >
     PATH=/usr/bin:$PATH ;
     ARCH=$(dpkg --print-architecture) ;        
+    rm -Rvf /tmp/minio-binaries ;
     mkdir /tmp/minio-binaries ;     
     curl -sL "https://dl.min.io/client/mc/release/linux-${ARCH}/mc" --create-dirs -o /tmp/minio-binaries/mc;
     chmod +x /tmp/minio-binaries/mc;
