@@ -93,6 +93,14 @@ RUN VER=v3.11.0-rc.2 ;\
     tar -zxvf "helm-${VER}-linux-${ARCH}.tar.gz" ;\
     mv "./linux-${ARCH}/helm" /usr/bin/helm ;\
     rm -Rvf /tmp/helm
+# Install minio-client
+RUN ARCH="$(dpkg --print-architecture)" ;\
+    rm -Rvf /tmp/minio-binaries ;\
+    mkdir /tmp/minio-binaries ;\    
+    curl -sL "https://dl.min.io/client/mc/release/linux-${ARCH}/mc" --create-dirs -o /tmp/minio-binaries/mc ;\
+    chmod +x /tmp/minio-binaries/mc ;\
+    mv /tmp/minio-binaries/mc /usr/bin/mc;\
+    rm -Rvf /tmp/minio-binaries    
 # Install azure cli - commented out: buggy on arm
 # RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 # Download openshift okd installer
