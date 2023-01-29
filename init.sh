@@ -137,9 +137,9 @@ nodes:
     hostPort: 9090
     protocol: TCP            
 EOF
-fi
 # deploy nginx ingress
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+fi
 
 if test -f /.dockerenv
 then 
