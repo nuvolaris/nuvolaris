@@ -79,6 +79,8 @@ RUN mkdir /tmp/awscli ;\
     cd /tmp/awscli ; unzip awscliv2.zip ;\
     ./aws/install -b /usr/bin  ;\
     rm -Rvf /tmp/awscli
+# azure cli
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 # Install eksctl
 RUN VER=v0.109.0 ;\
     ARCH="$(dpkg --print-architecture)" ;\

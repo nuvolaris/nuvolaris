@@ -87,7 +87,8 @@ runcmd:
    cd /tmp/awscli ; unzip awscliv2.zip ;\
    ./aws/install -b /usr/bin ;\
    rm -Rvf /tmp/awscli
-    
+ - >
+   curl -sL https://aka.ms/InstallAzureCLIDeb | bash
  - > 
    PATH=/usr/bin:$PATH ;
    VER=v0.109.0 ;
