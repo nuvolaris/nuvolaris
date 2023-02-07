@@ -124,6 +124,11 @@ RUN DO_VERSION=1.71.0 ;\
     ARCH=$(dpkg --print-architecture) ;\
     DO_URL="$DO_BASE/v$DO_VERSION/doctl-$DO_VERSION-linux-$ARCH.tar.gz" ;\
     curl -sL "$DO_URL" | tar xzvf - -C /usr/bin/
+
+RUN ARCH=$(dpkg --print-architecture) ;\
+    URL="https://github.com/carvel-dev/ytt/releases/download/v0.40.4/ytt-linux-$ARCH" ;\
+    curl -sL "$URL" >/usr/bin/ytt ;\
+    chmod +x /usr/bin/ytt
 # k3sup
 RUN VER=0.11.3 ;\
     BASE=https://github.com/alexellis/k3sup/releases/download ;\

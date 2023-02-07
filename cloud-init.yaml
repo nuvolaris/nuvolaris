@@ -181,7 +181,13 @@ runcmd:
     curl -sL "https://dl.min.io/client/mc/release/linux-${ARCH}/mc" --create-dirs -o /tmp/minio-binaries/mc;
     chmod +x /tmp/minio-binaries/mc;
     mv /tmp/minio-binaries/mc /usr/bin/mc;
-    rm -Rvf /tmp/minio-binaries               
+    rm -Rvf /tmp/minio-binaries    
+ - |
+    PATH=/usr/bin:$PATH 
+    ARCH=$(dpkg --print-architecture)
+    URL="https://github.com/carvel-dev/ytt/releases/download/v0.40.4/ytt-linux-$ARCH"
+    curl -sL "$URL" >/usr/bin/ytt
+    chmod +x /usr/bin/ytt
  - |
    PATH=/usr/bin:$PATH
    cd /home/ubuntu
