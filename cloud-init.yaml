@@ -118,12 +118,11 @@ runcmd:
     DO_URL="$DO_BASE/v$DO_VERSION/doctl-$DO_VERSION-linux-$ARCH.tar.gz" ;
     curl -sL "$DO_URL" | tar xzvf - -C /usr/bin/
  - >
-    PATH=/usr/bin:$PATH ;
-    VER=0.11.3 ;
-    BASE=https://github.com/alexellis/k3sup/releases/download ;
-    ARCH=-$(dpkg --print-architecture) ;
-    if [[ $ARCH == "amd64" ]] ; then ARCH="" ; fi ;
-    URL="$BASE/$VER/k3sup${ARCH}" ;
+    VER=0.12.12 ;\
+    BASE=https://github.com/alexellis/k3sup/releases/download ;\
+    ARCH=-$(dpkg --print-architecture) ;\
+    if [[ $ARCH == "amd64" ]] ; then ARCH="" ; fi ;\
+    URL="$BASE/$VER/k3sup${ARCH}" ;\
     curl -sL "$URL" >/usr/bin/k3sup ; chmod +x /usr/bin/k3sup
  - > 
     PATH=/usr/bin:$PATH ;

@@ -18,10 +18,11 @@
 #
 alias k="kubectl -n nuvolaris"
 alias ka="kubectl -n nuvolaris apply"
+alias kaf="kubectl -n nuvolaris apply -f"
 alias kg="kubectl -n nuvolaris get"
 alias kgy="kubectl -n nuvolaris -o yaml get"
-alias kd="kubectl -n nuvolaris delete"
-alias kde="kubectl -n nuvolaris describe"
+alias kdel="kubectl -n nuvolaris delete"
+alias kd="kubectl -n nuvolaris describe"
 function ke { 
   kubectl -n nuvolaris exec -ti "$1" -- bash 
 }

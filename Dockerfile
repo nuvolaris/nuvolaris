@@ -130,7 +130,7 @@ RUN ARCH=$(dpkg --print-architecture) ;\
     curl -sL "$URL" >/usr/bin/ytt ;\
     chmod +x /usr/bin/ytt
 # k3sup
-RUN VER=0.11.3 ;\
+RUN VER=0.12.12 ;\
     BASE=https://github.com/alexellis/k3sup/releases/download ;\
     ARCH=-$(dpkg --print-architecture) ;\
     if [[ $ARCH == "amd64" ]] ; then ARCH="" ; fi ;\
