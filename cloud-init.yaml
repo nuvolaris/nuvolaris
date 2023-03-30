@@ -69,6 +69,28 @@ runcmd:
    wget $URL -O /usr/bin/kubectl && chmod +x /usr/bin/kubectl
  - >
    PATH=/usr/bin:$PATH ;
+   VER="v1.26.1" ;
+   ARCH="$(dpkg --print-architecture)" ;
+   URL="https://dl.k8s.io/release/$VER/bin/linux/$ARCH/kubeadm" ;
+   wget $URL -O /usr/bin/kubeadm && chmod +x /usr/bin/kubeadm
+ - >
+   PATH=/usr/bin:$PATH ;
+   VER="v1.26.1" ;
+   ARCH="$(dpkg --print-architecture)" ;
+   URL="https://dl.k8s.io/release/$VER/bin/linux/$ARCH/kubelet" ;
+   wget $URL -O /usr/bin/kubelet && chmod +x /usr/bin/kubelet  
+- >
+    RELEASE_VERSION="v0.4.0" ;
+    curl -sSL "https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VERSION}/cmd/kubepkg/templates/latest/deb/kubelet/lib/systemd/system/kubelet.service" | sed "s:/usr/bin:${DOWNLOAD_DIR}:g" | sudo tee /etc/systemd/system/kubelet.service ;
+    sudo mkdir -p /etc/systemd/system/kubelet.service.d ;
+    curl -sSL "https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VERSION}/cmd/kubepkg/templates/latest/deb/kubeadm/10-kubeadm.conf" | sed "s:/usr/bin:${DOWNLOAD_DIR}:g" | sudo tee /etc/systemd/system/kubelet.service.d/10-kubeadm.conf ;
+    sudo systemctl enable --now kubelet
+- > 
+    CRICTL_VERSION="v1.25.0" ;
+    ARCH="$(dpkg --print-architecture)" ;
+    curl -L "https://github.com/kubernetes-sigs/cri-tools/releases/download/${CRICTL_VERSION}/crictl-${CRICTL_VERSION}-linux-${ARCH}.tar.gz" | sudo tar -C /usr/bin -xz
+ - >
+   PATH=/usr/bin:$PATH ;
    VER="v4.5.4" ;
    ARCH="$(dpkg --print-architecture)" ;
    URL="https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F$VER/kustomize_${VER}_linux_${ARCH}.tar.gz" ;
@@ -175,10 +197,11 @@ runcmd:
     rm -Rvf /tmp/helm  
  - >
     PATH=/usr/bin:$PATH ;
-    ARCH=$(dpkg --print-architecture) ;        
+    ARCH=$(dpkg --print-architecture) ;
+    MC_VER=RELEASE.2023-03-23T20-03-04Z ;
     rm -Rvf /tmp/minio-binaries ;
     mkdir /tmp/minio-binaries ;     
-    curl -sL "https://dl.min.io/client/mc/release/linux-${ARCH}/mc" --create-dirs -o /tmp/minio-binaries/mc;
+    curl -sL "https://dl.min.io/client/mc/release/linux-${ARCH}/mc.${MC_VER}" --create-dirs -o /tmp/minio-binaries/mc;
     chmod +x /tmp/minio-binaries/mc;
     mv /tmp/minio-binaries/mc /usr/bin/mc;
     rm -Rvf /tmp/minio-binaries    

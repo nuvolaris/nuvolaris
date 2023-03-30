@@ -44,7 +44,7 @@ RUN apt-get update &&\
     libgdbm-dev libnss3-dev libssl-dev \
     libreadline-dev libffi-dev libsqlite3-dev liblzma-dev \
     java-11-amazon-corretto-jdk \
-    docker-ce-cli google-cloud-cli
+    docker-ce-cli google-cloud-cli\
 # add delta to show diffs
 RUN FILE="git-delta_0.11.2_$(dpkg --print-architecture).deb" ;\
     wget "https://github.com/dandavison/delta/releases/download/0.11.2/$FILE" -O "/tmp/$FILE" ;\
@@ -54,6 +54,27 @@ RUN VER="v1.23.6" ;\
     ARCH="$(dpkg --print-architecture)" ;\
     URL="https://dl.k8s.io/release/$VER/bin/linux/$ARCH/kubectl" ;\
     wget $URL -O /usr/bin/kubectl && chmod +x /usr/bin/kubectl
+# Download Kubeadm
+RUN VER="v1.26.1" ;\
+    ARCH="$(dpkg --print-architecture)" ;\
+    URL="https://dl.k8s.io/release/$VER/bin/linux/$ARCH/kubeadm" ;\
+    wget $URL -O /usr/bin/kubeadm && chmod +x /usr/bin/kubeadm  
+# Download Kubelet
+RUN VER="v1.26.1" ;\
+    ARCH="$(dpkg --print-architecture)" ;\
+    URL="https://dl.k8s.io/release/$VER/bin/linux/$ARCH/kubelet" ;\
+    wget $URL -O /usr/bin/kubelet && chmod +x /usr/bin/kubelet 
+# Donwload and enable kubelet service
+RUN RELEASE_VERSION="v0.4.0" ;\
+    curl -sSL "https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VERSION}/cmd/kubepkg/templates/latest/deb/kubelet/lib/systemd/system/kubelet.service" | sed "s:/usr/bin:${DOWNLOAD_DIR}:g" | sudo tee /etc/systemd/system/kubelet.service ;\
+    sudo mkdir -p /etc/systemd/system/kubelet.service.d ;\
+    curl -sSL "https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VERSION}/cmd/kubepkg/templates/latest/deb/kubeadm/10-kubeadm.conf" | sed "s:/usr/bin:${DOWNLOAD_DIR}:g" | sudo tee /etc/systemd/system/kubelet.service.d/10-kubeadm.conf ;\
+    sudo systemctl enable --now kubelet
+# Download CRICTL
+RUN CRICTL_VERSION="v1.25.0" ;\
+    ARCH="$(dpkg --print-architecture)" ;\
+    curl -L "https://github.com/kubernetes-sigs/cri-tools/releases/download/${CRICTL_VERSION}/crictl-${CRICTL_VERSION}-linux-${ARCH}.tar.gz" | sudo tar -C /usr/bin -xz
+
 # Download Kustomize
 RUN VER="v4.5.4" ;\
     ARCH="$(dpkg --print-architecture)" ;\
@@ -97,9 +118,10 @@ RUN VER=v3.11.0-rc.2 ;\
     rm -Rvf /tmp/helm
 # Install minio-client
 RUN ARCH="$(dpkg --print-architecture)" ;\
+    MC_VER=RELEASE.2023-03-23T20-03-04Z; \
     rm -Rvf /tmp/minio-binaries ;\
     mkdir /tmp/minio-binaries ;\    
-    curl -sL "https://dl.min.io/client/mc/release/linux-${ARCH}/mc" --create-dirs -o /tmp/minio-binaries/mc ;\
+    curl -sL "https://dl.min.io/client/mc/release/linux-${ARCH}/mc.${MC_VER}" --create-dirs -o /tmp/minio-binaries/mc ;\
     chmod +x /tmp/minio-binaries/mc ;\
     mv /tmp/minio-binaries/mc /usr/bin/mc;\
     rm -Rvf /tmp/minio-binaries    
