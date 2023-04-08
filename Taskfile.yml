@@ -116,7 +116,6 @@ tasks:
       VER:
         sh: cat release | sed -e 's/-.*.//'
 
-
   snap: 
     silent: true
     cmds:
