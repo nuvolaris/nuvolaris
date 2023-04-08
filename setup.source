@@ -22,11 +22,14 @@ fi
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]] 
 then echo "You must source this script with bash, not execute it." ; kill -INT $$
 fi
+if which cloud-init
+then cloud-init status --wait
+fi
 
 # versions
-export NODENV_VERSION=16.19.0
+export NODENV_VERSION=18.15.0
 export PYENV_VERSION=3.11.1
-export GOENV_VERSION=1.19.4
+export GOENV_VERSION=1.20.3
 export DOCKER_VERSION=19
 export JAVA_VERSION=8
 

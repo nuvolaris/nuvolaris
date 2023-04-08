@@ -134,3 +134,16 @@ tasks:
       echo push with task snap [T=test] [S=suffix]
       fi
       fi
+
+  dockerfile:
+    - echo "# DO NOT EDIT - edit cloud-init.yaml then regenerate with task dockerfile" >Dockerfile
+    - cat Dockerfile.pre >>Dockerfile
+    - >
+      cat cloud-init.yaml 
+      | awk '/##BEGIN##/,/##END##/'
+      | grep -v ' # '
+      | sed -e 's/  - |/RUN \\/'
+      >>Dockerfile
+    - cat Dockerfile.post >>Dockerfile
+
+
