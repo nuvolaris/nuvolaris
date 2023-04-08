@@ -29,7 +29,7 @@ RUN ARCH=$(dpkg --print-architecture) ;\
     echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu bionic stable" > /etc/apt/sources.list.d/docker.list &&\
     add-apt-repository 'deb https://apt.corretto.aws stable main'
 RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" |  tee -a /etc/apt/sources.list.d/google-cloud-sdk.list &&\
-    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg >/usr/share/keyrings/cloud.google.gpg
 # install software
 RUN apt-get update &&\
     apt-get -y install \
@@ -58,7 +58,7 @@ RUN VER="v1.23.6" ;\
 RUN VER="v1.26.1" ;\
     ARCH="$(dpkg --print-architecture)" ;\
     URL="https://dl.k8s.io/release/$VER/bin/linux/$ARCH/kubeadm" ;\
-    wget $URL -O /usr/bin/kubeadm && chmod +x /usr/bin/kubeadm  
+    wget $URL -O /usr/bin/kubeadm && chmod +x /usr/bin/kubeadm
 # Download Kubelet
 RUN VER="v1.26.1" ;\
     ARCH="$(dpkg --print-architecture)" ;\
