@@ -21,9 +21,6 @@
 [submodule "operator"]
 	path = nuvolaris-operator
 	url = https://github.com/nuvolaris/nuvolaris-operator
-[submodule "cli"]
-	path = nuvolaris-cli
-	url = https://github.com/nuvolaris/nuvolaris-cli
 [submodule "nuvolaris-documentation"]
 	path = nuvolaris-documentation
 	url = https://github.com/nuvolaris/nuvolaris-documentation/
