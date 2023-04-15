@@ -19,7 +19,7 @@
 -->
 # Nuvolaris Roadmap
 
-Version 0.2, February 2022. Subject to changes.
+Version 0.3, April 2023. Subject to changes.
 
 ## About
 
@@ -41,9 +41,8 @@ It should run and be tested to work on more recent versions of:
 - Azure AKS
 - Google GKE
 - Redhat OpenShift
-- Ubuntu Charmed Kubernetes
+- Ubuntu Microk8s
 - Rancher K3S
-- VMware Tanzu
 
 More Kubernetes distributions we can add the better.
 
@@ -65,8 +64,8 @@ The installer should be able to use or connect to those external compoments:
 
 - a object storage compatible with s3
 - a cache based on redis
-- a SQL database service, either MySQL or PostgreSQL
 - a NO-SQL database service, either Couchdb or Mongodb
+- a SQL database service
 
 ## Runtimes
 
@@ -83,15 +82,10 @@ Ideally, Nuvolaris applications should work in every OpenWhisk implementation (I
 
 We have to provide, together with the runtimes, the required build to reconstruct a local environent to run tests and develop without having to deploy the project.
 
-## Legacy Migrations
-
-We need to provide support tools allowing to migrate SpringBoot as serverless applications with minimal (ideally zero) code changes.
-
-We need to support Wordpress to be usable as a provider of content for JAMStack applications, ideally building it as a serverless action.
-
 ## Integrations
 
 We will integrate enterprise products like
+
 - Kafka for streaming applications
 - Spark for big data applications
 - TensowrFlow for deep learning applications

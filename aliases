@@ -48,16 +48,7 @@ function gsnap {
 alias gl1="git log --pretty=oneline"
 alias gd1="git diff --name-only"
 
-alias na="nuv wsk action"
-alias nau="nuv wsk action update"
-alias nal="nuv wsk action list"
-alias ng="nuv wsk action get"
-alias ngu="nuv wsk action get --url"
-alias nv="nuv wsk activation"
-alias nvl="nuv wsk activation list"
-alias nvg="nuv wsk activation logs"
-alias nvgl="nuv wsk activation logs --last"
-alias nvp="nuw wsk activation poll"
+alias dnuv="NUV_NO_NUVOPTS=1 nuv"
 
 alias t=task
 alias tu='task -d ..'

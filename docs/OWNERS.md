@@ -19,7 +19,6 @@
 -->
 Current Project ownership
 
-- [Michele Sciabarra](https://github.com/sciabarracom/)
-- [Leonardo Cigolini](https://github.com/leonardocigolini)
-- [Federico Balice](https://github.com/fb-git)
-- [Irina Branovic](https://github.com/irinacodes)
+- [Michele Sciabarra](https://github.com/msciabarra/)
+- [Francesco Tiberi Timperi](https://github.com/francescotimperi)
+- [Giuseppe De Palma](https://github.com/giusdp)

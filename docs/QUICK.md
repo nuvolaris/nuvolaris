@@ -100,7 +100,7 @@ We name milestones after characters of the movies of The Matrix franchise.
 
 We reached the second milestone, [Trinity](docs/Trinity.md).
 
-The next milestones will be Morpheus, yet to be planned.
+The are working on [Morpheus](docs/Morpheus.md).
 
 The milestone to reach when we release 1.0 is [Matrix](docs/Matrix.md).
  

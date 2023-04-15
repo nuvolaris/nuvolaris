@@ -19,10 +19,9 @@
 -->
 # Morpheus 
 
-(Work in progress)
-
-- Deploy an user accessible database for the actions (`rqlite`)
-- Provide support for storing static frontend content
-- Implement deployments of projects with the cli `nuv`
-- Provide https support automated (using caddy?)
+- SSL Support
+- Works on k3s, microk8s, AWS EKS, Azure AKS, Google GKE and Openshift
+- Integrated support for redis, minio, mongodb
+- Multi-tenant support
+- Automated deployment of hierarchies of actions, Nimbella style
 
