@@ -18,21 +18,15 @@
 {
 	"folders": [
 		{
-			"path": "nuvolaris-cli/nuv"
-		},
-		{
 			"path": "nuvolaris-operator"
 		},
 		{
-			"path": "."
+			"path": "nuvolaris-operator/olaris"
 		},
 		{
-			"path": "nuvolaris-cli"
-		},
-		{
-			"path": "nuvolaris-controller/openwhisk/tests/src/test/scala/org/apache/openwhisk/core/controller"
+			"path": "nuvolaris-operator/nuv"
 		}
-	],
+		],
 	"settings": {
 		"workbench.colorCustomizations": {
 			"activityBar.background": "#1c5389"

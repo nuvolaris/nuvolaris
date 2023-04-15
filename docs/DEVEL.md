@@ -23,12 +23,11 @@ This document describes the development procedures for Nuvolaris.
 
 ## Prerequisites
 
-Before starting you need a computer with enough memory. Since we use extensively Docker and create a local development environemnt, you need to [install docker](https://docs.docker.com/get-docker/) either on Windows, OSX or Linux and **assign to Docker at least 8 gb of memory**. 
+Before starting you need a computer with enough memory. Since we use extensively Docker and create a local development environemnt, you need to [install docker](https://docs.docker.com/get-docker/) either on Windows, OSX or Linux and **assign to Docker at least 6 gb of memory**. 
 
-The version of Docker we currently use and we have tested is **20.x**, either Docker Desktop or Docker CE. Earlier version may work or not work. Defintely the `docker.io` distributed with Ubuntu *does not work* and you have to update to Docker-CE.
+The version of Docker we currently use and we have tested is **20.x**, either Docker Desktop or Docker CE. Earlier version may work or not work. Definitely the `docker.io` distributed with Ubuntu *does not work* and you have to update to Docker-CE.
 
 Given the high memory footprinr required, it is pretty unlikely you can work productively on any machine with less than 16G of memory. 
-
 
 either:
 
@@ -52,10 +51,9 @@ Before starting development, you need to:
 
 Accessing to code stored in your local filesystem can be slow. Also you may have other problems, especially with Linux if the user you are using has an uid != 1000, since this is the uid used internally by the container.
 
-
 As an alternative you can put code in a docker volume with this alternative procedure, that works for the various `nuvolaris-*` subprojects, but not for the top-level `nuvolaris` project as it uses submodules (not yet supported by VSCode).
 
-- Fork one of the `nuvolaris-*` repository in your account. N
+- Fork one of the Nuvolaris repository in your account. 
 - Start VSCode
 - Open the repository in a volume with `F1` | `Remote-Containers: Clone Repositories in a Container Volume` 
 - Log in GitHub and select your fork.
@@ -78,6 +76,14 @@ When everything is installed:
 - Use the remote SSH extension to [connect to the Remote Server](https://code.visualstudio.com/docs/remote/ssh-tutorial#_connect-using-ssh)
 - Open the folder with VSCode and then say YES when it asks to "reopen in container"
 - Finally, open one of the workspace file (the file workspace.code-workspace) present in every subproject in the folders nuvolaris-*
+
+## Use a virtual machine
+
+You can build a virtual machine which has all the required components starting a virtual machine with `Ubuntu 22` in any cloud provider and feed to them the `cloud-init.yaml` in the nuvolaris folder.
+
+If you have [multipass](https://multipass.dev) you can also directly start a suitable VM using the `multipass.sh` script to launch and initialize it. Then connect to it as it was a remote server.
+
+If you use a virtual machine created with cloud-init you do not need to launch the development container as it has already all the required tools.
 
 ## Build your own development environment
 
