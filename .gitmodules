@@ -27,3 +27,6 @@
 [submodule "nuvolaris-runtimes"]
 	path = nuvolaris-runtimes
 	url = https://github.com/nuvolaris/nuvolaris-runtimes
+[submodule "nuvolaris-testing"]
+	path = nuvolaris-testing
+	url = https://github.com/nuvolaris/nuvolaris-testing
