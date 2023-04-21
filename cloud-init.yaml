@@ -148,8 +148,8 @@ runcmd:
     rm -Rvf /tmp/minio-binaries    
   - |
     # Download openshift okd installer
-    VER=4.11.0-0.okd-2022-08-20-022919 ;\
-    ARCH=$(dpkg --print-architecture) ;\
+    VER=4.12.0-0.okd-2023-04-16-041331 ;\
+    if dpkg --print-architecture | grep arm64 ; then VER="arm64-$VER" ; fi ;\
     BASE=https://github.com/okd-project/okd/releases/download/ ;\
     URL1="$BASE/$VER/openshift-install-linux-$VER.tar.gz" ;\
     URL2="$BASE/$VER/openshift-client-linux-$VER.tar.gz" ;\

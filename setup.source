@@ -96,7 +96,7 @@ else ok kubectl
 fi
 
 if ! which wsk >/dev/null
-then die "Please install wsk"
+then echo "*** Please install wsk ***"
 else ok wsk
 fi
 
