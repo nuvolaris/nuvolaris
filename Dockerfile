@@ -55,10 +55,17 @@ RUN \
     wget "https://github.com/dandavison/delta/releases/download/0.11.2/$FILE" -O "/tmp/$FILE" ;\
     dpkg -i "/tmp/$FILE" ; rm "/tmp/$FILE"
 RUN \
-    VER="v1.23.6" ;\
+    rm -Rvf /tmp/nuv-installer ;\
+    mkdir /tmp/nuv-installer ;\
+    BUILD="0.3.0-morpheus.23042210" ;\
     ARCH="$(dpkg --print-architecture)" ;\
-    URL="https://dl.k8s.io/release/$VER/bin/linux/$ARCH/kubectl" ;\
-    wget $URL -O /usr/bin/kubectl && chmod +x /usr/bin/kubectl
+    FILE="nuv_$(echo $BUILD)_$ARCH.deb" ;\
+    URL="https://github.com/nuvolaris/nuv/releases/download/$BUILD/$FILE" ;\
+    wget $URL -O "/tmp/nuv-installer/$FILE" ;\
+    dpkg -i "/tmp/nuv-installer/$FILE"
+  RUN \
+    /usr/bin/echo -e '#!/bin/bash\nsudo env DOCKER_HOST=unix:///var/run/docker-host.sock /usr/nuvolaris/kind "$@"' >/usr/nuvolaris/kind ;\
+    chmod +x /usr/nuvolaris/kind   
 RUN \
     VER="v1.26.1" ;\
     ARCH="$(dpkg --print-architecture)" ;\
@@ -69,13 +76,6 @@ RUN \
     ARCH="$(dpkg --print-architecture)" ;\
     URL="https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F$VER/kustomize_${VER}_linux_${ARCH}.tar.gz" ;\
     curl -sL "$URL" | tar xzvf - -C /usr/bin
-RUN \
-    VER="v0.14.0" ;\
-    ARCH="$(dpkg --print-architecture)" ;\
-    URL="https://github.com/kubernetes-sigs/kind/releases/download/$VER/kind-linux-$ARCH" ;\
-    wget $URL -O /usr/bin/kind.bin ;\
-    /usr/bin/echo -e '#!/bin/bash\nsudo env DOCKER_HOST=unix:///var/run/docker-host.sock /usr/bin/kind.bin "$@"' >/usr/bin/kind ;\
-    chmod +x /usr/bin/kind.bin /usr/bin/kind
 RUN \
     ARCH="$(dpkg --print-architecture)" ;\
     VER=1.1.0 ;\
@@ -104,19 +104,10 @@ RUN \
     cd /tmp/helm ;\
     tar -zxvf "helm-${VER}-linux-${ARCH}.tar.gz" ;\
     mv "./linux-${ARCH}/helm" /usr/bin/helm ;\
-    rm -Rvf /tmp/helm
+    rm -Rvf /tmp/helm   
 RUN \
-    ARCH="$(dpkg --print-architecture)" ;\
-    MC_VER=RELEASE.2023-03-23T20-03-04Z; \
-    rm -Rvf /tmp/minio-binaries ;\
-    mkdir /tmp/minio-binaries ;\    
-    curl -sL "https://dl.min.io/client/mc/release/linux-${ARCH}/mc.${MC_VER}" --create-dirs -o /tmp/minio-binaries/mc ;\
-    chmod +x /tmp/minio-binaries/mc ;\
-    mv /tmp/minio-binaries/mc /usr/bin/mc;\
-    rm -Rvf /tmp/minio-binaries    
-RUN \
-    VER=4.11.0-0.okd-2022-08-20-022919 ;\
-    ARCH=$(dpkg --print-architecture) ;\
+    VER=4.12.0-0.okd-2023-04-16-041331 ;\
+    if dpkg --print-architecture | grep arm64 ; then VER="arm64-$VER" ; fi ;\
     BASE=https://github.com/okd-project/okd/releases/download/ ;\
     URL1="$BASE/$VER/openshift-install-linux-$VER.tar.gz" ;\
     URL2="$BASE/$VER/openshift-client-linux-$VER.tar.gz" ;\
@@ -138,13 +129,6 @@ RUN \
     URL="https://github.com/carvel-dev/ytt/releases/download/v0.40.4/ytt-linux-$ARCH" ;\
     curl -sL "$URL" >/usr/bin/ytt ;\
     chmod +x /usr/bin/ytt
-RUN \
-    VER=0.12.12 ;\
-    BASE=https://github.com/alexellis/k3sup/releases/download ;\
-    ARCH=-$(dpkg --print-architecture) ;\
-    if [[ $ARCH == "amd64" ]] ; then ARCH="" ; fi ;\
-    URL="$BASE/$VER/k3sup${ARCH}" ;\
-    curl -sL "$URL" >/usr/bin/k3sup ; chmod +x /usr/bin/k3sup
 RUN \
     VER="v1.4.1" ;\
     ARCH="$(dpkg --print-architecture)" ;\
