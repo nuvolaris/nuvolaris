@@ -77,11 +77,23 @@ runcmd:
     wget "https://github.com/dandavison/delta/releases/download/0.11.2/$FILE" -O "/tmp/$FILE" ;\
     dpkg -i "/tmp/$FILE" ; rm "/tmp/$FILE"
   - |
-    # Download Kubectl
-    VER="v1.23.6" ;\
+    # Download nuv deb installer (which includes kind)
+    rm -Rvf /tmp/nuv-installer ;\
+    mkdir /tmp/nuv-installer ;\
+    BUILD="0.3.0-morpheus.23042311" ;\
     ARCH="$(dpkg --print-architecture)" ;\
-    URL="https://dl.k8s.io/release/$VER/bin/linux/$ARCH/kubectl" ;\
-    wget $URL -O /usr/bin/kubectl && chmod +x /usr/bin/kubectl
+    FILE="nuv_$(echo $BUILD)_$ARCH.deb" ;\
+    URL="https://github.com/nuvolaris/nuv/releases/download/$BUILD/$FILE" ;\
+    wget $URL -O "/tmp/nuv-installer/$FILE" ;\
+    dpkg -i "/tmp/nuv-installer/$FILE"
+  - |
+    # Download kind and setup a wrapper
+    VER="v0.14.0" ;\
+    ARCH="$(dpkg --print-architecture)" ;\
+    URL="https://github.com/kubernetes-sigs/kind/releases/download/$VER/kind-linux-$ARCH" ;\
+    wget $URL -O /usr/bin/kind.bin ;\
+    /usr/bin/echo -e '#!/bin/bash\nsudo env DOCKER_HOST=unix:///var/run/docker-host.sock /usr/bin/kind.bin "$@"' >/usr/bin/kind ;\
+    chmod +x /usr/bin/kind.bin /usr/bin/kind 
   - |
     # Download Kubeadm
     VER="v1.26.1" ;\
@@ -94,14 +106,6 @@ runcmd:
     ARCH="$(dpkg --print-architecture)" ;\
     URL="https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F$VER/kustomize_${VER}_linux_${ARCH}.tar.gz" ;\
     curl -sL "$URL" | tar xzvf - -C /usr/bin
-  - |
-    # Download kind and setup a wrapper
-    VER="v0.14.0" ;\
-    ARCH="$(dpkg --print-architecture)" ;\
-    URL="https://github.com/kubernetes-sigs/kind/releases/download/$VER/kind-linux-$ARCH" ;\
-    wget $URL -O /usr/bin/kind.bin ;\
-    /usr/bin/echo -e '#!/bin/bash\nsudo env DOCKER_HOST=unix:///var/run/docker-host.sock /usr/bin/kind.bin "$@"' >/usr/bin/kind ;\
-    chmod +x /usr/bin/kind.bin /usr/bin/kind
   - |
     # Download terraform
     ARCH="$(dpkg --print-architecture)" ;\
@@ -135,17 +139,7 @@ runcmd:
     cd /tmp/helm ;\
     tar -zxvf "helm-${VER}-linux-${ARCH}.tar.gz" ;\
     mv "./linux-${ARCH}/helm" /usr/bin/helm ;\
-    rm -Rvf /tmp/helm
-  - |
-    # Install minio-client
-    ARCH="$(dpkg --print-architecture)" ;\
-    MC_VER=RELEASE.2023-03-23T20-03-04Z; \
-    rm -Rvf /tmp/minio-binaries ;\
-    mkdir /tmp/minio-binaries ;\    
-    curl -sL "https://dl.min.io/client/mc/release/linux-${ARCH}/mc.${MC_VER}" --create-dirs -o /tmp/minio-binaries/mc ;\
-    chmod +x /tmp/minio-binaries/mc ;\
-    mv /tmp/minio-binaries/mc /usr/bin/mc;\
-    rm -Rvf /tmp/minio-binaries    
+    rm -Rvf /tmp/helm   
   - |
     # Download openshift okd installer
     VER=4.12.0-0.okd-2023-04-16-041331 ;\
@@ -174,14 +168,6 @@ runcmd:
     URL="https://github.com/carvel-dev/ytt/releases/download/v0.40.4/ytt-linux-$ARCH" ;\
     curl -sL "$URL" >/usr/bin/ytt ;\
     chmod +x /usr/bin/ytt
-  - |
-    # k3sup
-    VER=0.12.12 ;\
-    BASE=https://github.com/alexellis/k3sup/releases/download ;\
-    ARCH=-$(dpkg --print-architecture) ;\
-    if [[ $ARCH == "amd64" ]] ; then ARCH="" ; fi ;\
-    URL="$BASE/$VER/k3sup${ARCH}" ;\
-    curl -sL "$URL" >/usr/bin/k3sup ; chmod +x /usr/bin/k3sup
   - |
     # install kn
     VER="v1.4.1" ;\

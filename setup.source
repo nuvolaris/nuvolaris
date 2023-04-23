@@ -37,6 +37,7 @@ export JAVA_VERSION=8
 export PYENV_ROOT="$HOME/.pyenv"
 export NODENV_ROOT="$HOME/.nodenv"
 export GOENV_ROOT="$HOME/.goenv"
+export NUV_INSTALL_DIR="/usr/nuvolaris"
 
 # git config
 export GIT_EDITOR=vim
@@ -55,6 +56,10 @@ die() {
 
 ok() {
     echo OK: "$@"
+}
+
+ko() {
+    echo KO: "$@"
 }
 
 if ! which gcc >/dev/null
@@ -278,6 +283,15 @@ do CMD="$(basename ${REF%%@*})"
    else go install $REF
    fi
 done
+
+# Check existence of nuv cli installed via deb and add it to the classpath
+if test -e $NUV_INSTALL_DIR
+then
+    export PATH="$NUV_INSTALL_DIR:$PATH"
+    ok nuv
+else 
+    ko $NUV_INSTALL_DIR    
+fi
 
 # replace
 if ! which replace >/dev/null
