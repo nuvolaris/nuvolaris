@@ -63,9 +63,13 @@ RUN \
     URL="https://github.com/nuvolaris/nuv/releases/download/$BUILD/$FILE" ;\
     wget $URL -O "/tmp/nuv-installer/$FILE" ;\
     dpkg -i "/tmp/nuv-installer/$FILE"
-  RUN \
-    /usr/bin/echo -e '#!/bin/bash\nsudo env DOCKER_HOST=unix:///var/run/docker-host.sock /usr/nuvolaris/kind "$@"' >/usr/nuvolaris/kind ;\
-    chmod +x /usr/nuvolaris/kind   
+RUN \
+    VER="v0.14.0" ;\
+    ARCH="$(dpkg --print-architecture)" ;\
+    URL="https://github.com/kubernetes-sigs/kind/releases/download/$VER/kind-linux-$ARCH" ;\
+    wget $URL -O /usr/bin/kind.bin ;\
+    /usr/bin/echo -e '#!/bin/bash\nsudo env DOCKER_HOST=unix:///var/run/docker-host.sock /usr/bin/kind.bin "$@"' >/usr/bin/kind ;\
+    chmod +x /usr/bin/kind.bin /usr/bin/kind 
 RUN \
     VER="v1.26.1" ;\
     ARCH="$(dpkg --print-architecture)" ;\
