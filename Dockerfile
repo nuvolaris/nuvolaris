@@ -57,7 +57,7 @@ RUN \
 RUN \
     rm -Rvf /tmp/nuv-installer ;\
     mkdir /tmp/nuv-installer ;\
-    BUILD="0.3.0-morpheus.23042210" ;\
+    BUILD="0.3.0-morpheus.23042311" ;\
     ARCH="$(dpkg --print-architecture)" ;\
     FILE="nuv_$(echo $BUILD)_$ARCH.deb" ;\
     URL="https://github.com/nuvolaris/nuv/releases/download/$BUILD/$FILE" ;\

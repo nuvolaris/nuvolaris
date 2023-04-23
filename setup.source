@@ -288,6 +288,7 @@ done
 if test -e $NUV_INSTALL_DIR
 then
     export PATH="$NUV_INSTALL_DIR:$PATH"
+    ok nuv
 else 
     ko $NUV_INSTALL_DIR    
 fi
