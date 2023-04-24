@@ -56,6 +56,58 @@ This is the procedure to install everything and play with the source code. Usual
 
 Check  [our development guide](DEVEL.md) for more informations.
 
+## Build and deploy the operator
+
+If you opened the dev container and the workspace you should be able to build and run our operator.
+
+Open a terminal with "Terminal > New Terminal" and select  the `nuvolaris-operator` subproject. A shell will open and setup the environment.
+
+You should have now a Kubernetes-in-Docker (kind) up and running. Check it is working with `kubectl get nodes`, you should see:
+
+```
+$ kubectl get nodes
+NAME                      STATUS   ROLES           AGE     VERSION
+nuvolaris-control-plane   Ready    control-plane   7m35s   v1.24.0
+nuvolaris-worker          Ready    <none>          7m14s   v1.24.0
+```
+
+If kind is not started (but it should) you can initialize it again with `init.sh reset`.
+
+You can now build everything from sources. There are few steps to perform (all of those are automated in the CLI), but here it is a development environment, so it is better to perform the steps to better investigate failures.
+
+Execute the following steps (while you perform them. you may want to split another terminal on `nuvolaris-operator` and use `task watch` to see what is happening):
+
+Now you need a docker registry. The simplest way is to use ghcr.io.
+
+So you need to register on github and get a GitHub developer token. 
+
+Then configure a `.env` with at least the following variables (check `.env.sample` for more).
+
+```
+GITHB_USER=<user>
+GITHUB_TOKER=<your-token>
+MY_OPERATOR_IMAGE=ghcr.io/<user>/nuvolaris-operator
+```
+
+Replace of course `<user>` with your actual github user
+
+1. generate a new image that with `task image-tag` 
+1. push it to the registry with `task build-and-push`
+
+*NOTE*: the first time you publish an image, it is private by default. You have to make it public to be able to use it in your local kind cluster.
+
+Once you have the operator image built and public you can deploy Nuvolaris
+
+1. `task permission`: apply permissions to deploy
+1. `task operator`: deploy the operator
+1. `task minimal`: deploy a minimal openwhisk configuration
+
+Finally configure openwhisk and run a couple of tests (note: it can take a while before all the containers are downloaded and you may need to retry if they timeout):
+
+1. `task config`
+1. `task hello`
+2. `task ping`
+
 ## How to contribute
 
 - Either find an open and unassigned issue, or open one by yourself in the [Issue Tracker](https://github.com/nuvolaris/nuvolaris/issues) describing what you want to do.

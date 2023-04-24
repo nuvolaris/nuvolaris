@@ -138,8 +138,6 @@ nodes:
     hostPort: 9090
     protocol: TCP            
 EOF
-# deploy nginx ingress
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
 fi
 
 if test -f /.dockerenv
@@ -148,6 +146,7 @@ then
   mkdir -p /home/nuvolaris/.kube 
   sudo cp /root/.kube/config /home/nuvolaris/.kube/config
   sudo chown nuvolaris:nuvolaris /home/nuvolaris/.kube/config
+  kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
   # proxy to sockerhost and loop forever
   test -S /var/run/docker.sock || exec sudo /usr/bin/socat \
   UNIX-LISTEN:/var/run/docker.sock,fork,mode=660,user=nuvolaris \
