@@ -29,7 +29,7 @@ fi
 if ! multipass ls | grep nuvolaris
 then 
    echo Preparing nuvolaris vm - expect a timeout
-   multipass launch -c4 -m4G -d30G -nnuvolaris --cloud-init cloud-init.yaml
+   multipass launch -c4 -m8G -d50G -nnuvolaris --cloud-init cloud-init.yaml
 fi
 
 multipass shell nuvolaris
