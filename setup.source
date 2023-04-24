@@ -287,7 +287,7 @@ done
 # Check existence of nuv cli installed via deb and add it to the classpath
 if test -e $NUV_INSTALL_DIR
 then
-    export PATH="$NUV_INSTALL_DIR:$PATH"
+    export PATH="$PATH:$NUV_INSTALL_DIR"
     ok nuv
 else 
     ko $NUV_INSTALL_DIR    

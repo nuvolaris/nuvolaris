@@ -20,7 +20,7 @@
 # that works either inside or outside of a container.
 #
 # check kind is in path
-export PATH=/usr/nuvolaris:/usr/local/nuvolaris:$PATH
+export PATH=$PATH:/usr/nuvolaris:/usr/local/nuvolaris
 if ! which kind >/dev/null
 then echo "Please install Kind from https://kind.sigs.k8s.io/docs/user/quick-start/#installation"
      exit 1
@@ -45,9 +45,9 @@ if test -f /.dockerenv
 then DATADIR=$REAL_HOME/.nuvolaris_data
 else DATADIR=$HOME/.nuvolaris_data
 fi
-for i in data openwhisk/standalone openwhisk/invoker openwhisk/controller couchdb redis mongodb zookeeper/data zookeeper/log kafka
-do mkdir -p $DATADIR/$i
-done
+#for i in data openwhisk/standalone openwhisk/invoker openwhisk/controller couchdb redis mongodb zookeeper/data zookeeper/log kafka
+#do mkdir -p $DATADIR/$i
+#done
 # if the nuvolaris cluster already running export its configuration
 if kind get clusters | grep nuvolaris >/dev/null 2>/dev/null
 then
