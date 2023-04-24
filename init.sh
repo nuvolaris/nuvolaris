@@ -20,6 +20,7 @@
 # that works either inside or outside of a container.
 #
 # check kind is in path
+export PATH=/usr/nuvolaris;/usr/local/nuvolaris;$PATH
 if ! which kind >/dev/null
 then echo "Please install Kind from https://kind.sigs.k8s.io/docs/user/quick-start/#installation"
      exit 1
