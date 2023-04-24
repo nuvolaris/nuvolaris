@@ -64,13 +64,6 @@ RUN \
     wget $URL -O "/tmp/nuv-installer/$FILE" ;\
     dpkg -i "/tmp/nuv-installer/$FILE"
 RUN \
-    VER="v0.14.0" ;\
-    ARCH="$(dpkg --print-architecture)" ;\
-    URL="https://github.com/kubernetes-sigs/kind/releases/download/$VER/kind-linux-$ARCH" ;\
-    wget $URL -O /usr/bin/kind.bin ;\
-    /usr/bin/echo -e '#!/bin/bash\nsudo env DOCKER_HOST=unix:///var/run/docker-host.sock /usr/bin/kind.bin "$@"' >/usr/bin/kind ;\
-    chmod +x /usr/bin/kind.bin /usr/bin/kind 
-RUN \
     VER="v1.26.1" ;\
     ARCH="$(dpkg --print-architecture)" ;\
     URL="https://dl.k8s.io/release/$VER/bin/linux/$ARCH/kubeadm" ;\
@@ -111,10 +104,11 @@ RUN \
     rm -Rvf /tmp/helm   
 RUN \
     VER=4.12.0-0.okd-2023-04-16-041331 ;\
-    if dpkg --print-architecture | grep arm64 ; then VER="arm64-$VER" ; fi ;\
-    BASE=https://github.com/okd-project/okd/releases/download/ ;\
-    URL1="$BASE/$VER/openshift-install-linux-$VER.tar.gz" ;\
-    URL2="$BASE/$VER/openshift-client-linux-$VER.tar.gz" ;\
+    BASE=https://github.com/okd-project/okd/releases/download ;\
+    if dpkg --print-architecture | grep arm64 ;\ 
+    then VER1="arm64-$VER" ; else VER1=$VER ; fi ;\
+    URL1="$BASE/$VER/openshift-install-linux-$VER1.tar.gz" ;\
+    URL2="$BASE/$VER/openshift-client-linux-$VER1.tar.gz" ;\
     curl -sL "$URL1" | tar xzvf - -C /usr/bin/ ;\
     curl -sL "$URL2" | tar xzvf - -C /usr/bin/
 RUN \
@@ -163,6 +157,12 @@ RUN \
 # under the License.
 #
 # add and configure user
+RUN VER="v0.14.0" ;\
+    ARCH="$(dpkg --print-architecture)" ;\
+    URL="https://github.com/kubernetes-sigs/kind/releases/download/$VER/kind-linux-$ARCH" ;\
+    wget $URL -O /usr/bin/kind.bin ;\
+    /usr/bin/echo -e '#!/bin/bash\nsudo env DOCKER_HOST=unix:///var/run/docker-host.sock /usr/bin/kind.bin "$@"' >/usr/bin/kind ;\
+    chmod +x /usr/bin/kind.bin /usr/bin/kind 
 ENV TZ=Europe/London
 RUN useradd -m nuvolaris -s /bin/bash &&\
     echo "nuvolaris ALL=(ALL:ALL) NOPASSWD: ALL" >>/etc/sudoers
