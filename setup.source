@@ -95,11 +95,6 @@ else
     fi
 fi
 
-if ! which kubectl >/dev/null
-then die "Please install kubectl"
-else ok kubectl
-fi
-
 if ! which wsk >/dev/null
 then echo "*** Please install wsk ***"
 else ok wsk
@@ -291,6 +286,12 @@ then
     ok nuv
 else 
     ko $NUV_INSTALL_DIR    
+fi
+
+# Check for kubectl
+if ! which kubectl >/dev/null
+then die "Please install kubectl"
+else ok kubectl
 fi
 
 # replace
