@@ -55,12 +55,12 @@ RUN \
     wget "https://github.com/dandavison/delta/releases/download/0.11.2/$FILE" -O "/tmp/$FILE" ;\
     dpkg -i "/tmp/$FILE" ; rm "/tmp/$FILE"
 RUN \
-    rm -Rvf /tmp/nuv-installer ;\
-    mkdir /tmp/nuv-installer ;\
-    BUILD="0.3.0-morpheus.23042518" ;\
+    BUILD="0.3.0-morpheus.23042703" ;\
     ARCH="$(dpkg --print-architecture)" ;\
     FILE="nuv_$(echo $BUILD)_$ARCH.deb" ;\
     URL="https://github.com/nuvolaris/nuv/releases/download/$BUILD/$FILE" ;\
+    rm -Rvf /tmp/nuv-installer ;\
+    mkdir /tmp/nuv-installer ;\
     wget $URL -O "/tmp/nuv-installer/$FILE" ;\
     dpkg -i "/tmp/nuv-installer/$FILE"
 RUN \
@@ -96,7 +96,7 @@ RUN \
 RUN \
     curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 RUN \
-    VER=v0.109.0 ;\
+    VER=v0.138.0 ;\
     ARCH="$(dpkg --print-architecture)" ;\
     curl -sL "https://github.com/weaveworks/eksctl/releases/download/${VER}/eksctl_Linux_${ARCH}.tar.gz" |\
     tar xzvf - -C /usr/bin
