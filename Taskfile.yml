@@ -146,4 +146,21 @@ tasks:
       >>Dockerfile
     - cat Dockerfile.post >>Dockerfile
 
+  ubuntu:
+    - echo "#!/bin/bash" >prepare-ubuntu.sh
+    - echo "# DO NOT EDIT - edit cloud-init.yaml then regenerate with task ubuntu" >>prepare-ubuntu.sh
+    - echo 'if [[  $(id -u) != "0" ]] ; then echo "please use sudo" ; exit 1 ; fi' >>prepare-ubuntu.sh
+    - >
+      cat cloud-init.yaml 
+      | awk '/##BEGIN##/,/##END##/'
+      | grep -v ' # '
+      | sed -e 's/  - |//'
+      >>prepare-ubuntu.sh
+    - echo "echo \"$PWD/start.sh\" >>~/.bashrc" >>prepare-ubuntu.sh
+    - chmod +x prepare-ubuntu.sh
+    - echo "run it with sudo ./prepare-ubuntu.sh"
+    
+
+
+
 
