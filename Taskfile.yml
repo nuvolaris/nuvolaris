@@ -19,7 +19,7 @@ version: '3'
 
 vars:
   MODULES: controller runtimes operator cli config testing
-  BASETAG: 0.3.0-morpheus
+  BASETAG: 0.3.0-dev
   IMAGE: nuvolaris/nuvolaris-devkit
   REPO: ghcr.io
   TAG:
@@ -39,7 +39,7 @@ tasks:
     silent: true
     cmds:
     - git tag -d $(git tag) 
-    - git tag -f {{.BASETAG}}.$(date +%y%m%d%H)
+    - git tag -f {{.BASETAG}}.$(date +%y%m%d%H%M)
     - env PAGER= git tag
 
   buildx-and-push:
