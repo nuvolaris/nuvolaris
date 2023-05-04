@@ -16,7 +16,7 @@
 // under the License.
 {
 	"name": "nuvolaris",
-	"image": "ghcr.io/nuvolaris/nuvolaris-devkit:0.3.0-dev.2305042100",
+	"image": "ghcr.io/nuvolaris/nuvolaris-devkit:0.3.0-dev.2305042102",
 	//"build": { "dockerfile": "Dockerfile" },
 	"mounts": [
 		"source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"
