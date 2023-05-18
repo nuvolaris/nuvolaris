@@ -34,6 +34,13 @@ vars:
 tasks:
 
   default: "true"
+  origin:
+    - git fetch --all
+    - git checkout origin/main -B main
+    - cd nuvolaris-controller ; task origin
+    - cd nuvolaris-operator ; task origin
+    - cd nuvolaris-runtimes ; task origin
+    - cd nuvolaris-testing ; task origin
 
   image-tag: 
     silent: true
