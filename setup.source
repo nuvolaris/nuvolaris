@@ -22,9 +22,6 @@ fi
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]] 
 then echo "You must source this script with bash, not execute it." ; kill -INT $$
 fi
-if which cloud-init
-then cloud-init status --wait
-fi
 
 # versions
 export NODENV_VERSION=18.15.0
@@ -165,8 +162,6 @@ then pip install ipython
 else ok httpie
 fi
 
-
-
 # install xonsh
 if ! which xonsh >/dev/null
 then pip install xonsh[full]
@@ -233,6 +228,19 @@ fi
 #    rm -Rvf /tmp/kn-plugin-func
 #else ok func
 #fi
+
+# download the gcloud cli
+if ! test -d ~/.local/google-cloud-sdk
+then 
+    case $(dpkg --print-architecture) in
+    (amd64) ARCH=x86_64 ;;
+    (arm64) ARCH=arm ;;
+    esac
+    curl -sL https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-432.0.0-linux-$ARCH.tar.gz | tar xzvf - -C ~/.local
+    ~/.local/google-cloud-sdk/install.sh --additional-components gke-gcloud-auth-plugin --quiet
+fi
+source ~/.local/google-cloud-sdk/completion.bash.inc
+source ~/.local/google-cloud-sdk/path.bash.inc
 
 # install hcloud
 if ! which hcloud >/dev/null

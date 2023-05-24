@@ -53,9 +53,6 @@ runcmd:
     echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu bionic stable" > /etc/apt/sources.list.d/docker.list &&\
     add-apt-repository 'deb https://apt.corretto.aws stable main'
   - |
-    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" |  tee -a /etc/apt/sources.list.d/google-cloud-sdk.list &&\
-    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg >/usr/share/keyrings/cloud.google.gpg
-  - |
     # install software
     apt-get update &&\
     apt-get -y install \
@@ -70,7 +67,7 @@ runcmd:
     libgdbm-dev libnss3-dev libssl-dev \
     libreadline-dev libffi-dev libsqlite3-dev liblzma-dev \
     java-11-amazon-corretto-jdk \
-    docker-ce-cli google-cloud-cli
+    docker-ce-cli
   - |
     # add delta to show diffs
     FILE="git-delta_0.11.2_$(dpkg --print-architecture).deb" ;\
@@ -116,6 +113,8 @@ runcmd:
   - |
     # download the azure cli
     curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+  - | 
+
   - |
     # Install eksctl
     VER=v0.138.0 ;\
