@@ -208,6 +208,12 @@ then npm install -g zx
 else ok zx
 fi
 
+# install antora
+if ! which antora >/dev/null
+then npm i -g @antora/cli@3.1 @antora/site-generator@3.1
+else ok antora
+fi
+
 # install coursier - commented out as not required for now
 #if ! which cs >/dev/null
 #then curl -sfLo $HOME/.local/bin/cs https://git.io/coursier-cli-"$(uname | tr LD ld)"
