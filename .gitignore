@@ -26,3 +26,4 @@ workspace-inc.code-workspace
 private/
 hack/
 .git-hooks/
+.vscode/
