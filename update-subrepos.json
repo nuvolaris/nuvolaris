@@ -1,0 +1,58 @@
+[
+  {
+    "dir": ".",
+    "branch": "main"
+  },
+  {
+    "dir": "nuvolaris-operator",
+    "branch": "main"
+  },
+  {
+    "dir": "nuvolaris-operator/nuv",
+    "branch": "main"
+  },
+  {
+    "dir": "nuvolaris-operator/olaris",
+    "branch": "0.3.0"
+  },
+  {
+    "dir": "nuvolaris-testing",
+    "branch": "main"
+  },
+  {
+    "dir": "nuvolaris-controller",
+    "branch": "main"
+  },
+  {
+    "dir": "nuvolaris-controller/openwhisk",
+    "branch": "nuvolaris"
+  },
+  {
+    "dir": "nuvolaris-documentation",
+    "branch": "main"
+  },
+  {
+    "dir": "nuvolaris-runtimes",
+    "branch": "main"
+  },
+  {
+    "dir": "nuvolaris-runtimes/apache/openwhisk-runtime-nodejs",
+    "branch": "nuvolaris"
+  },
+  {
+    "dir": "nuvolaris-runtimes/apache/openwhisk-runtime-python",
+    "branch": "nuvolaris"
+  },
+  {
+    "dir": "nuvolaris-runtimes/apache/openwhisk-runtime-go",
+    "branch": "nuvolaris"
+  },
+  {
+    "dir": "nuvolaris-runtimes/apache/openwhisk-runtime-java",
+    "branch": "nuvolaris"
+  },
+  {
+    "dir": "nuvolaris-runtimes/apache/openwhisk-runtime-php",
+    "branch": "nuvolaris"
+  }
+]

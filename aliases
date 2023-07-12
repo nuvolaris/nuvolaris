@@ -52,7 +52,6 @@ alias dnuv="NUV_NO_NUVOPTS=1 nuv"
 
 alias t=task
 alias tu='task -d ..'
-alias tsn="task snap --"
 alias dtag="date +%y%m%d%H"
 alias va="vi ~/nuvolaris/aliases ; source ~/nuvolaris/aliases"
 alias lenv='export $(xargs <.env)'
