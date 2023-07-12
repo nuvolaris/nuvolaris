@@ -29,6 +29,7 @@ header:
     - 'nuvolaris-*/**'
     - 'private/**'
     - 'nuv/**'
+    - '*.json'
 
 
 dependency:
