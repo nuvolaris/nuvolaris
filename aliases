@@ -54,12 +54,19 @@ function gsnap {
   fi
 }
 
-
 alias t=task
 alias tt='task -d ..'
 alias ttt='task -d ../..'
 alias dtag="date +%y%m%d%H"
 alias lenv='export $(xargs <.env)'
-alias dnuv="NUV_NO_NUVOPTS=1 nuv"
 
+nvar() { 
+  nuv -config -dump | grep "$1" 
+} 
+alias nreset="nuv config reset"
 alias nd="nuv debug"
+alias nno="NUV_NO_NUVOPTS=1 nuv"
+alias nca="nuv cloud aws"
+alias ncu="nuv config use"
+alias ndk="nuv debug kube"
+alias ndl="nuv debug log"
