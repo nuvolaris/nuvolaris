@@ -18,7 +18,7 @@
 #
 alias va="vi ~/nuvolaris/aliases ; source ~/nuvolaris/aliases"
 
-export KNS="nuvolaris"
+export KNS="$(kubectl config view --minify | grep -oP 'namespace: \K.*')"
 alias k='kubectl -n $KNS'
 alias kg='kubectl -n $KNS get'
 alias kgy='kubectl -n $KNS -o yaml get'
@@ -26,11 +26,19 @@ alias kap='kubectl -n $KNS apply -f'
 alias kde='kubectl -n $KNS describe'
 alias kdel='kubectl -n $KNS delete'
 function kex { 
-  kubectl -n $KNS exec -ti "$1" -- bash 
+  ME=$1
+  CMD=${2:-bash} 
+  kubectl -n $KNS exec -ti $(kubectl -n $KNS get po | awk "/$ME/"'{print $1}') -- $CMD
 }
+function klo {
+  ME=$1
+  shift
+  kubectl -n $KNS logs $(kubectl -n $KNS get po | awk "/$ME/"'{print $1}') "$@"
+} 
 function kns {
   if test -z "$1"
   then kubectl get ns
+       echo "*** current: $KNS ***"
   else export KNS="$1"
        kubectl config set-context --current --namespace "$1"
   fi
