@@ -43,6 +43,12 @@ function kns {
        kubectl config set-context --current --namespace "$1"
   fi
 }
+
+alias kwa="watch kubectl get po,deploy,sts,jobs,svc,ingress --no-headers"
+alias kwp="watch kubectl get po,deploy,sts,jobs --no-headers"
+alias kws="watch kubectl get svc,ingress --no-headers"
+alias kwc="watch kubectl get cm,secret --no-headers"
+
 alias kfin='kubectl -n nuvolaris patch -p {"metadata":{"finalizers":[]}} --type=merge' 
 
 alias ga="git add"
