@@ -17,16 +17,16 @@
 #
 [submodule "controller"]
 	path = nuvolaris-controller
-	url = https://github.com/nuvolaris/nuvolaris-controller
+	url = git@github.com:nuvolaris/nuvolaris-controller
 [submodule "operator"]
 	path = nuvolaris-operator
-	url = https://github.com/nuvolaris/nuvolaris-operator
+	url = git@github.com:nuvolaris/nuvolaris-operator
 [submodule "nuvolaris-documentation"]
 	path = nuvolaris-documentation
-	url = https://github.com/nuvolaris/nuvolaris-documentation/
+	url = git@github.com:nuvolaris/nuvolaris-documentation/
 [submodule "nuvolaris-runtimes"]
 	path = nuvolaris-runtimes
-	url = https://github.com/nuvolaris/nuvolaris-runtimes
+	url = git@github.com:nuvolaris/nuvolaris-runtimes
 [submodule "nuvolaris-testing"]
 	path = nuvolaris-testing
-	url = https://github.com/nuvolaris/nuvolaris-testing
+	url = git@github.com:nuvolaris/nuvolaris-testing
