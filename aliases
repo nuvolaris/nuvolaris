@@ -16,9 +16,10 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+
 alias va="vi ~/nuvolaris/aliases ; source ~/nuvolaris/aliases"
 
-export KNS="$(kubectl config view --minify | grep -oP 'namespace: \K.*')"
+export KNS="default"
 alias k='kubectl -n $KNS'
 alias kg='kubectl -n $KNS get'
 alias kgy='kubectl -n $KNS -o yaml get'
@@ -84,3 +85,8 @@ alias nca="nuv cloud aws"
 alias ncu="nuv config use"
 alias ndk="nuv debug kube"
 alias ndl="nuv debug log"
+
+function origin2ssh {
+  HERE="$(basename $PWD)"
+  git remote set-url origin "git@github.com:nuvolaris/$HERE"
+}

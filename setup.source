@@ -235,18 +235,11 @@ fi
 #else ok func
 #fi
 
-# download the gcloud cli
-if ! test -d ~/.local/google-cloud-sdk
-then 
-    case $(dpkg --print-architecture) in
-    (amd64) ARCH=x86_64 ;;
-    (arm64) ARCH=arm ;;
-    esac
-    curl -sL https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-432.0.0-linux-$ARCH.tar.gz | tar xzvf - -C ~/.local
-    ~/.local/google-cloud-sdk/install.sh --additional-components gke-gcloud-auth-plugin --quiet
+# load gcloud sdk
+if test -d ~/.local/google-cloud-sdk; then 
+ source ~/.local/google-cloud-sdk/completion.bash.inc
+ source ~/.local/google-cloud-sdk/path.bash.inc
 fi
-source ~/.local/google-cloud-sdk/completion.bash.inc
-source ~/.local/google-cloud-sdk/path.bash.inc
 
 # install hcloud
 if ! which hcloud >/dev/null
@@ -269,12 +262,6 @@ source $GOBIN/z.sh
 if ! which godaddy-cli >/dev/null
 then go install github.com/Cabemo/godaddy-cli@v1.0.0
 else ok go-daddy
-fi
-
-# env
-if test -e .env
-then export $(xargs <.env)
-     ok .env
 fi
 
 # install go tools for VSCode
