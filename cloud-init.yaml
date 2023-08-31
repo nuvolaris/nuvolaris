@@ -75,7 +75,7 @@ runcmd:
     dpkg -i "/tmp/$FILE" ; rm "/tmp/$FILE"
   - |
     # Download nuv deb installer (which includes kind)
-    BUILD="0.3.0-morpheus.23042703" ;\
+    BUILD="0.3.0-dev.2308261806" ;\
     ARCH="$(dpkg --print-architecture)" ;\
     FILE="nuv_$(echo $BUILD)_$ARCH.deb" ;\
     URL="https://github.com/nuvolaris/nuv/releases/download/$BUILD/$FILE" ;\
