@@ -17,7 +17,7 @@
 # under the License.
 #
 
-alias va="vi ~/nuvolaris/aliases ; source ~/nuvolaris/aliases"
+alias va="vi ~/main/nuvolaris/aliases ; source ~/main/nuvolaris/aliases"
 
 export KNS="default"
 alias k='kubectl -n $KNS'
@@ -26,6 +26,7 @@ alias kgy='kubectl -n $KNS -o yaml get'
 alias kap='kubectl -n $KNS apply -f'
 alias kde='kubectl -n $KNS describe'
 alias kdel='kubectl -n $KNS delete'
+alias kin="kubectl cluster-info"
 function kex { 
   ME=$1
   CMD=${2:-bash} 
@@ -79,14 +80,33 @@ nvar() {
   nuv -config -dump | grep "$1" 
 } 
 alias nreset="nuv config reset"
+alias nc="nuv config"
+alias ns="nuv setup"
 alias nd="nuv debug"
-alias nno="NUV_NO_NUVOPTS=1 nuv"
+alias nonuv="NUV_NO_NUVOPTS=1 nuv"
 alias nca="nuv cloud aws"
-alias ncu="nuv config use"
+alias nce="nuv cloud eks"
+alias ncaz="nuv cloud azure"
+alias ncak="nuv cloud aks"
+alias ncg="nuv cloud gcloud"
 alias ndk="nuv debug kube"
 alias ndl="nuv debug log"
+alias nsk="nuv setup kubernetes"
+alias nsn="nuv setup nuvolaris"
+
+alias ncu="nuv config use"
+function use() {
+   if test -z "$1"
+   then nuv config use
+   else nuv config use "$@"
+        nuv debug export F=-
+        kubectl config set-context --current --namespace nuvolaris
+   fi
+}
 
 function origin2ssh {
   HERE="$(basename $PWD)"
   git remote set-url origin "git@github.com:nuvolaris/$HERE"
 }
+
+alias nssh="ssh -oStrictHostKeyChecking=no"
