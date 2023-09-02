@@ -55,7 +55,7 @@ RUN \
     wget "https://github.com/dandavison/delta/releases/download/0.11.2/$FILE" -O "/tmp/$FILE" ;\
     dpkg -i "/tmp/$FILE" ; rm "/tmp/$FILE"
 RUN \
-    BUILD="0.3.0-morpheus.23042703" ;\
+    BUILD="0.3.0-dev.2308261806" ;\
     ARCH="$(dpkg --print-architecture)" ;\
     FILE="nuv_$(echo $BUILD)_$ARCH.deb" ;\
     URL="https://github.com/nuvolaris/nuv/releases/download/$BUILD/$FILE" ;\
