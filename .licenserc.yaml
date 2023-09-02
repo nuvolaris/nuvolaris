@@ -29,7 +29,8 @@ header:
     - 'nuvolaris-*/**'
     - 'private/**'
     - 'nuv/**'
-    - '**/*.json'
+    - '*.json'
+    - 'bin/.gitkeep'
 
 
 dependency:
