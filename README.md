@@ -36,7 +36,7 @@ This is the main differentiation from Apache OpenWhisk, as it only provides a ba
 
 If you are in a hurry, here a few starting points:
 
-- Read the [documentation](https://github.com/nuvolaris/nuvolaris-documentation).
+- Read the [documentation](https://nuvolaris.github.io).
 - Download the [latest release](https://github.com/nuvolaris/nuvolaris/releases) of the CLI to install and use Nuvolaris.
 - Check our [YouTube Channel](https://www.youtube.com/channel/UCPt5hk7qcOkESjB7kii1byw) for our trainings and community calls.
 - Discuss with us on our [Dicourse](https://nuvolaris.discourse.group/) forum.
