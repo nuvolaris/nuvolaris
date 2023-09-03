@@ -31,7 +31,7 @@ header:
     - 'nuv/**'
     - '*.json'
     - 'bin/.gitkeep'
-    - '.vscode/settings.json'
+    - 'docs/.vscode/settings.json'
 
 
 dependency:
