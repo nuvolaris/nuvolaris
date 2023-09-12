@@ -19,6 +19,35 @@
 
 alias va="vi ~/main/nuvolaris/aliases ; source ~/main/nuvolaris/aliases"
 
+function secrets {
+    if ! which op 
+    then echo "download the op cli from https://developer.1password.com/docs/cli/get-started/"
+         return
+    fi
+    if ! test -e .env.dist
+    then echo "no .env.dist listing the required secrets" 
+         return
+    fi
+    echo "reading .env.dist to generate .env and .env.src from 1password"
+    echo "I OVERWRITE the existing files, type your password or interrupt now"
+    eval $(op signin)
+    rm -f .env .env.src
+    cat .env.dist | awk '{
+        if(match($1, /^(.*)=(.*):/, a)) {
+            print a[1] " op://secrets/" a[2] "/" a[1]
+        }
+    }' | while read VAR SEC 
+    do 
+        VAL="$(op read $SEC)"
+        echo read $VAR 
+        echo "$VAR=$VAL" >>.env
+        echo "echo export and config $VAR" >>.env.src
+        echo "export $VAR=\"$VAL\"" >>.env.src
+        echo "nuv -config \"$VAR=$VAL\""  >>.env.src
+    done
+    source .env.src
+}
+
 export KNS="default"
 alias k='kubectl -n $KNS'
 alias kg='kubectl -n $KNS get'
@@ -99,6 +128,9 @@ alias nosh="nuv ops server hub"
 alias nosm="nuv ops server master"
 alias nosw="nuv ops server worker"
 alias nco="nuv cloud ops" 
+alias nsg="nuv saas gcloud"
+alias nnsg="env NUV_NO_NUVOPTS=1 nuv saas gcloud"
+alias ops="nuv cloud ops client" 
 alias ncu="nuv config use"
 function use() {
    if test -z "$1"
