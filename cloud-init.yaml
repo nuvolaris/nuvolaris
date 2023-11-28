@@ -108,7 +108,7 @@ runcmd:
     mkdir /tmp/awscli ;\
     curl -sL "https://awscli.amazonaws.com/awscli-exe-linux-$(arch).zip" -o "/tmp/awscli/awscliv2.zip" ;\
     cd /tmp/awscli ; unzip awscliv2.zip ;\
-    ./aws/install -b /usr/bin  ;\
+    ./aws/install --update -b /usr/bin  ;\
     rm -Rvf /tmp/awscli
   - |
     # download the azure cli
