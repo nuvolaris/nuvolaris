@@ -148,3 +148,4 @@ function origin2ssh {
 }
 
 alias nssh="ssh -oStrictHostKeyChecking=no"
+
