@@ -30,3 +30,6 @@
 [submodule "nuvolaris-testing"]
 	path = nuvolaris-testing
 	url = git@github.com:nuvolaris/nuvolaris-testing
+[submodule "nuvolaris-mastrogpt"]
+	path = nuvolaris-mastrogpt
+	url = git@github.com:nuvolaris/nuvolaris-mastrogpt
