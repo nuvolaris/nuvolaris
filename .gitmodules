@@ -15,21 +15,26 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-[submodule "controller"]
+[submodule "nuvolaris-controller"]
 	path = nuvolaris-controller
 	url = git@github.com:nuvolaris/nuvolaris-controller
-[submodule "operator"]
+	branch = main
+[submodule "nuvolaris-operator"]
 	path = nuvolaris-operator
 	url = git@github.com:nuvolaris/nuvolaris-operator
+	branch = main
 [submodule "nuvolaris-documentation"]
 	path = nuvolaris-documentation
 	url = git@github.com:nuvolaris/nuvolaris-documentation/
+	branch = 3.0.0
 [submodule "nuvolaris-runtimes"]
 	path = nuvolaris-runtimes
 	url = git@github.com:nuvolaris/nuvolaris-runtimes
 [submodule "nuvolaris-testing"]
 	path = nuvolaris-testing
 	url = git@github.com:nuvolaris/nuvolaris-testing
+	branch = main
 [submodule "nuvolaris-mastrogpt"]
 	path = nuvolaris-mastrogpt
 	url = git@github.com:nuvolaris/nuvolaris-mastrogpt
+	branch = main
