@@ -34,7 +34,3 @@
 	path = nuvolaris-testing
 	url = git@github.com:nuvolaris/nuvolaris-testing
 	branch = main
-[submodule "nuvolaris-mastrogpt"]
-	path = nuvolaris-mastrogpt
-	url = git@github.com:nuvolaris/nuvolaris-mastrogpt
-	branch = main
