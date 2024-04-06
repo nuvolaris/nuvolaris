@@ -30,6 +30,7 @@
 [submodule "nuvolaris-runtimes"]
 	path = nuvolaris-runtimes
 	url = git@github.com:nuvolaris/nuvolaris-runtimes
+	branch = main
 [submodule "nuvolaris-testing"]
 	path = nuvolaris-testing
 	url = git@github.com:nuvolaris/nuvolaris-testing
