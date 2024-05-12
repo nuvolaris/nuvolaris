@@ -26,7 +26,7 @@
 [submodule "nuvolaris-documentation"]
 	path = nuvolaris-documentation
 	url = git@github.com:nuvolaris/nuvolaris-documentation/
-	branch = 3.0.0
+	branch = 3.1.0
 [submodule "nuvolaris-runtimes"]
 	path = nuvolaris-runtimes
 	url = git@github.com:nuvolaris/nuvolaris-runtimes
