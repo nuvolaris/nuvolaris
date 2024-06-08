@@ -23,7 +23,7 @@ This is our first milestone. We want to release just an operator that runs OpenW
 
 We start building:
 
-- an image with the standalone OpenWhisk  controller #5
+- an image with the standalone OpenWhisk controller #5
 - a operator that launches such a controller #3
-- a cli to start eveything
+- a cli to start everything
 

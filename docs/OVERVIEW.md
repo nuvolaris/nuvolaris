@@ -30,15 +30,15 @@
 
 ## Overview
 
-In this diagrama there is an overview of the repos in the Nuvolaris organization:
+In this diagrams there is an overview of the repos in the Nuvolaris organization:
 
 ![nuvolaris](./nuvolaris.png)
 
-The main repositories, those relevant for the project, are  pinned and named `nuvolaris-*`. Also there are the repositories `nuv` and `olaris` which are the engine and the tasks of the CLI.  All the other repositories, especially those starting with `openwhisk*` and `nimbella*` are forks of our upstream source code. 
+The main repositories, those relevant for the project, are  pinned and named `nuvolaris-*`. Also, there are the repositories `nuv` and `olaris` which are the engine and the tasks of the CLI.  All the other repositories, especially those starting with `openwhisk*` and `nimbella*` are forks of our upstream source code. 
 
 If we to make changes to our fork, we try to limit changes to the absolute minimum. 
 
-Our work is always placed in branches starting with `nuvolaris`, and then they are included as git modules in the main ones.  And we try, when possible, to contribute back our changes tp upstream.
+Our work is always placed in branches starting with `nuvolaris`, and then they are included as git modules in the main ones. And we try, when possible, to contribute back our changes tp upstream.
 
 Development procedures are described in the [DEVEL](./DEVEL.md) document.
 
@@ -56,7 +56,7 @@ It contains:
 - the [Discussion Forum](https://nuvolaris.discourse.group)
 - the [Issue Tracker](https://github.com/nuvolaris/nuvolaris/issues) to manage the whole project.
 
-To discuss the project in general, introduce yourself in the forum, make suggestions or ask questions, post in the [general]  category on forum or in the correct category.
+To discuss the project in general, introduce yourself in the forum, make suggestions or ask questions, post in the [general] category on forum or in the correct category.
 
 [Up.](#index)
 
@@ -87,7 +87,7 @@ This repo builds the installer for the CLI.
 
 ### [`olaris`](https://github.com/nuvolaris/olaris)
 
-This repo contains the tasks used by the `nuv`CLI which are automatically downloaded by the CLI itself
+This repo contains the tasks used by the `nuv` CLI which are automatically downloaded by the CLI itself
 
 [Up.](#index)
 
