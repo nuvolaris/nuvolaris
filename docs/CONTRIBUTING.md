@@ -20,7 +20,7 @@
 
 # Contributing to Nuvolaris
 
-Anyone can contribute to the Nuvolaris project and we welcome your contributions. 
+Anyone can contribute to the Nuvolaris project, and we welcome your contributions. 
 
 This project is not (yet!) an Apache Foundation project but we follow their rules to accept code and contributions. 
 
@@ -60,7 +60,7 @@ Please raise any bug reports or enhancement requests on the respective project r
 list to see if your issue has already been raised.
 
 A good bug report is one that make it easy for us to understand what you were trying to do and what went wrong.
-Provide as much context as possible so we can try to recreate the issue.
+Provide as much context as possible, so we can try to recreate the issue.
 
 A good enhancement request comes with an explanation of what you are trying to do and how that enhancement would help you.
 
