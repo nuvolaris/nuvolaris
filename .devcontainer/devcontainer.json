@@ -27,10 +27,14 @@
 		"--network=host",
 		"--env=REAL_HOME=${localEnv:HOMEDRIVE}${localEnv:HOMEPATH}${localEnv:HOME}"
 	],
-	"extensions": [
-		"stuart.unique-window-colors",
-		"oderwat.indent-rainbow",
-		"mhutchie.git-graph", 
-		"golang.go"
-	]
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"stuart.unique-window-colors",
+				"oderwat.indent-rainbow",
+				"mhutchie.git-graph",
+				"golang.go"
+			]
+		}
+	}
 }
