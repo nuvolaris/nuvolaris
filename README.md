@@ -17,6 +17,9 @@
   ~ under the License.
   ~
 -->
+# IMPORTANT!
+Please note all the development moved to [Apache OpenServerless](https://github.com/apache/openserverless)
+
 # Welcome to Nuvolaris!
 
 Nuvolaris is an [Open Source](https://opensource.org/) project to build a complete and portable [Serverless](https://martinfowler.com/articles/serverless.html) environment that runs in every [Kubernetes](https://kubernetes.io/).
